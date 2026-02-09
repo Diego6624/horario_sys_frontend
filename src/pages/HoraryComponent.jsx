@@ -11,35 +11,35 @@ const HoraryComponent = () => {
             sesion: "Tercera Clase"
         },
         {
-            aula: "201",
+            aula: "Laboratorio 201",
             docente: "—",
             curso: "Excel Intermedio",
             horario: "06:00 PM - 10:00 PM",
             sesion: "Tercera Clase"
         },
         {
-            aula: "202",
+            aula: "Laboratorio 202",
             docente: "—",
             curso: "Excel Intermedio",
             horario: "06:00 PM - 10:00 PM",
             sesion: "Tercera Clase"
         },
         {
-            aula: "301",
+            aula: "Laboratorio 301",
             docente: "Cesar Raul Morales Ticona",
             curso: "Excel Profesional",
             horario: "06:00 PM - 10:00 PM",
             sesion: "Tercera Clase"
         },
         {
-            aula: "401",
+            aula: "Laboratorio 401",
             docente: "Christian Anthony Rodas Donayre",
             curso: "Ofimática Empresarial",
             horario: "06:00 PM - 10:00 PM",
             sesion: "Tercera Clase"
         },
         {
-            aula: "402",
+            aula: "Laboratorio 402",
             docente: "David Jesías Palomino García",
             curso: "Power BI",
             horario: "06:00 PM - 10:00 PM",
