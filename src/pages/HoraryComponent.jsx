@@ -48,7 +48,7 @@ const HoraryComponent = () => {
     ];
 
     return (
-        <div className="w-screen h-screen bg-slate-900 text-white flex flex-col overflow-hidden">
+        <div className="w-screen h-screen bg-slate-900 text-white flex flex-col">
 
             {/* HEADER */}
             <div className="text-center py-6 border-b border-slate-700">
@@ -62,14 +62,12 @@ const HoraryComponent = () => {
 
             {/* CARDS ROW */}
             <div className="
-                flex
-                flex-1
-                flex-nowrap
-                gap-6
-                p-6
-                overflow-hidden
-                items-stretch
-            ">
+            flex
+            flex-wrap
+            gap-6
+            p-6
+            overflow-hidden
+        ">
                 {horarios.map((h, index) => (
                     <CardHorarioComponent
                         key={index}
