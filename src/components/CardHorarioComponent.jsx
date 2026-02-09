@@ -19,6 +19,7 @@ const CardHorarioComponent = ({ aula, docente, curso, horario, sesion }) => {
                 to-blue-500
                 text-center
                 py-5
+                px-10
                 rounded-t-2xl
             ">
                 <h2 className="text-3xl font-bold tracking-wide leading-tight">
@@ -28,21 +29,16 @@ const CardHorarioComponent = ({ aula, docente, curso, horario, sesion }) => {
 
             {/* BODY */}
             <div className="p-6 flex flex-col gap-6 flex-grow text-[1.1vw]">
-
                 <Info label="DOCENTE" value={docente} />
                 <Info label="CURSO" value={curso} />
                 <Info label="HORARIO" value={horario} />
                 <Info label="SESIÓN" value={sesion} />
-
             </div>
-
         </div>
     );
 };
 
 export default CardHorarioComponent;
-
-
 
 /* Subcomponente interno */
 const Info = ({ label, value }) => (

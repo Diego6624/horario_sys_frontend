@@ -11,35 +11,35 @@ const HoraryComponent = () => {
             sesion: "Tercera Clase"
         },
         {
-            aula: "201",
+            aula: "Laboratorio 201",
             docente: "—",
             curso: "Excel Intermedio",
             horario: "06:00 PM - 10:00 PM",
             sesion: "Tercera Clase"
         },
         {
-            aula: "202",
+            aula: "Laboratorio 202",
             docente: "—",
             curso: "Excel Intermedio",
             horario: "06:00 PM - 10:00 PM",
             sesion: "Tercera Clase"
         },
         {
-            aula: "301",
+            aula: "Laboratorio 301",
             docente: "Cesar Raul Morales Ticona",
             curso: "Excel Profesional",
             horario: "06:00 PM - 10:00 PM",
             sesion: "Tercera Clase"
         },
         {
-            aula: "401",
+            aula: "Laboratorio 401",
             docente: "Christian Anthony Rodas Donayre",
             curso: "Ofimática Empresarial",
             horario: "06:00 PM - 10:00 PM",
             sesion: "Tercera Clase"
         },
         {
-            aula: "402",
+            aula: "Laboratorio 402",
             docente: "David Jesías Palomino García",
             curso: "Power BI",
             horario: "06:00 PM - 10:00 PM",
@@ -48,7 +48,7 @@ const HoraryComponent = () => {
     ];
 
     return (
-        <div className="w-screen h-screen bg-slate-900 text-white flex flex-col overflow-hidden">
+        <div className="w-screen h-screen bg-slate-900 text-white flex flex-col">
 
             {/* HEADER */}
             <div className="text-center py-6 border-b border-slate-700">
@@ -62,14 +62,12 @@ const HoraryComponent = () => {
 
             {/* CARDS ROW */}
             <div className="
-                flex
-                flex-1
-                flex-nowrap
-                gap-6
-                p-6
-                overflow-hidden
-                items-stretch
-            ">
+            flex
+            flex-wrap
+            gap-6
+            p-6
+            overflow-hidden
+        ">
                 {horarios.map((h, index) => (
                     <CardHorarioComponent
                         key={index}
