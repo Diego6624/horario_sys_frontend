@@ -1,87 +1,78 @@
+import { useEffect, useState } from "react";
 import CardHorarioComponent from "../components/CardHorarioComponent";
+import {
+  connectSocket,
+  disconnectSocket,
+} from "../services/socketService";
+
+const API_URL =
+  "https://horario-sys-backend.onrender.com/api/horaries";
 
 const HoraryComponent = () => {
 
-    const horarios = [
-        {
-            aula: "Laboratorio multiuso",
-            docente: "—",
-            curso: "Oratoria",
-            horario: "06:00 PM - 10:00 PM",
-            sesion: "Tercera Clase"
-        },
-        {
-            aula: "Laboratorio 201",
-            docente: "—",
-            curso: "Excel Intermedio",
-            horario: "06:00 PM - 10:00 PM",
-            sesion: "Tercera Clase"
-        },
-        {
-            aula: "Laboratorio 202",
-            docente: "—",
-            curso: "Excel Intermedio",
-            horario: "06:00 PM - 10:00 PM",
-            sesion: "Tercera Clase"
-        },
-        {
-            aula: "Laboratorio 301",
-            docente: "Cesar Raul Morales Ticona",
-            curso: "Excel Profesional",
-            horario: "06:00 PM - 10:00 PM",
-            sesion: "Tercera Clase"
-        },
-        {
-            aula: "Laboratorio 401",
-            docente: "Christian Anthony Rodas Donayre",
-            curso: "Ofimática Empresarial",
-            horario: "06:00 PM - 10:00 PM",
-            sesion: "Tercera Clase"
-        },
-        {
-            aula: "Laboratorio 402",
-            docente: "David Jesías Palomino García",
-            curso: "Power BI",
-            horario: "06:00 PM - 10:00 PM",
-            sesion: "Tercera Clase"
-        }
-    ];
+  const [horarios, setHorarios] = useState([]);
 
-    return (
-        <div className="w-screen h-screen bg-slate-900 text-white flex flex-col">
+  // ===============================
+  // 📡 Cargar horarios
+  // ===============================
+  const cargarHorarios = async () => {
+    try {
+      const res = await fetch(API_URL);
+      const data = await res.json();
+      setHorarios(data);
+    } catch (error) {
+      console.error("Error cargando horarios:", error);
+    }
+  };
 
-            {/* HEADER */}
-            <div className="text-center py-6 border-b border-slate-700">
-                <h1 className="text-5xl font-extrabold tracking-wider">
-                    DISTRIBUCIÓN DE LAS AULAS DE CLASE
-                </h1>
-                <p className="text-2xl text-slate-300 mt-2">
-                    Turno Mañana
-                </p>
-            </div>
+  // ===============================
+  // 🔌 Socket tiempo real
+  // ===============================
+  useEffect(() => {
 
-            {/* CARDS ROW */}
-            <div className="
-            flex
-            flex-wrap
-            gap-6
-            p-6
-            overflow-hidden
-        ">
-                {horarios.map((h, index) => (
-                    <CardHorarioComponent
-                        key={index}
-                        aula={h.aula}
-                        docente={h.docente}
-                        curso={h.curso}
-                        horario={h.horario}
-                        sesion={h.sesion}
-                    />
-                ))}
-            </div>
+    cargarHorarios();
 
-        </div>
-    );
-}
+    connectSocket(() => {
+      console.log("📡 Cambio detectado");
+      cargarHorarios();
+    });
+
+    return () => disconnectSocket();
+
+  }, []);
+
+  return (
+    <div className="w-screen h-screen bg-slate-900 text-white flex flex-col">
+
+      {/* HEADER */}
+      <div className="text-center py-6 border-b border-slate-700">
+        <h1 className="text-5xl font-extrabold tracking-wider">
+          DISTRIBUCIÓN DE LAS AULAS DE CLASE
+        </h1>
+        <p className="text-2xl text-slate-300 mt-2">
+          Turno Mañana
+        </p>
+      </div>
+
+      {/* CARDS */}
+      <div className="flex flex-wrap gap-6 p-6 overflow-hidden">
+
+        {horarios.map((h) => (
+
+          <CardHorarioComponent
+            key={h.id}
+            aula={h.numLab}
+            docente={h.nameDocente || "—"}
+            curso={h.nameCurso || "—"}
+            horario={h.horario || "—"}
+            sesion={h.numSesion || "—"}
+          />
+
+        ))}
+
+      </div>
+    </div>
+  );
+};
 
 export default HoraryComponent;
