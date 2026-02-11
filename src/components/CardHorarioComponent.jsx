@@ -1,52 +1,34 @@
 const CardHorarioComponent = ({ aula, docente, curso, horario, sesion }) => {
     return (
-        <div className="
-            flex-1
-            bg-slate-800
-            rounded-2xl
-            shadow-2xl
-            border border-slate-700
-            flex
-            flex-col
-            min-w-[260px]
-            h-full
-        ">
-
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-200 flex flex-col w-full h-full">
             {/* HEADER */}
-            <div className="
-                bg-gradient-to-r
-                from-blue-600
-                to-blue-500
-                text-center
-                py-5
-                px-10
-                rounded-t-2xl
-            ">
-                <h2 className="text-3xl font-bold tracking-wide leading-tight">
-                    {aula}
+            <div className="bg-gradient-to-r from-indigo-600 to-blue-500 text-center py-4 px-6 rounded-t-2xl">
+                <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white">
+                    Aula {aula}
                 </h2>
             </div>
 
             {/* BODY */}
-            <div className="p-6 flex flex-col gap-6 flex-grow text-[1.1vw]">
-                <Info label="DOCENTE" value={docente} />
-                <Info label="CURSO" value={curso} />
-                <Info label="HORARIO" value={horario} />
-                <Info label="SESIÓN" value={sesion} />
+            <div className="p-4 sm:p-6 flex flex-col gap-4 sm:gap-6 flex-grow">
+                <Info label="Docente" value={docente} />
+                <Info label="Curso" value={curso} />
+                <Info label="Horario" value={horario} />
+                <Info label="Sesión" value={sesion} />
             </div>
         </div>
+
     );
 };
 
 export default CardHorarioComponent;
 
-/* Subcomponente interno */
+// Subcomponente Info
 const Info = ({ label, value }) => (
     <div className="flex flex-col">
-        <span className="text-slate-400 font-semibold tracking-wide">
+        <span className="text-gray-500 font-semibold uppercase tracking-wide text-xs sm:text-sm">
             {label}
         </span>
-        <span className="font-medium leading-snug">
+        <span className="font-medium text-gray-800 text-sm sm:text-base md:text-lg">
             {value}
         </span>
     </div>
