@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import CardHorarioComponent from "../components/CardHorarioComponent";
+import CardHorarioComponent from "../../components/CardHorarioComponent";
 import {
   connectSocket,
   disconnectSocket,
-} from "../services/socketService";
+} from "../../services/socketService";
 
 const API_URL =
   "https://horario-sys-backend.onrender.com/api/horaries";
