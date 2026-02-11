@@ -6,28 +6,30 @@ import {
 
 import App from "../App";
 
-// 📺 Público
+/* 🌐 PUBLIC */
 import HoraryComponent from "../pages/publicPage/HoraryComponent";
 import NotFoundComponent from "../pages/publicPage/NotFoundComponent";
 
-// 🔐 Admin
-import AdminComponent from "../pages/adminPage/AdminComponent";
+/* 🔐 AUTH */
 import LoginComponent from "../pages/adminPage/LoginComponent";
-import PrivateRoute from "./PrivateRoute";
+import PrivateRoute from "./privateRoute";
+
+/* 🛠️ ADMIN */
+import AdminComponent from "../pages/adminPage/AdminComponent";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />} errorElement={<NotFoundComponent />}>
 
-      {/* 📺 TV Pública */}s
+      {/* PUBLICO */}
       <Route index element={<HoraryComponent />} />
 
-      {/* 🔐 LOGIN */}
-      <Route path="/admin/login" element={<LoginComponent />} />
+      {/* LOGIN */}
+      <Route path="admin/login" element={<LoginComponent />} />
 
-      {/* 🔒 PANEL ADMIN PROTEGIDO */}
+      {/* ADMIN */}
       <Route
-        path="/admin"
+        path="admin"
         element={
           <PrivateRoute>
             <AdminComponent />

@@ -2,11 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const LoginComponent = () => {
-
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    email: "",
+    username: "",
     password: "",
   });
 
@@ -21,7 +20,6 @@ const LoginComponent = () => {
     e.preventDefault();
 
     try {
-
       const res = await fetch(
         "https://horario-sys-backend.onrender.com/api/auth/login",
         {
@@ -40,10 +38,9 @@ const LoginComponent = () => {
 
       const data = await res.json();
 
-      // 🧠 Guardar token
-      localStorage.setItem("token", data.token);
+      // ✅ Guardar usuario
+      localStorage.setItem("user", JSON.stringify(data));
 
-      // 🔁 Redirigir al panel
       navigate("/admin");
 
     } catch (error) {
@@ -52,28 +49,57 @@ const LoginComponent = () => {
   };
 
   return (
-    <div>
-      <h2>Login Admin</h2>
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600">
+      <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-md">
+        {/* Logo / título */}
+        <h1 className="text-3xl font-bold text-center text-indigo-600 mb-2">
+          Systematic
+        </h1>
+        <p className="text-center text-gray-500 mb-6">
+          Acceso al panel administrativo
+        </p>
 
-      <form onSubmit={handleLogin}>
-        <input
-          type="text"
-          name="email"
-          placeholder="Correo"
-          onChange={handleChange}
-        />
+        {/* Formulario */}
+        <form onSubmit={handleLogin} className="space-y-5">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Correo electrónico
+            </label>
+            <input
+              type="text"
+              name="username"
+              placeholder="ejemplo@correo.com"
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            />
+          </div>
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Contraseña"
-          onChange={handleChange}
-        />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Contraseña
+            </label>
+            <input
+              type="password"
+              name="password"
+              placeholder="********"
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            />
+          </div>
 
-        <button type="submit">
-          Ingresar
-        </button>
-      </form>
+          <button
+            type="submit"
+            className="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition duration-300"
+          >
+            Ingresar
+          </button>
+        </form>
+
+        {/* Footer */}
+        <p className="text-xs text-gray-400 text-center mt-6">
+          © {new Date().getFullYear()} Systematic. Todos los derechos reservados.
+        </p>
+      </div>
     </div>
   );
 };

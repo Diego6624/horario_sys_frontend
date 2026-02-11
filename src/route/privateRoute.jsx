@@ -2,14 +2,13 @@ import { Navigate } from "react-router-dom";
 
 const PrivateRoute = ({ children }) => {
 
-  const token = localStorage.getItem("token");
+  const user = localStorage.getItem("user");
 
-  // ❌ No logueado → Login
-  if (!token) {
+  // Si NO hay usuario → login
+  if (!user) {
     return <Navigate to="/admin/login" replace />;
   }
 
-  // ✅ Logueado → Panel
   return children;
 };
 
