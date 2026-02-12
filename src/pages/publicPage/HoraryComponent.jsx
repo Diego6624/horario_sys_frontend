@@ -42,7 +42,7 @@ const HoraryComponent = () => {
   }, []);
 
   return (
-    <div className="w-screen xl:h-screen h-auto bg-slate-900 text-white flex flex-col">
+    <div className="w-screen min-h-screen bg-slate-900 text-white flex flex-col">
 
       {/* HEADER */}
       <div className="text-center py-6 border-b border-slate-700">
@@ -56,18 +56,18 @@ const HoraryComponent = () => {
 
       {/* CARDS */}
       {/* CARDS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 p-6">
+      <div className="flex-grow grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 p-8">
         {horarios.map((h) => (
-          <CardHorarioComponent
-            key={h.id}
-            aula={h.numLab}
-            docente={h.nameDocente || "—"}
-            curso={h.nameCurso || "—"}
-            horario={h.horario || "—"}
-            sesion={h.numSesion || "—"}
+          <CardHorarioComponent 
+            key={h.id} 
+            aula={h.numLab} 
+            docente={h.nameDocente || "—"} 
+            curso={h.nameCurso || "—"} 
+            horario={h.horario || "—"} 
+            sesion={h.numSesion || "—"} 
           />
-        ))}
-      </div>
+          ))} 
+        </div>
 
     </div>
   );
