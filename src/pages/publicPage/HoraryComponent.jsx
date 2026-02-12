@@ -58,7 +58,7 @@ const HoraryComponent = () => {
 
 
       {/* CARDS */}
-      <div className="flex-grow grid grid-cols-1 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-4 p-4">
+      <div className="flex-grow grid grid-cols-1 sm:grid-cols-5 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-4 p-4">
         {horarios.map((h) => (
           <CardHorarioComponent
             key={h.id}
