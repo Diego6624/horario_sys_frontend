@@ -9,7 +9,7 @@ const CardHorarioComponent = ({ aula, docente, curso, horario, sesion }) => {
       </div>
 
       {/* BODY */}
-      <div className="p-4 grid grid-cols-2 gap-4 flex-grow">
+      <div className="p-2 grid grid-cols-2 gap-4 flex-grow">
         <Info label="Docente" value={docente} />
         <Info label="Curso" value={curso} />
         <Info label="Horario" value={horario} />
