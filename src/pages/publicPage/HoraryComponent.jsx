@@ -45,17 +45,17 @@ const HoraryComponent = () => {
     <div className="w-screen min-h-screen bg-slate-900 text-white flex flex-col">
 
       {/* HEADER */}
-      <div className="text-center py-6 border-b border-slate-700">
-        <h1 className="text-5xl font-extrabold tracking-wider">
-          DISTRIBUCIÓN DE LAS AULAS DE CLASE
+      <div className="text-center py-3 border-b border-slate-700">
+        <h1 className="text-2xl md:text-3xl font-extrabold tracking-wide">
+          DISTRIBUCIÓN DE LAS AULAS
         </h1>
-        <p className="text-2xl text-slate-300 mt-2">
+        <p className="text-lg md:text-xl text-slate-300 mt-1">
           Turno Mañana
         </p>
       </div>
 
       {/* CARDS */}
-      <div className="flex-grow grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4 p-4">
+      <div className="flex-grow grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6">
         {horarios.map((h) => (
           <CardHorarioComponent
             key={h.id}
@@ -67,8 +67,8 @@ const HoraryComponent = () => {
           />
         ))}
       </div>
-
     </div>
+
   );
 };
 
