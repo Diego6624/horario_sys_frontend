@@ -3,7 +3,6 @@ import { updateHorary } from "../services/horaryService";
 
 const HoraryEditModal = ({ horary, onClose, onUpdated }) => {
 
-    // 👇 Solo campos editables
     const [form, setForm] = useState({
         nameDocente: horary.nameDocente || "",
         nameCurso: horary.nameCurso || "",
@@ -50,6 +49,7 @@ const HoraryEditModal = ({ horary, onClose, onUpdated }) => {
                         name="nameDocente"
                         value={form.nameDocente}
                         onChange={handleChange}
+                        placeholder="Ej: Ana Perez Huamani"
                         className="w-full border p-2 rounded mt-1"
                     />
                 </div>
@@ -61,6 +61,7 @@ const HoraryEditModal = ({ horary, onClose, onUpdated }) => {
                         name="nameCurso"
                         value={form.nameCurso}
                         onChange={handleChange}
+                        placeholder="Ej: Excel avanzado"
                         className="w-full border p-2 rounded mt-1"
                     />
                 </div>
@@ -72,6 +73,7 @@ const HoraryEditModal = ({ horary, onClose, onUpdated }) => {
                         name="horario"
                         value={form.horario}
                         onChange={handleChange}
+                        placeholder="Ej: 8:00 - 10:00 pm"
                         className="w-full border p-2 rounded mt-1"
                     />
                 </div>
@@ -83,6 +85,7 @@ const HoraryEditModal = ({ horary, onClose, onUpdated }) => {
                         name="numSesion"
                         value={form.numSesion}
                         onChange={handleChange}
+                        placeholder="Ej: Cuarta sesión"
                         className="w-full border p-2 rounded mt-1"
                     />
                 </div>
