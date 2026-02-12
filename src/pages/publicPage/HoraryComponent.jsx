@@ -45,7 +45,7 @@ const HoraryComponent = () => {
     <div className="w-screen min-h-screen bg-slate-900 text-white flex flex-col">
 
       {/* HEADER */}
-      <div className="flex w-full items-center justify-center text-center py-3 border-b border-slate-700 gap-2">
+      <div className="flex w-full items-center justify-center text-center py-2 border-b border-slate-700 gap-2">
         <h1 className="text-2xl md:text-3xl font-extrabold tracking-wide">
           DISTRIBUCIÓN DE LAS AULAS
         </h1>
