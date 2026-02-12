@@ -2,7 +2,7 @@ const CardHorarioComponent = ({ aula, docente, curso, horario, sesion }) => {
   return (
     <div className="bg-white rounded-xl shadow-md border border-gray-200 flex flex-col w-full h-full">
       {/* HEADER */}
-      <div className="bg-gradient-to-r from-indigo-600 to-blue-500 text-center py-3 px-4 rounded-t-xl">
+      <div className="bg-gradient-to-r from-indigo-600 to-blue-500 text-center py-2 px-4 rounded-t-xl">
         <h2 className="text-base sm:text-lg md:text-xl xl:text-2xl font-bold text-white">
           Aula {aula}
         </h2>
