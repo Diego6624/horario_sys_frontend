@@ -3,10 +3,9 @@ const CardHorarioComponent = ({ aula, docente, curso, horario, sesion }) => {
         <div className="bg-white rounded-xl shadow-md border border-gray-200 flex flex-col w-full h-full">
             {/* HEADER */}
             <div className="bg-gradient-to-r from-indigo-600 to-blue-500 text-center py-3 px-4 rounded-t-xl">
-                <h2 className="text-sm sm:text-base md:text-lg font-bold text-white">
+                <h2 className="text-base sm:text-lg md:text-xl font-bold text-white">
                     Aula {aula}
                 </h2>
-
             </div>
 
             {/* BODY */}
@@ -29,9 +28,8 @@ const Info = ({ label, value }) => (
         <span className="text-gray-500 font-semibold uppercase tracking-wide text-xs sm:text-sm">
             {label}
         </span>
-        <span className="font-medium text-gray-800 text-xs sm:text-sm md:text-base">
+        <span className="font-medium text-gray-800 text-sm sm:text-base md:text-lg">
             {value}
         </span>
-
     </div>
 );
