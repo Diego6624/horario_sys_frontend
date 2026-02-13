@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
-    getHoraries,
+    getAllHoraries,
+    toggleHorary,
 } from "../../services/horaryService";
 
 import HoraryEditModal from "../../components/HoraryEditModal";
@@ -15,7 +16,7 @@ const HoraryList = () => {
         setLoading(true);
 
         try {
-            const data = await getHoraries();
+            const data = await getAllHoraries();
             setHoraries(data);
         } catch (error) {
             console.error(error);
@@ -28,6 +29,15 @@ const HoraryList = () => {
         fetchData();
     }, []);
 
+    // 👁️ Toggle mostrar / ocultar
+    const handleToggle = async (id) => {
+        try {
+            await toggleHorary(id);
+            fetchData(); // recargar lista
+        } catch (error) {
+            console.error("Error cambiando estado:", error);
+        }
+    };
 
     if (loading) return <LoaderComponent />;
 
@@ -46,7 +56,7 @@ const HoraryList = () => {
                 {horaries.map((h) => (
                     <div
                         key={h.id}
-                        className="bg-white rounded-xl shadow p-5 border hover:shadow-lg transition"
+                        className={`rounded-xl shadow p-5 border hover:shadow-lg transition${h.enabled? "bg-white" : "bg-gray-200 opacity-60"}`}
                     >
                         <h3 className="font-bold text-lg text-indigo-600 mb-2">
                             Aula {h.numLab}
@@ -57,14 +67,26 @@ const HoraryList = () => {
                         <p><b>Horario:</b> {h.horario || "—"}</p>
                         <p><b>Sesión:</b> {h.numSesion || "—"}</p>
 
-                        <div className="flex gap-2 mt-4">
+                        {/* BOTONES */}
+                        <div className="flex flex-col sm:flex-row gap-2 mt-4">
+
                             <button
                                 onClick={() => setSelected(h)}
-                                className="flex-1 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700"
+                                className="w-full sm:flex-1 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition"
                             >
                                 Editar
                             </button>
+
+                            <button
+                                onClick={() => handleToggle(h.id)}
+                                className={`w-full sm:flex-1 py-2 rounded-lg text-white transition
+                                    ${h.enabled ? "bg-gray-500 hover:bg-gray-600" : "bg-slate-500 hover:bg-slate-800"}`}
+                            >
+                                {h.enabled ? "Ocultar" : "Mostrar"}
+                            </button>
+
                         </div>
+
                     </div>
                 ))}
             </div>
