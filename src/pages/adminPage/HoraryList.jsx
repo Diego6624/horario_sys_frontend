@@ -80,7 +80,7 @@ const HoraryList = () => {
                             <button
                                 onClick={() => handleToggle(h.id)}
                                 className={`w-full sm:flex-1 py-2 rounded-lg text-white transition
-                                    ${h.enabled ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"}`}
+                                    ${h.enabled ? "bg-gray-500 hover:bg-gray-600" : "bg-slate-500 hover:bg-slate-800"}`}
                             >
                                 {h.enabled ? "Ocultar" : "Mostrar"}
                             </button>
