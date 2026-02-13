@@ -13,7 +13,6 @@ export const getHoraryByAula = async (aula) => {
   return await res.json();
 };
 
-
 export const updateHorary = async (aula, data) => {
   const res = await fetch(`${API}/aula/${aula}`, {
     method: "PUT",
@@ -25,4 +24,33 @@ export const updateHorary = async (aula, data) => {
   return await res.json();
 };
 
-export default { getHoraries, getHoraryByAula, updateHorary };
+// ===============================
+// 🛠️ ADMIN → TODOS
+// ===============================
+export const getAllHoraries = async () => {
+  const res = await fetch(`${API}/all`);
+  if (!res.ok) throw new Error("Error obteniendo horarios");
+  return await res.json();
+};
+
+
+// ===============================
+// 👁️ TOGGLE
+// ===============================
+export const toggleHorary = async (id) => {
+  const res = await fetch(`${API}/toggle/${id}`, {
+    method: "PUT",
+  });
+
+  if (!res.ok) throw new Error("Error cambiando estado");
+  return await res.json();
+};
+
+
+export default {
+  getHoraries,
+  getHoraryByAula,
+  updateHorary,
+  getAllHoraries,
+  toggleHorary,
+};
