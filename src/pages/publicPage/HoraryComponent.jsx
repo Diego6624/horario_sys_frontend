@@ -4,6 +4,7 @@ import {
   connectSocket,
   disconnectSocket,
 } from "../../services/socketService";
+import bg from "/public/image/bg_image.png";
 
 const API_URL =
   "https://horario-sys-backend.onrender.com/api/horaries";
@@ -42,7 +43,12 @@ const HoraryComponent = () => {
   }, []);
 
   return (
-    <div className="w-screen min-h-screen bg-slate-900 text-white flex flex-col">
+    <div
+      className="w-screen min-h-screen text-white flex flex-col bg-cover bg-center"
+      style={{
+        backgroundImage: `url(${bg})`,
+      }}
+    >
 
       {/* HEADER */}
       <div className="flex w-full items-center justify-center text-center py-2 border-b border-slate-700 gap-2">
@@ -68,7 +74,6 @@ const HoraryComponent = () => {
           />
         ))}
       </div>
-
     </div>
   );
 };
