@@ -4,7 +4,8 @@ import {
   connectSocket,
   disconnectSocket,
 } from "../../services/socketService";
-import bg from "/public/image/bg_image.png";
+import bg from "/image/bg_image.png";
+import { Circle } from "lucide-react";
 
 const API_URL =
   "https://horario-sys-backend.onrender.com/api/horaries";
@@ -51,14 +52,43 @@ const HoraryComponent = () => {
     >
 
       {/* HEADER */}
-      <div className="flex w-full items-center justify-center text-center py-2 border-b border-slate-700 gap-2">
-        <h1 className="text-2xl md:text-3xl font-extrabold tracking-wide">
-          DISTRIBUCIÓN DE LAS AULAS
-        </h1>
-        <p className="text-2xl md:text-3xl font-medium tracking-wide">-</p>
-        <p className="text-2xl md:text-3xl text-slate-300">
-          TURNO MAÑANA
-        </p>
+      <div className="relative flex w-full items-center justify-center text-center py-3 border-b border-slate-400">
+
+        {/* TÍTULO */}
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl md:text-3xl font-extrabold tracking-wide text-black">
+            DISTRIBUCIÓN DE AULAS
+          </h1>
+
+          <span className="text-2xl md:text-3xl font-bold text-blue-600">
+            - TURNO MAÑANA
+          </span>
+        </div>
+
+        {/* ESTADOS */}
+        <div className="absolute right-28 flex items-center gap-4 text-black font-medium">
+
+          <div className="flex items-center gap-2">
+            <Circle size={14} className="fill-green-500 text-green-500" />
+            Libre
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Circle size={14} className="fill-red-500 text-red-500" />
+            Ocupado
+          </div>
+
+        </div>
+
+        {/* LOGO DERECHA */}
+        <div className="absolute right-6 top-1/2 -translate-y-1/2">
+          <img
+            src="/image/logo_systematic.png"
+            alt="Systematic"
+            className="h-10 object-contain"
+          />
+        </div>
+
       </div>
 
       {/* CARDS */}
@@ -71,6 +101,7 @@ const HoraryComponent = () => {
             curso={h.nameCurso || "—"}
             horario={h.horario || "—"}
             sesion={h.numSesion || "—"}
+            estado={h.status?.nombre}
           />
         ))}
       </div>
