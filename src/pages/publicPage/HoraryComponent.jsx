@@ -52,41 +52,43 @@ const HoraryComponent = () => {
     >
 
       {/* HEADER */}
-      <div className="relative flex w-full items-center justify-center text-center py-3 border-b border-slate-400">
+      <div className="w-full grid grid-cols-3 items-center py-3 border-b border-slate-400 px-6">
 
-        {/* TÍTULO */}
-        <div className="flex items-center gap-2">
-          <h1 className="text-2xl md:text-3xl font-extrabold tracking-wide text-black">
+        {/* IZQUIERDA — LOGO */}
+        <div className="flex items-center">
+          <img
+            src="/image/logo_systematic.png"
+            alt="Systematic"
+            className="h-10 md:h-12 object-contain"
+          />
+        </div>
+
+        {/* CENTRO — TÍTULO */}
+        <div className="flex justify-center items-center text-center gap-2">
+
+          <h1 className="text-2xl md:text-3xl font-extrabold tracking-wide text-black whitespace-nowrap">
             DISTRIBUCIÓN DE AULAS
           </h1>
 
-          <span className="text-2xl md:text-3xl font-bold text-blue-600">
+          <span className="text-2xl md:text-3xl font-bold text-blue-600 whitespace-nowrap">
             - TURNO MAÑANA
           </span>
+
         </div>
 
-        {/* ESTADOS */}
-        <div className="absolute right-28 flex items-center gap-4 text-black font-medium">
+        {/* DERECHA — ESTADOS */}
+        <div className="flex justify-end items-center gap-6 text-black font-medium">
 
           <div className="flex items-center gap-2">
-            <Circle size={14} className="fill-green-500 text-green-500" />
+            <Circle size={16} className="fill-green-500 text-green-500" />
             Libre
           </div>
 
           <div className="flex items-center gap-2">
-            <Circle size={14} className="fill-red-500 text-red-500" />
+            <Circle size={16} className="fill-red-500 text-red-500" />
             Ocupado
           </div>
 
-        </div>
-
-        {/* LOGO DERECHA */}
-        <div className="absolute right-6 top-1/2 -translate-y-1/2">
-          <img
-            src="/image/logo_systematic.png"
-            alt="Systematic"
-            className="h-10 object-contain"
-          />
         </div>
 
       </div>

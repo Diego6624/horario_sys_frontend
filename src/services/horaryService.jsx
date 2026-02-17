@@ -46,11 +46,40 @@ export const toggleHorary = async (id) => {
   return await res.json();
 };
 
+export const getStatuses = async () => {
+  const res = await fetch(`${API}/status`);
+  if (!res.ok) throw new Error("Error obteniendo estados");
+  return await res.json();
+};
+
+// ===============================
+// 🔄 CAMBIAR ESTADO
+// ===============================
+export const changeStatus = async (horaryId, statusId) => {
+  const res = await fetch(
+    `${API}/${horaryId}/status`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        statusId: Number(statusId),
+      }),
+    }
+  );
+
+  if (!res.ok) throw new Error("Error cambiando estado");
+  return await res.json();
+};
 
 export default {
   getHoraries,
   getHoraryByAula,
   updateHorary,
   getAllHoraries,
+  getStatuses,
+  changeStatus,
   toggleHorary,
 };
+

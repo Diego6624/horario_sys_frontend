@@ -97,6 +97,5 @@ const Info = ({ icon, label, value }) => (
     <span className="font-medium text-gray-800 text-sm sm:text-base md:text-lg xl:text-xl">
       {value || "—"}
     </span>
-
   </div>
 );
