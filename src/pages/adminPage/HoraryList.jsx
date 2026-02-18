@@ -120,7 +120,7 @@ const HoraryList = () => {
                         <p><b>Sesión:</b> {h.numSesion || "—"}</p>
 
                         {/* ACCIONES */}
-                        <div className="flex flex-col sm:flex-row gap-2 mt-4">
+                        <div className="flex gap-2 mt-4">
 
                             {/* EDITAR */}
                             <button
@@ -130,25 +130,6 @@ const HoraryList = () => {
                                 Editar
                             </button>
 
-                            {/* SELECT ESTADO */}
-                            <select
-                                className="border rounded-lg px-2 py-2 w-full sm:w-auto"
-                                value={h.status?.id || ""}
-                                onChange={(e) =>
-                                    handleStatusChange(
-                                        h.id,
-                                        e.target.value
-                                    )
-                                }
-                            >
-                                <option value="">Estado</option>
-
-                                {statuses.map((st) => (
-                                    <option key={st.id} value={st.id}>
-                                        {st.name}
-                                    </option>
-                                ))}
-                            </select>
                         </div>
                     </div>
                 ))}

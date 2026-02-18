@@ -12,18 +12,19 @@ const CardHorarioComponent = ({
   curso,
   horario,
   sesion,
-  estado, // 👈 nuevo
+  estado,
 }) => {
 
-  const ocupado = estado === "OCUPADO";
+  const isOcupado =
+    estado?.toLowerCase() === "ocupado";
 
   return (
     <div
       className={`
         rounded-xl shadow-md flex flex-col w-full h-full
         border-2 transition
-        ${ocupado ? "border-red-400" : "border-green-500"}
-        ${!ocupado ? "bg-gray-100" : "bg-white"}
+        ${isOcupado ? "border-red-400" : "border-green-500"}
+        ${!isOcupado ? "bg-gray-100" : "bg-white"}
       `}
     >
 
@@ -39,7 +40,7 @@ const CardHorarioComponent = ({
           size={16}
           className={`
             absolute right-3 top-3
-            ${ocupado
+            ${isOcupado
               ? "fill-red-500 text-red-500"
               : "fill-green-500 text-green-500"}
           `}

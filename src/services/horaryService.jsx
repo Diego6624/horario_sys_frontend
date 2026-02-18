@@ -33,7 +33,6 @@ export const getAllHoraries = async () => {
   return await res.json();
 };
 
-
 // ===============================
 // 👁️ TOGGLE
 // ===============================
@@ -69,8 +68,18 @@ export const changeStatus = async (horaryId, statusId) => {
     }
   );
 
-  if (!res.ok) throw new Error("Error cambiando estado");
-  return await res.json();
+  if (!res.ok)
+    throw new Error("Error cambiando estado");
+
+  return res.json();
+};
+
+export const getTurn = async () => {
+  const res = await fetch(`${API}/current-shift`);
+
+  if (!res.ok) throw new Error("Error obteniendo turno actual");
+  
+  return await res.text();
 };
 
 export default {

@@ -6,6 +6,7 @@ import {
 } from "../../services/socketService";
 import bg from "/image/bg_image.png";
 import { Circle } from "lucide-react";
+import { getTurn } from "../../services/horaryService";
 
 const API_URL =
   "https://horario-sys-backend.onrender.com/api/horaries";
@@ -13,6 +14,19 @@ const API_URL =
 const HoraryComponent = () => {
 
   const [horarios, setHorarios] = useState([]);
+  const [turno, setTurno] = useState("");
+  // ===============================
+  // Turno automatico
+  // ===============================
+  useEffect(() => {
+    const cargarTurno = async () => {
+      const t = await getTurn();
+      setTurno(t);
+    };
+
+    cargarTurno();
+  }, []);
+
 
   // ===============================
   // 📡 Cargar horarios
@@ -71,7 +85,7 @@ const HoraryComponent = () => {
           </h1>
 
           <span className="text-2xl md:text-3xl font-bold text-blue-600 whitespace-nowrap">
-            - TURNO MAÑANA
+            - TURNO {turno}
           </span>
 
         </div>
@@ -103,7 +117,7 @@ const HoraryComponent = () => {
             curso={h.nameCurso || "—"}
             horario={h.horario || "—"}
             sesion={h.numSesion || "—"}
-            estado={h.status?.nombre}
+            estado={h.status?.name}
           />
         ))}
       </div>
