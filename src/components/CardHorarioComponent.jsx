@@ -49,7 +49,7 @@ const CardHorarioComponent = ({
       </div>
 
       {/* BODY */}
-      <div className="relative px-2 py-4 grid grid-cols-2 grid-rows-2 gap-6 flex-grow">
+      <div className="relative px-2 py-2 grid grid-cols-2 grid-rows-2 gap-5 flex-grow">
 
           {/* Linea vertical */}
         <div className="absolute left-1/2 top-4 bottom-4 w-px bg-black -translate-x-1/2" />
