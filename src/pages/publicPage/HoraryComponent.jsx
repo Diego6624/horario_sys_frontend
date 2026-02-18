@@ -43,7 +43,7 @@ const HoraryComponent = () => {
       style={{ backgroundImage: `url(${bg})` }}
     >
       {/* HEADER con Padding de Seguridad (Safe Zone para TV) */}
-      <div className="w-full flex flex-wrap justify-between items-center py-2 lg:py-4 px-12 border-b border-slate-300 bg-white/10 backdrop-blur-sm">
+      <div className="w-full flex flex-wrap justify-between items-center py-1.5 lg:py-4 px-12 border-b border-slate-300 bg-white/10 backdrop-blur-sm">
         
         {/* LOGO */}
         <div className="flex items-center">

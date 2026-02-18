@@ -29,7 +29,7 @@ const CardHorarioComponent = ({
     >
 
       {/* HEADER */}
-      <div className="relative text-center py-2 px-4 border-b border-black">
+      <div className="relative text-center py-1 lg:py-2 px-4 border-b border-black">
 
         <h2 className="text-base sm:text-lg md:text-xl xl:text-2xl font-bold text-black">
           Aula {aula}
@@ -49,7 +49,7 @@ const CardHorarioComponent = ({
       </div>
 
       {/* BODY */}
-      <div className="relative px-2 py-2 grid grid-cols-2 grid-rows-2 gap-5 flex-grow">
+      <div className="relative px-2 py-2 grid grid-cols-2 grid-rows-2 gap-4 flex-grow">
 
           {/* Linea vertical */}
         <div className="absolute left-1/2 top-4 bottom-4 w-px bg-black -translate-x-1/2" />
