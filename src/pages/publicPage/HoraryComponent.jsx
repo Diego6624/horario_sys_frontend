@@ -50,7 +50,7 @@ const HoraryComponent = () => {
           <img
             src="/image/logo_systematic.png"
             alt="Systematic"
-            className="h-12 md:h-12 object-contain"
+            className="h-5 md:h-12 object-contain"
           />
         </div>
 
