@@ -88,14 +88,14 @@ export default CardHorarioComponent;
 
 // Subcomponente Info
 const Info = ({ icon, label, value }) => (
-  <div className="flex flex-col gap-1">
+  <div className="flex flex-col gap-0.5">
 
     <div className="flex items-center gap-2 text-blue-600 font-semibold uppercase tracking-wide text-xs sm:text-sm md:text-md xl:text-lg">
       {icon}
       {label}
     </div>
 
-    <span className="font-medium text-gray-800 text-sm sm:text-base md:text-lg xl:text-xl">
+    <span className="font-medium text-gray-800 h-auto text-sm sm:text-base md:text-lg xl:text-xl">
       {value || "—"}
     </span>
   </div>
