@@ -1,36 +1,24 @@
 import { useEffect, useState } from "react";
 import CardHorarioComponent from "../../components/CardHorarioComponent";
-import {
-  connectSocket,
-  disconnectSocket,
-} from "../../services/socketService";
+import { connectSocket, disconnectSocket } from "../../services/socketService";
 import bg from "/image/bg_image.png";
 import { Circle } from "lucide-react";
 import { getTurn } from "../../services/horaryService";
 
-const API_URL =
-  "https://horario-sys-backend.onrender.com/api/horaries";
+const API_URL = "https://horario-sys-backend.onrender.com/api/horaries";
 
 const HoraryComponent = () => {
-
   const [horarios, setHorarios] = useState([]);
   const [turno, setTurno] = useState("");
-  // ===============================
-  // Turno automatico
-  // ===============================
+
   useEffect(() => {
     const cargarTurno = async () => {
       const t = await getTurn();
       setTurno(t);
     };
-
     cargarTurno();
   }, []);
 
-
-  // ===============================
-  // 📡 Cargar horarios
-  // ===============================
   const cargarHorarios = async () => {
     try {
       const res = await fetch(API_URL);
@@ -41,85 +29,69 @@ const HoraryComponent = () => {
     }
   };
 
-  // ===============================
-  // 🔌 Socket tiempo real
-  // ===============================
   useEffect(() => {
-
     cargarHorarios();
-
     connectSocket(() => {
-      console.log("📡 Cambio detectado");
       cargarHorarios();
     });
-
     return () => disconnectSocket();
-
   }, []);
 
   return (
     <div
-      className="w-screen min-h-screen text-white flex flex-col bg-cover bg-center"
-      style={{
-        backgroundImage: `url(${bg})`,
-      }}
+      className="w-screen min-h-screen text-white flex flex-col bg-cover bg-center overflow-hidden"
+      style={{ backgroundImage: `url(${bg})` }}
     >
-
-      {/* HEADER */}
-      <div className="w-full grid grid-cols-3 items-center py-3 border-b border-slate-400 px-6">
-
-        {/* IZQUIERDA — LOGO */}
+      {/* HEADER con Padding de Seguridad (Safe Zone para TV) */}
+      <div className="w-full flex flex-wrap justify-between items-center py-2 px-12 border-b border-slate-300 bg-white/10 backdrop-blur-sm">
+        
+        {/* LOGO */}
         <div className="flex items-center">
           <img
             src="/image/logo_systematic.png"
             alt="Systematic"
-            className="h-10 md:h-12 object-contain"
+            className="h-12 md:h-12 object-contain"
           />
         </div>
 
-        {/* CENTRO — TÍTULO */}
-        <div className="flex justify-center items-center text-center gap-2">
-
-          <h1 className="text-2xl md:text-3xl font-extrabold tracking-wide text-black whitespace-nowrap">
-            DISTRIBUCIÓN DE AULAS
+        {/* TÍTULO CENTRALIZADO */}
+        <div className="flex flex-col items-center">
+          <h1 className="text-3xl md:text-4xl font-black tracking-tighter text-black uppercase">
+            Distribución de Aulas
           </h1>
-
-          <span className="text-2xl md:text-3xl font-bold text-blue-600 whitespace-nowrap">
-            - TURNO {turno}
+          <span className="text-2xl md:text-3xl font-bold text-blue-700">
+            TURNO {turno}
           </span>
-
         </div>
 
-        {/* DERECHA — ESTADOS */}
-        <div className="flex justify-end items-center gap-6 text-black font-medium">
-
-          <div className="flex items-center gap-2">
-            <Circle size={16} className="fill-green-500 text-green-500" />
+        {/* LEYENDA (DERECHA) */}
+        <div className="flex flex-col text-black font-semibold text-md md:text-lg">
+          <div className="flex items-center gap-3">
+            <Circle size={20} className="fill-green-500 text-green-500" />
             Libre
           </div>
-
-          <div className="flex items-center gap-2">
-            <Circle size={16} className="fill-red-500 text-red-500" />
+          <div className="flex items-center gap-3">
+            <Circle size={20} className="fill-red-500 text-red-500" />
             Ocupado
           </div>
-
         </div>
-
       </div>
 
-      {/* CARDS */}
-      <div className="flex-grow grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4 p-4">
-        {horarios.map((h) => (
-          <CardHorarioComponent
-            key={h.id}
-            aula={h.numLab}
-            docente={h.nameDocente || "—"}
-            curso={h.nameCurso || "—"}
-            horario={h.horario || "—"}
-            sesion={h.numSesion || "—"}
-            estado={h.status?.name}
-          />
-        ))}
+      {/* CONTENEDOR DE CARDS - Ajustado para evitar recortes en bordes de TV */}
+      <div className="flex-grow p-5 w-full max-w-screen-2xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {horarios.map((h) => (
+            <CardHorarioComponent
+              key={h.id}
+              aula={h.numLab}
+              docente={h.nameDocente || "—"}
+              curso={h.nameCurso || "—"}
+              horario={h.horario || "—"}
+              sesion={h.numSesion || "—"}
+              estado={h.status?.name}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
