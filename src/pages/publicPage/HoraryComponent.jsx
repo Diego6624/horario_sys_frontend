@@ -56,10 +56,10 @@ const HoraryComponent = () => {
 
         {/* TÍTULO CENTRALIZADO */}
         <div className="flex flex-col items-center">
-          <h1 className="text-3xl md:text-4xl font-black tracking-tighter text-black uppercase">
+          <h1 className="text-xl md:text-4xl font-black tracking-tighter text-black uppercase">
             Distribución de Aulas
           </h1>
-          <span className="text-2xl md:text-3xl font-bold text-blue-700">
+          <span className="text-xl md:text-3xl font-bold text-blue-700">
             TURNO {turno}
           </span>
         </div>
@@ -79,7 +79,7 @@ const HoraryComponent = () => {
 
       {/* CONTENEDOR DE CARDS - Ajustado para evitar recortes en bordes de TV */}
       <div className="flex-grow p-5 w-full max-w-screen-2xl mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-2 lg:gap-6">
           {horarios.map((h) => (
             <CardHorarioComponent
               key={h.id}
