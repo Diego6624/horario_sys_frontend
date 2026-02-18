@@ -78,7 +78,7 @@ const HoraryComponent = () => {
       </div>
 
       {/* CONTENEDOR DE CARDS - Ajustado para evitar recortes en bordes de TV */}
-      <div className="flex-grow p-5 w-full max-w-screen-2xl mx-auto">
+      <div className="grow p-1.5 lg:p-5 w-full">
         <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-2 lg:gap-6">
           {horarios.map((h) => (
             <CardHorarioComponent
