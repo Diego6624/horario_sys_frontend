@@ -43,35 +43,35 @@ const HoraryComponent = () => {
       style={{ backgroundImage: `url(${bg})` }}
     >
       {/* HEADER con Padding de Seguridad (Safe Zone para TV) */}
-      <div className="w-full flex flex-wrap justify-between items-center py-2 px-12 border-b border-slate-300 bg-white/10 backdrop-blur-sm">
+      <div className="w-full flex flex-wrap justify-between items-center py-2 lg:py-4 px-12 border-b border-slate-300 bg-white/10 backdrop-blur-sm">
         
         {/* LOGO */}
         <div className="flex items-center">
           <img
             src="/image/logo_systematic.png"
             alt="Systematic"
-            className="h-5 md:h-12 object-contain"
+            className="h-6 md:h-12 lg:h-15 object-contain"
           />
         </div>
 
         {/* TÍTULO CENTRALIZADO */}
-        <div className="flex flex-col items-center">
-          <h1 className="text-xl md:text-4xl font-black tracking-tighter text-black uppercase">
+        <div className="flex items-center gap-2 text-center">
+          <h1 className="text-xl md:text-2xl lg:text-4xl font-bold tracking-tighter text-black uppercase">
             Distribución de Aulas
           </h1>
-          <span className="text-xl md:text-3xl font-bold text-blue-700">
-            TURNO {turno}
+          <span className="text-xl md:text-2xl lg:text-4xl font-bold text-blue-700">
+            - TURNO {turno}
           </span>
         </div>
 
         {/* LEYENDA (DERECHA) */}
-        <div className="flex flex-col text-black font-semibold text-md md:text-lg">
+        <div className="flex flex-col text-black font-semibold text-md md:text-md lg:text-lg">
           <div className="flex items-center gap-3">
-            <Circle size={20} className="fill-green-500 text-green-500" />
+            <Circle size={15} className="fill-green-500 text-green-500" />
             Libre
           </div>
           <div className="flex items-center gap-3">
-            <Circle size={20} className="fill-red-500 text-red-500" />
+            <Circle size={15} className="fill-red-500 text-red-500" />
             Ocupado
           </div>
         </div>
