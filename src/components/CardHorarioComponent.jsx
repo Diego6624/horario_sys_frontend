@@ -1,34 +1,119 @@
-const CardHorarioComponent = ({ aula, docente, curso, horario, sesion }) => {
-    return (
-        <div className="bg-white rounded-xl shadow-md border border-gray-200 flex flex-col w-full h-full">
-            {/* HEADER */}
-            <div className="bg-gradient-to-r from-indigo-600 to-blue-500 text-center py-2 px-4 rounded-t-xl">
-                <h2 className="text-base sm:text-lg md:text-xl xl:text-2xl font-bold text-white">
-                    Aula {aula}
-                </h2>
-            </div>
+import {
+  User,
+  BookOpen,
+  Clock,
+  CalendarDays,
+} from "lucide-react";
 
-            {/* BODY */}
-            <div className="p-2 grid grid-cols-2 gap-4 flex-grow">
-                <Info label="Docente" value={docente} />
-                <Info label="Curso" value={curso} />
-                <Info label="Horario" value={horario} />
-                <Info label="Sesión" value={sesion} />
-            </div>
+const CardHorarioComponent = ({
+  aula,
+  docente,
+  curso,
+  horario,
+  sesion,
+  estado,
+}) => {
+
+  const isOcupado =
+    estado?.toLowerCase() === "ocupado";
+
+  return (
+    <div
+      className={`
+        rounded-xl shadow-md flex flex-col w-full h-full
+        border-2 transition
+        ${isOcupado ? "border-red-400" : "border-green-500"}
+        ${!isOcupado ? "bg-gray-100" : "bg-white"}
+      `}
+    >
+
+      {/* HEADER */}
+      <div className="relative text-center py-1 lg:py-2 px-4 border-b border-black">
+
+        <h2 className="text-base sm:text-lg md:text-xl xl:text-2xl font-bold text-black">
+          Aula {aula}
+        </h2>
+
+        {/* 🔘 ESTADO ANIMADO */}
+        <div className="absolute right-3 top-3 flex items-center justify-center">
+
+          <div className="relative flex items-center justify-center">
+
+            {/* Aura / Glow */}
+            <span
+              className={`
+                absolute inline-flex h-6 w-6 rounded-full
+                ${isOcupado ? "bg-red-400 animate-ping"  : ""}
+                opacity-60
+              `}
+            />
+
+            {/* Punto principal */}
+            <span
+              className={`
+                relative inline-flex h-4 w-4 rounded-full
+                ${isOcupado ? "bg-red-500" : "bg-green-500"}
+              `}
+            />
+
+          </div>
+
         </div>
-    );
+
+      </div>
+
+      {/* BODY */}
+      <div className="relative px-2 py-2 lg:px-6 lg:py-6 grid grid-cols-2 grid-rows-2 gap-4 lg:gap-10 flex-grow">
+
+        {/* Línea vertical */}
+        <div className="absolute left-1/2 top-4 bottom-4 w-px bg-black -translate-x-1/2" />
+        
+        <Info
+          icon={<User size={22} />}
+          label="Docente"
+          value={docente}
+        />
+
+        <Info
+          icon={<BookOpen size={22} />}
+          label="Curso"
+          value={curso}
+        />
+
+        <Info
+          icon={<Clock size={22} />}
+          label="Horario"
+          value={horario}
+        />
+
+        <Info
+          icon={<CalendarDays size={22} />}
+          label="Sesión"
+          value={sesion}
+        />
+
+      </div>
+
+    </div>
+  );
 };
 
 export default CardHorarioComponent;
 
+
+// ===============================
 // Subcomponente Info
-const Info = ({ label, value }) => (
-    <div className="flex flex-col">
-        <span className="text-gray-500 font-semibold uppercase tracking-wide text-xs sm:text-sm">
-            {label}
-        </span>
-        <span className="font-medium text-gray-800 text-sm sm:text-base md:text-lg xl:text-xl">
-            {value}
-        </span>
+// ===============================
+const Info = ({ icon, label, value }) => (
+  <div className="flex flex-col gap-0.5">
+
+    <div className="flex items-center gap-2 text-blue-600 font-semibold uppercase tracking-wide text-xs sm:text-sm md:text-md xl:text-lg">
+      {icon}
+      {label}
     </div>
+
+    <span className="font-medium text-gray-800 h-auto text-sm sm:text-base md:text-lg xl:text-xl">
+      {value || "—"}
+    </span>
+  </div>
 );
