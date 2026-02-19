@@ -43,7 +43,7 @@ const HoraryComponent = () => {
       style={{ backgroundImage: `url(${bg})` }}
     >
       {/* HEADER DINÁMICO */}
-      <div className="w-full flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 sm:py-4 px-6 sm:px-12 border-b border-slate-300 bg-white/10 backdrop-blur-sm gap-4 sm:gap-0">
+      <div className="w-full flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 sm:py-2 px-6 sm:px-12 border-b border-slate-300 bg-white/10 backdrop-blur-sm gap-4 sm:gap-0">
         
         {/* BLOQUE SUPERIOR: Logo (Izquierda) y Turno (Derecha en mobile) */}
         <div className="flex justify-between items-center w-full sm:w-auto">
@@ -63,10 +63,10 @@ const HoraryComponent = () => {
 
         {/* BLOQUE CENTRAL: Título y Turno (Solo visible de SM para arriba) */}
         <div className="hidden sm:flex items-center gap-2 text-center">
-          <h1 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold tracking-tighter text-black uppercase">
+          <h1 className="text-xl md:text-2xl lg:text-4xl xl:text-4xl font-bold tracking-tighter text-black uppercase">
             Distribución de Aulas
           </h1>
-          <span className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-blue-700 uppercase">
+          <span className="text-xl md:text-2xl lg:text-4xl xl:text-4xl font-bold text-blue-700 uppercase">
             TURNO {turno}
           </span>
         </div>
