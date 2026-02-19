@@ -39,7 +39,7 @@ const HoraryComponent = () => {
 
   return (
     <div
-      className="w-screen min-h-screen text-white flex flex-col bg-cover bg-center overflow-hidden"
+      className="w-screen min-h-screen lg:h-full lg:w-full text-white flex flex-col bg-cover bg-center overflow-hidden"
       style={{ backgroundImage: `url(${bg})` }}
     >
       {/* HEADER con Padding de Seguridad (Safe Zone para TV) */}
@@ -55,7 +55,7 @@ const HoraryComponent = () => {
         </div>
 
         {/* TÍTULO CENTRALIZADO */}
-        <div className="flex items-center gap-2 text-center">
+        <div className="flex items-center gap-3 text-center">
           <h1 className="text-xl md:text-2xl lg:text-4xl font-bold tracking-tighter text-black uppercase">
             Distribución de Aulas
           </h1>
@@ -79,7 +79,7 @@ const HoraryComponent = () => {
 
       {/* CONTENEDOR DE CARDS - Ajustado para evitar recortes en bordes de TV */}
       <div className="grow p-1.5 lg:p-5 w-full">
-        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-2 lg:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-2 lg:gap-4 w-full h-full">
           {horarios.map((h) => (
             <CardHorarioComponent
               key={h.id}

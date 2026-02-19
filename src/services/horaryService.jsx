@@ -82,6 +82,8 @@ export const getTurn = async () => {
   return await res.text();
 };
 
+export const connecHealth = `${API}/ping`
+
 export default {
   getHoraries,
   getHoraryByAula,

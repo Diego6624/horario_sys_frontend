@@ -3,7 +3,6 @@ import {
   BookOpen,
   Clock,
   CalendarDays,
-  Circle,
 } from "lucide-react";
 
 const CardHorarioComponent = ({
@@ -35,23 +34,38 @@ const CardHorarioComponent = ({
           Aula {aula}
         </h2>
 
-        {/* PUNTO ESTADO */}
-        <Circle
-          size={16}
-          className={`
-            absolute right-3 top-3
-            ${isOcupado
-              ? "fill-red-500 text-red-500"
-              : "fill-green-500 text-green-500"}
-          `}
-        />
+        {/* 🔘 ESTADO ANIMADO */}
+        <div className="absolute right-3 top-3 flex items-center justify-center">
+
+          <div className="relative flex items-center justify-center">
+
+            {/* Aura / Glow */}
+            <span
+              className={`
+                absolute inline-flex h-6 w-6 rounded-full
+                ${isOcupado ? "bg-red-400 animate-ping"  : ""}
+                opacity-60
+              `}
+            />
+
+            {/* Punto principal */}
+            <span
+              className={`
+                relative inline-flex h-4 w-4 rounded-full
+                ${isOcupado ? "bg-red-500" : "bg-green-500"}
+              `}
+            />
+
+          </div>
+
+        </div>
 
       </div>
 
       {/* BODY */}
-      <div className="relative px-2 py-2 grid grid-cols-2 grid-rows-2 gap-4 flex-grow">
+      <div className="relative px-2 py-2 lg:px-6 lg:py-6 grid grid-cols-2 grid-rows-2 gap-4 lg:gap-10 flex-grow">
 
-          {/* Linea vertical */}
+        {/* Línea vertical */}
         <div className="absolute left-1/2 top-4 bottom-4 w-px bg-black -translate-x-1/2" />
         
         <Info
@@ -86,7 +100,10 @@ const CardHorarioComponent = ({
 
 export default CardHorarioComponent;
 
+
+// ===============================
 // Subcomponente Info
+// ===============================
 const Info = ({ icon, label, value }) => (
   <div className="flex flex-col gap-0.5">
 
