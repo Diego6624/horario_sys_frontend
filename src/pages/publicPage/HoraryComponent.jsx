@@ -43,7 +43,7 @@ const HoraryComponent = () => {
       style={{ backgroundImage: `url(${bg})` }}
     >
       {/* HEADER DINÁMICO */}
-      <div className="w-full flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 sm:py-2 px-6 sm:px-12 border-b border-slate-300 bg-white/10 backdrop-blur-sm gap-4 sm:gap-0">
+      <div className="w-full flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 sm:py-1.5 px-6 sm:px-12 border-b border-slate-300 bg-white/10 backdrop-blur-sm gap-4 sm:gap-0">
         
         {/* BLOQUE SUPERIOR: Logo (Izquierda) y Turno (Derecha en mobile) */}
         <div className="flex justify-between items-center w-full sm:w-auto">
