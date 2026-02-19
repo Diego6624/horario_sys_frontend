@@ -43,8 +43,8 @@ const HoraryComponent = () => {
       style={{ backgroundImage: `url(${bg})` }}
     >
       {/* HEADER DINÁMICO */}
-      <div className="w-full flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 sm:py-1.5 px-6 sm:px-12 border-b border-slate-300 bg-white/10 backdrop-blur-sm gap-4 sm:gap-0">
-        
+      <div className="w-full flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 sm:py-1.5 px-6 sm:px-12 border-b border-slate-300 bg-white/10 backdrop-blur-sm gap-2 sm:gap-0">
+
         {/* BLOQUE SUPERIOR: Logo (Izquierda) y Turno (Derecha en mobile) */}
         <div className="flex justify-between items-center w-full sm:w-auto">
           <div className="flex items-center">
@@ -54,7 +54,7 @@ const HoraryComponent = () => {
               className="h-8 md:h-12 lg:h-15 object-contain"
             />
           </div>
-          
+
           {/* Turno exclusivo para Mobile (Oculto en SM para arriba) */}
           <span className="sm:hidden text-lg font-extrabold text-blue-700 uppercase">
             TURNO {turno}
@@ -72,15 +72,28 @@ const HoraryComponent = () => {
         </div>
 
         {/* LEYENDA / ESTADOS: Debajo en mobile, a la derecha en SM+ */}
-        <div className="flex flex-row sm:flex-col justify-center sm:justify-end gap-6 sm:gap-1 text-black font-semibold text-sm md:text-md lg:text-lg">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-row sm:flex-col justify-center sm:justify-end gap-6 sm:gap-1 text-black font-semibold text-sm sm:text-md lg:text-lg">
+
+          {/* Versión MOBILE: Size 12 */}
+          <div className="sm:hidden flex items-center gap-2">
+            <Circle size={12} className="fill-green-500 text-green-500" />
+            <span>Libre</span>
+          </div>
+          <div className="sm:hidden flex items-center gap-2">
+            <Circle size={12} className="fill-red-500 text-red-500" />
+            <span>Ocupado</span>
+          </div>
+
+          {/* Versión SM en adelante: Size 15 */}
+          <div className="hidden sm:flex items-center gap-2">
             <Circle size={15} className="fill-green-500 text-green-500" />
             <span>Libre</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="hidden sm:flex items-center gap-2">
             <Circle size={15} className="fill-red-500 text-red-500" />
             <span>Ocupado</span>
           </div>
+
         </div>
       </div>
 
