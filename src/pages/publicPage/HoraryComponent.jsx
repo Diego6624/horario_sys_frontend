@@ -5,7 +5,7 @@ import bg from "/image/bg_image.png";
 import { Circle } from "lucide-react";
 import { getTurn } from "../../services/horaryService";
 
-const API_URL = "https://horario-sys-backend.onrender.com/api/horaries";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const HoraryComponent = () => {
   const [horarios, setHorarios] = useState([]);

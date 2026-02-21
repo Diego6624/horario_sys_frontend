@@ -9,7 +9,7 @@ export const connectSocket = (onMessage) => {
 
   stompClient = new Client({
     brokerURL:
-      "wss://horario-sys-backend.onrender.com/ws-horarios",
+      import.meta.env.VITE_SOCKET_URL,
 
     reconnectDelay: 5000,
     debug: (str) => console.log(str),

@@ -21,7 +21,7 @@ const LoginComponent = () => {
 
     try {
       const res = await fetch(
-        "https://horario-sys-backend.onrender.com/api/auth/login",
+        `${import.meta.env.VITE_AUTH_URL}/login`,
         {
           method: "POST",
           headers: {

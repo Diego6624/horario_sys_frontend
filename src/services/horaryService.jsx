@@ -1,5 +1,4 @@
-const API =
-  "https://horario-sys-backend.onrender.com/api/horaries";
+const API = import.meta.env.VITE_API_URL;
 
 export const getHoraries = async () => {
   const res = await fetch(API);
