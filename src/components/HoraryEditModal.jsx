@@ -7,6 +7,7 @@ import {
 const HoraryEditModal = ({ horary, onClose, onUpdated }) => {
 
   const [statuses, setStatuses] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
     nameDocente: horary.nameDocente || "",
@@ -47,28 +48,27 @@ const HoraryEditModal = ({ horary, onClose, onUpdated }) => {
   // ===============================
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
-
       const payload = {
         nameDocente: form.nameDocente,
         nameCurso: form.nameCurso,
         horario: form.horario,
         numSesion: form.numSesion,
-        status: {
-          id: Number(form.statusId)
-        }
+        status: { id: Number(form.statusId) }
       };
 
       await updateHorary(horary.numLab, payload);
-
       await onUpdated();
       onClose();
-
     } catch (err) {
       console.error("Error actualizando:", err);
+    } finally {
+      setLoading(false);
     }
   };
+
 
   return (
     <div className="fixed inset-0 bg-black/40 flex justify-center items-center">
@@ -150,13 +150,6 @@ const HoraryEditModal = ({ horary, onClose, onUpdated }) => {
         <div className="flex justify-end gap-2 pt-2">
 
           <button
-            type="submit"
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded"
-          >
-            Actualizar
-          </button>
-
-          <button
             type="button"
             onClick={onClose}
             className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded"
@@ -164,6 +157,17 @@ const HoraryEditModal = ({ horary, onClose, onUpdated }) => {
             Cancelar
           </button>
 
+          <button
+            type="submit"
+            disabled={loading}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded flex items-center justify-center"
+          >
+            {loading ? (
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+            ) : (
+              "Actualizar"
+            )}
+          </button>
         </div>
       </form>
     </div>

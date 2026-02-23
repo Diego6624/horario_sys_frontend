@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 const LoginComponent = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
     username: "",
@@ -18,35 +19,31 @@ const LoginComponent = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true); // 👈 activa el loader
 
     try {
-      const res = await fetch(
-        `${import.meta.env.VITE_AUTH_URL}/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(form),
-        }
-      );
+      const res = await fetch(`${import.meta.env.VITE_AUTH_URL}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
 
       if (!res.ok) {
         alert("Credenciales incorrectas");
+        setLoading(false); // 👈 apaga el loader si falla
         return;
       }
 
       const data = await res.json();
-
-      // ✅ Guardar usuario
       localStorage.setItem("user", JSON.stringify(data));
-
       navigate("/admin");
-
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false); // 👈 siempre apagar al terminar
     }
   };
+
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600">
@@ -89,10 +86,16 @@ const LoginComponent = () => {
 
           <button
             type="submit"
-            className="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition duration-300"
+            disabled={loading}
+            className="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition duration-300 flex justify-center items-center"
           >
-            Ingresar
+            {loading ? (
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+            ) : (
+              "Ingresar"
+            )}
           </button>
+
         </form>
 
         {/* Footer */}

@@ -60,20 +60,6 @@ const HoraryList = () => {
         }
     };
 
-    // ===============================
-    // 🔄 Cambiar estado
-    // ===============================
-    const handleStatusChange = async (horaryId, statusId) => {
-        if (!statusId) return;
-
-        try {
-            await changeStatus(horaryId, statusId);
-            fetchData();
-        } catch (error) {
-            console.error("Error cambiando estado:", error);
-        }
-    };
-
     if (loading) return <LoaderComponent />;
 
     return (

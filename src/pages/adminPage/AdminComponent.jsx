@@ -9,6 +9,9 @@ const AdminComponent = () => {
     navigate("/");
   };
 
+  // DEBUG: Verificar variables de entorno
+  // console.log(import.meta.env.MODE); 
+  // console.log(import.meta.env.VITE_API_URL);
 
   return (
     <div className="min-h-screen bg-gray-100">
