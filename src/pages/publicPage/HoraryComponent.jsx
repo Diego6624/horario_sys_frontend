@@ -100,6 +100,8 @@ const HoraryComponent = () => {
       <div className="grow p-1.5 lg:p-5 w-full">
         {loading ? (
           <LoaderComponent />
+        ) : horarios.length === 0 ? (
+          <p className="text-center text-lg text-blue-500 font-semibold mt-10"> No se han encontrado aulas. </p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-2 lg:gap-4 w-full h-full">
             {horarios.map((h) => (

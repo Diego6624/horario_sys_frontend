@@ -2,12 +2,11 @@ import { useEffect, useState } from "react";
 import {
     getAllHoraries,
     toggleHorary,
-    changeStatus,
     getStatuses,
 } from "../../services/horaryService";
-
 import HoraryEditModal from "../../components/HoraryEditModal";
 import LoaderComponent from "../../components/LoaderComponent";
+import { Calendar, User, BookOpen, Clock, List, Edit } from "lucide-react";
 
 const HoraryList = () => {
     const [horaries, setHoraries] = useState([]);
@@ -15,12 +14,8 @@ const HoraryList = () => {
     const [selected, setSelected] = useState(null);
     const [statuses, setStatuses] = useState([]);
 
-    // ===============================
-    // 📦 Cargar horarios
-    // ===============================
     const fetchData = async () => {
         setLoading(true);
-
         try {
             const data = await getAllHoraries();
             setHoraries(data);
@@ -31,9 +26,6 @@ const HoraryList = () => {
         }
     };
 
-    // ===============================
-    // 📦 Cargar estados
-    // ===============================
     const fetchStatuses = async () => {
         try {
             const data = await getStatuses();
@@ -48,9 +40,6 @@ const HoraryList = () => {
         fetchStatuses();
     }, []);
 
-    // ===============================
-    // 👁️ Toggle mostrar / ocultar
-    // ===============================
     const handleToggle = async (id) => {
         try {
             await toggleHorary(id);
@@ -66,7 +55,11 @@ const HoraryList = () => {
         <>
             {/* HEADER */}
             <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-700">
+                <h2
+                    className="text-2xl font-bold flex items-center gap-2"
+                    style={{ color: "rgb(43,57,143)" }}
+                >
+                    <Calendar size={26} style={{ color: "rgb(47,106,174)" }} />
                     Gestión de Horarios
                 </h2>
             </div>
@@ -76,21 +69,18 @@ const HoraryList = () => {
                 {horaries.map((h) => (
                     <div
                         key={h.id}
-                        className="rounded-xl shadow p-5 border bg-white hover:shadow-lg transition"
+                        className="rounded-xl shadow-lg border bg-white hover:shadow-xl transition overflow-hidden"
+                        style={{ borderLeft: "6px solid rgb(43,57,143)" }}
                     >
                         {/* HEADER */}
-                        <div className="flex justify-between items-center mb-3">
-                            <h3 className="font-bold text-lg text-indigo-600">
+                        <div className="flex justify-between items-center px-4 py-3">
+                            <h3 className="font-bold text-lg" style={{ color: "rgb(47,106,174)" }}>
                                 Aula {h.numLab}
                             </h3>
-
-                            {/* BADGE ESTADO */}
                             <span
-                                className={`px-3 py-1 text-xs rounded-full font-semibold text-white
-                                    ${
-                                        h.status?.name === "Disponible"
-                                            ? "bg-green-500"
-                                            : h.status?.name === "Ocupado"
+                                className={`px-3 py-1 text-xs rounded-full font-semibold text-white shadow-sm ${h.status?.name === "Disponible"
+                                        ? "bg-green-500"
+                                        : h.status?.name === "Ocupado"
                                             ? "bg-red-500"
                                             : "bg-gray-400"
                                     }`}
@@ -100,22 +90,34 @@ const HoraryList = () => {
                         </div>
 
                         {/* INFO */}
-                        <p><b>Docente:</b> {h.nameDocente || "—"}</p>
-                        <p><b>Curso:</b> {h.nameCurso || "—"}</p>
-                        <p><b>Horario:</b> {h.horario || "—"}</p>
-                        <p><b>Sesión:</b> {h.numSesion || "—"}</p>
+                        <div className="p-4 space-y-2 text-gray-700">
+                            <p className="flex items-center gap-2">
+                                <User size={18} style={{ color: "rgb(43,57,143)" }} />
+                                <span><b>Docente:</b> {h.nameDocente || "—"}</span>
+                            </p>
+                            <p className="flex items-center gap-2">
+                                <BookOpen size={18} style={{ color: "rgb(43,57,143)" }} />
+                                <span><b>Curso:</b> {h.nameCurso || "—"}</span>
+                            </p>
+                            <p className="flex items-center gap-2">
+                                <Clock size={18} style={{ color: "rgb(43,57,143)" }} />
+                                <span><b>Horario:</b> {h.horario || "—"}</span>
+                            </p>
+                            <p className="flex items-center gap-2">
+                                <List size={18} style={{ color: "rgb(43,57,143)" }} />
+                                <span><b>Sesión:</b> {h.numSesion || "—"}</span>
+                            </p>
+                        </div>
 
                         {/* ACCIONES */}
-                        <div className="flex gap-2 mt-4">
-
-                            {/* EDITAR */}
+                        <div className="px-4 pb-4">
                             <button
                                 onClick={() => setSelected(h)}
-                                className="w-full sm:flex-1 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition"
+                                className="w-full bg-[rgb(43,57,143)] text-white py-2 rounded-lg hover:bg-[rgb(47,106,174)] transition flex items-center justify-center gap-2 font-semibold shadow-md cursor-pointer"
                             >
+                                <Edit size={18} />
                                 Editar
                             </button>
-
                         </div>
                     </div>
                 ))}

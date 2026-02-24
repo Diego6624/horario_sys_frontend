@@ -1,11 +1,8 @@
 import { useEffect, useState } from "react";
-import {
-  updateHorary,
-  getStatuses
-} from "../services/horaryService";
+import { updateHorary, getStatuses } from "../services/horaryService";
+import { Edit3, User, BookOpen, Clock, List, CheckCircle, XCircle } from "lucide-react";
 
 const HoraryEditModal = ({ horary, onClose, onUpdated }) => {
-
   const [statuses, setStatuses] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -17,9 +14,6 @@ const HoraryEditModal = ({ horary, onClose, onUpdated }) => {
     statusId: horary.status?.id || ""
   });
 
-  // ===============================
-  // 📦 Cargar estados
-  // ===============================
   useEffect(() => {
     const fetchStatuses = async () => {
       try {
@@ -29,13 +23,9 @@ const HoraryEditModal = ({ horary, onClose, onUpdated }) => {
         console.error(err);
       }
     };
-
     fetchStatuses();
   }, []);
 
-  // ===============================
-  // ✏️ Cambios form
-  // ===============================
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -43,9 +33,6 @@ const HoraryEditModal = ({ horary, onClose, onUpdated }) => {
     });
   };
 
-  // ===============================
-  // 💾 Submit
-  // ===============================
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -69,22 +56,23 @@ const HoraryEditModal = ({ horary, onClose, onUpdated }) => {
     }
   };
 
-
   return (
     <div className="fixed inset-0 bg-black/40 flex justify-center items-center">
-
       <form
         onSubmit={handleSubmit}
         className="bg-white p-6 rounded-xl w-96 space-y-4 shadow-xl"
       >
-
-        <h2 className="text-xl font-bold text-center">
+        {/* Título con icono */}
+        <h2 className="text-xl font-bold text-center flex items-center justify-center gap-2" style={{ color: "rgb(43,57,143)" }}>
+          <Edit3 size={22} style={{ color: "rgb(47,106,174)" }} />
           Editar Aula {horary.numLab}
         </h2>
 
         {/* DOCENTE */}
         <div>
-          <label className="text-sm font-semibold">Docente</label>
+          <label className="text-sm font-semibold flex items-center gap-1">
+            <User size={16} style={{ color: "rgb(43,57,143)" }} /> Docente
+          </label>
           <input
             name="nameDocente"
             value={form.nameDocente}
@@ -95,7 +83,9 @@ const HoraryEditModal = ({ horary, onClose, onUpdated }) => {
 
         {/* CURSO */}
         <div>
-          <label className="text-sm font-semibold">Curso</label>
+          <label className="text-sm font-semibold flex items-center gap-1">
+            <BookOpen size={16} style={{ color: "rgb(43,57,143)" }} /> Curso
+          </label>
           <input
             name="nameCurso"
             value={form.nameCurso}
@@ -106,7 +96,9 @@ const HoraryEditModal = ({ horary, onClose, onUpdated }) => {
 
         {/* HORARIO */}
         <div>
-          <label className="text-sm font-semibold">Horario</label>
+          <label className="text-sm font-semibold flex items-center gap-1">
+            <Clock size={16} style={{ color: "rgb(43,57,143)" }} /> Horario
+          </label>
           <input
             name="horario"
             value={form.horario}
@@ -115,9 +107,11 @@ const HoraryEditModal = ({ horary, onClose, onUpdated }) => {
           />
         </div>
 
-        {/* SESION */}
+        {/* SESIÓN */}
         <div>
-          <label className="text-sm font-semibold">Sesión</label>
+          <label className="text-sm font-semibold flex items-center gap-1">
+            <List size={16} style={{ color: "rgb(43,57,143)" }} /> Sesión
+          </label>
           <input
             name="numSesion"
             value={form.numSesion}
@@ -126,46 +120,44 @@ const HoraryEditModal = ({ horary, onClose, onUpdated }) => {
           />
         </div>
 
-        {/* ESTADO 🔥 */}
+        {/* ESTADO */}
         <div>
           <label className="text-sm font-semibold">Estado</label>
-
           <select
             name="statusId"
             value={form.statusId}
             onChange={handleChange}
             className="w-full border p-2 rounded mt-1"
           >
-
             {statuses.map((st) => (
               <option key={st.id} value={st.id}>
                 {st.name}
               </option>
             ))}
-
           </select>
         </div>
 
         {/* BOTONES */}
         <div className="flex justify-end gap-2 pt-2">
-
           <button
             type="button"
             onClick={onClose}
-            className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded"
+            className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded flex items-center gap-2 cursor-pointer"
           >
-            Cancelar
+            <XCircle size={18} /> Cancelar
           </button>
 
           <button
             type="submit"
             disabled={loading}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded flex items-center justify-center"
+            className="bg-[rgb(43,57,143)] hover:bg-[rgb(47,106,174)] text-white px-4 py-2 rounded flex items-center justify-center gap-2 cursor-pointer"
           >
             {loading ? (
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
             ) : (
-              "Actualizar"
+              <>
+                <CheckCircle size={18} /> Actualizar
+              </>
             )}
           </button>
         </div>
