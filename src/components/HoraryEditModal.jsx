@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { updateHorary, getStatuses } from "../services/horaryService";
+import { getStatuses, changeStatus } from "../services/horaryService";
 import { Edit3, User, BookOpen, Clock, List, CheckCircle, XCircle } from "lucide-react";
 
 const HoraryEditModal = ({ horary, onClose, onUpdated }) => {
@@ -7,10 +7,10 @@ const HoraryEditModal = ({ horary, onClose, onUpdated }) => {
   const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
-    nameDocente: horary.nameDocente || "",
-    nameCurso: horary.nameCurso || "",
-    horario: horary.horario || "",
-    numSesion: horary.numSesion || "",
+    nameDocente: horary.schedule?.docente || "",
+    nameCurso: horary.schedule?.curso || "",
+    horario: `${horary.schedule?.startTime || ""} - ${horary.schedule?.endTime || ""}`,
+    numSesion: horary.schedule?.sesion || "",
     statusId: horary.status?.id || ""
   });
 
@@ -38,15 +38,10 @@ const HoraryEditModal = ({ horary, onClose, onUpdated }) => {
     setLoading(true);
 
     try {
-      const payload = {
-        nameDocente: form.nameDocente,
-        nameCurso: form.nameCurso,
-        horario: form.horario,
-        numSesion: form.numSesion,
-        status: { id: Number(form.statusId) }
-      };
+      // Solo cambiamos estado en el backend
+      await changeStatus(horary.id, form.statusId);
 
-      await updateHorary(horary.numLab, payload);
+      // Refrescamos la lista en el admin
       await onUpdated();
       onClose();
     } catch (err) {
@@ -65,7 +60,7 @@ const HoraryEditModal = ({ horary, onClose, onUpdated }) => {
         {/* Título con icono */}
         <h2 className="text-xl font-bold text-center flex items-center justify-center gap-2" style={{ color: "rgb(43,57,143)" }}>
           <Edit3 size={22} style={{ color: "rgb(47,106,174)" }} />
-          Editar Aula {horary.numLab}
+          Editar Aula {horary.classroom?.nombre || horary.numLab}
         </h2>
 
         {/* DOCENTE */}
@@ -77,7 +72,8 @@ const HoraryEditModal = ({ horary, onClose, onUpdated }) => {
             name="nameDocente"
             value={form.nameDocente}
             onChange={handleChange}
-            className="w-full border p-2 rounded mt-1"
+            disabled
+            className="w-full border p-2 rounded mt-1 bg-gray-100"
           />
         </div>
 
@@ -90,7 +86,8 @@ const HoraryEditModal = ({ horary, onClose, onUpdated }) => {
             name="nameCurso"
             value={form.nameCurso}
             onChange={handleChange}
-            className="w-full border p-2 rounded mt-1"
+            disabled
+            className="w-full border p-2 rounded mt-1 bg-gray-100"
           />
         </div>
 
@@ -103,7 +100,8 @@ const HoraryEditModal = ({ horary, onClose, onUpdated }) => {
             name="horario"
             value={form.horario}
             onChange={handleChange}
-            className="w-full border p-2 rounded mt-1"
+            disabled
+            className="w-full border p-2 rounded mt-1 bg-gray-100"
           />
         </div>
 
@@ -116,7 +114,8 @@ const HoraryEditModal = ({ horary, onClose, onUpdated }) => {
             name="numSesion"
             value={form.numSesion}
             onChange={handleChange}
-            className="w-full border p-2 rounded mt-1"
+            disabled
+            className="w-full border p-2 rounded mt-1 bg-gray-100"
           />
         </div>
 

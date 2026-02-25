@@ -3,7 +3,7 @@ import CardHorarioComponent from "../../components/CardHorarioComponent";
 import { connectSocket, disconnectSocket } from "../../services/socketService";
 import bg from "/image/bg_image.png";
 import { Circle } from "lucide-react";
-import { getTurn, getHoraries } from "../../services/horaryService";
+import { getCurrentShift, getHoraries } from "../../services/horaryService";
 import LoaderComponent from "../../components/LoaderComponent";
 
 const HoraryComponent = () => {
@@ -15,7 +15,7 @@ const HoraryComponent = () => {
   useEffect(() => {
     const cargarTurno = async () => {
       try {
-        const t = await getTurn();
+        const t = await getCurrentShift();
         setTurno(t);
       } catch (err) {
         console.error("Error cargando turno:", err);
@@ -105,15 +105,14 @@ const HoraryComponent = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-2 lg:gap-4 w-full h-full">
             {horarios.map((h) => (
-              <CardHorarioComponent
-                key={h.id}
-                aula={h.numLab}
-                docente={h.nameDocente || "—"}
-                curso={h.nameCurso || "—"}
-                horario={h.horario || "—"}
-                sesion={h.numSesion || "—"}
-                estado={h.status?.name}
-              />
+              <CardHorarioComponent 
+                key={h.id} 
+                aula={h.classroom?.nombre || "—"} 
+                docente={h.schedule?.docente || "—"} 
+                curso={h.schedule?.curso || "—"} 
+                horario={`${h.schedule?.startTime || ""} - ${h.schedule?.endTime || ""}`} 
+                sesion={h.schedule?.sesion || "—"} 
+                estado={h.status?.name || "—"} />
             ))}
           </div>
         )}

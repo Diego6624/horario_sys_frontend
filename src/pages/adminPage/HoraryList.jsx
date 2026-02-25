@@ -40,14 +40,15 @@ const HoraryList = () => {
         fetchStatuses();
     }, []);
 
-    const handleToggle = async (id) => {
-        try {
-            await toggleHorary(id);
-            fetchData();
-        } catch (error) {
-            console.error("Error cambiando visibilidad:", error);
-        }
-    };
+    // Función para cambiar la visibilidad de un horario
+    // const handleToggle = async (id) => {
+    //     try {
+    //         await toggleHorary(id);
+    //         fetchData();
+    //     } catch (error) {
+    //         console.error("Error cambiando visibilidad:", error);
+    //     }
+    // };
 
     if (loading) return <LoaderComponent />;
 
