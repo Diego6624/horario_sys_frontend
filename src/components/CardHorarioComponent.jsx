@@ -22,7 +22,7 @@ const CardHorarioComponent = ({
       className={`
         rounded-xl shadow-md flex flex-col w-full h-full
         border-2 transition
-        ${isOcupado ? "border-red-400" : "border-green-500"}
+        ${isOcupado ? "border-blue-500" : "border-gray-400"}
         ${!isOcupado ? "bg-gray-100" : "bg-white"}
       `}
     >
@@ -43,7 +43,7 @@ const CardHorarioComponent = ({
             <span
               className={`
                 absolute inline-flex h-6 w-6 rounded-full
-                ${isOcupado ? "bg-red-400 animate-ping"  : ""}
+                ${isOcupado ? "bg-blue-400 animate-ping"  : ""}
                 opacity-60
               `}
             />
@@ -52,7 +52,7 @@ const CardHorarioComponent = ({
             <span
               className={`
                 relative inline-flex h-4 w-4 rounded-full
-                ${isOcupado ? "bg-red-500" : "bg-green-500"}
+                ${isOcupado ? "bg-blue-500" : "bg-gray-400"}
               `}
             />
 

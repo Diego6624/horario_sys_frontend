@@ -62,7 +62,7 @@ const HoraryComponent = () => {
         </div>
 
         {/* BLOQUE CENTRAL: Título y Turno (Solo visible de SM para arriba) */}
-        <div className="hidden sm:flex items-center gap-2 text-center">
+        <div className="hidden sm:flex items-center gap-4 text-center">
           <h1 className="text-xl md:text-2xl lg:text-4xl xl:text-4xl font-bold tracking-tighter text-black uppercase">
             Distribución de Aulas
           </h1>
@@ -76,22 +76,22 @@ const HoraryComponent = () => {
 
           {/* Versión MOBILE: Size 12 */}
           <div className="sm:hidden flex items-center gap-2">
-            <Circle size={12} className="fill-green-500 text-green-500" />
+            <Circle size={12} className="fill-gray-400 text-gray-400" />
             <span>Libre</span>
           </div>
           <div className="sm:hidden flex items-center gap-2">
-            <Circle size={12} className="fill-red-500 text-red-500" />
-            <span>Ocupado</span>
+            <Circle size={12} className="fill-blue-500 text-blue-500" />
+            <span>En clase</span>
           </div>
 
           {/* Versión SM en adelante: Size 15 */}
           <div className="hidden sm:flex items-center gap-2">
-            <Circle size={15} className="fill-green-500 text-green-500" />
+            <Circle size={15} className="fill-gray-400 text-gray-400" />
             <span>Libre</span>
           </div>
           <div className="hidden sm:flex items-center gap-2">
-            <Circle size={15} className="fill-red-500 text-red-500" />
-            <span>Ocupado</span>
+            <Circle size={15} className="fill-blue-500 text-blue-500" />
+            <span>En clase</span>
           </div>
 
         </div>
