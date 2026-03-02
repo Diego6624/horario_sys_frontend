@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getStatuses, changeStatus } from "../services/horaryService";
+import { getStatuses, changeStatus } from "../../../services/horaryService";
 import { Edit3, User, BookOpen, Clock, List, CheckCircle, XCircle } from "lucide-react";
 
 const HoraryEditModal = ({ horary, onClose, onUpdated }) => {

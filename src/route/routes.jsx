@@ -15,7 +15,11 @@ import LoginComponent from "../pages/adminPage/LoginComponent";
 import PrivateRoute from "./privateRoute";
 
 /* 🛠️ ADMIN */
-import AdminComponent from "../pages/adminPage/AdminComponent";
+import HoraryList from "../pages/adminPage/HoraryList";
+import CreateHoraryForm from "../pages/adminPage/components/CreateHoraryForm";
+import ClassroomList from "../pages/adminPage/ClassroomList";
+import ScheduleList from "../pages/adminPage/ScheduleList";
+import IndexAdmin from "@/pages/adminPage/IndexAdmin";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -32,11 +36,16 @@ const router = createBrowserRouter(
         path="admin"
         element={
           <PrivateRoute>
-            <AdminComponent />
+            <IndexAdmin />
           </PrivateRoute>
         }
-      />
-
+      >
+        <Route index element={<HoraryList />} />
+        <Route path="horarios" element={<HoraryList />} />
+        <Route path="crear-horario" element={<CreateHoraryForm />} />
+        <Route path="aulas" element={<ClassroomList />} />
+        <Route path="bloques" element={<ScheduleList />} />
+      </Route>
     </Route>
   )
 );

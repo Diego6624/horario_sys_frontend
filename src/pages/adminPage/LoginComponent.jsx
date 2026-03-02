@@ -46,7 +46,7 @@ const LoginComponent = () => {
 
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600">
+    <div className="flex items-center justify-center min-h-screen bg-linear-to-r from-blue-600 via-indigo-600 to-purple-600">
       <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-md">
         {/* Logo / título */}
         <h1 className="text-3xl font-bold text-center text-indigo-600 mb-2">
