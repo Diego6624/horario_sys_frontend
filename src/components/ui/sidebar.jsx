@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react"
 import { cva } from "class-variance-authority";
-import { PanelLeftIcon } from "lucide-react"
+import { MenuIcon, PanelLeftIcon } from "lucide-react"
 import { Slot } from "radix-ui"
 
 import { useIsMobile } from "@/hooks/use-mobile"
@@ -240,7 +240,7 @@ function SidebarTrigger({
         toggleSidebar()
       }}
       {...props}>
-      <PanelLeftIcon />
+      <MenuIcon />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );

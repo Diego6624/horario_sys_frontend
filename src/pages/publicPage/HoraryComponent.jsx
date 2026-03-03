@@ -11,6 +11,10 @@ const HoraryComponent = () => {
   const [turno, setTurno] = useState("");
   const [loading, setLoading] = useState(true);
 
+  // Día actual
+  const diasSemana = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"];
+  const hoy = diasSemana[new Date().getDay()];
+
   // Cargar turno actual
   useEffect(() => {
     const cargarTurno = async () => {
@@ -37,7 +41,6 @@ const HoraryComponent = () => {
     }
   };
 
-
   // Suscripción al socket
   useEffect(() => {
     cargarHorarios();
@@ -46,6 +49,9 @@ const HoraryComponent = () => {
     });
     return () => disconnectSocket();
   }, []);
+
+  // Filtrar horarios del día actual
+  const horariosHoy = horarios.filter(h => h.schedule?.day === hoy);
 
   return (
     <div
@@ -100,19 +106,22 @@ const HoraryComponent = () => {
       <div className="grow p-1.5 lg:p-5 w-full">
         {loading ? (
           <LoaderComponent />
-        ) : horarios.length === 0 ? (
-          <p className="text-center text-lg text-blue-500 font-semibold mt-10"> No se han encontrado aulas. </p>
+        ) : horariosHoy.length === 0 ? (
+          <p className="text-center text-lg text-blue-500 font-semibold mt-10">
+            No hay clases programadas para hoy ({hoy}).
+          </p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-2 lg:gap-4 w-full h-full">
-            {horarios.map((h) => (
-              <CardHorarioComponent 
-                key={h.id} 
-                aula={h.classroom?.nombre || "—"} 
-                docente={h.schedule?.docente || "—"} 
-                curso={h.schedule?.curso || "—"} 
-                horario={`${h.schedule?.startTime || ""} - ${h.schedule?.endTime || ""}`} 
-                sesion={h.schedule?.sesion || "—"} 
-                estado={h.status?.name || "—"} />
+            {horariosHoy.map((h) => (
+              <CardHorarioComponent
+                key={h.id}
+                aula={h.classroom?.nombre || "—"}
+                docente={h.schedule?.docente || "—"}
+                curso={h.schedule?.curso || "—"}
+                horario={`${h.schedule?.startTime || ""} - ${h.schedule?.endTime || ""}`}
+                sesion={h.schedule?.sesion || "—"}
+                estado={h.status?.name || "—"}
+              />
             ))}
           </div>
         )}

@@ -15,12 +15,10 @@ const IndexAdmin = () => {
         <div className="flex-1 flex flex-col bg-gray-100">
 
           {/* Header Mobile */}
-          <header className="md:hidden px-6 py-4 flex items-center gap-4 shadow bg-[rgb(43,57,143)] text-white">
+          <header className="md:hidden justify-between px-6 py-4 flex items-center gap-4 shadow bg-[rgb(43,57,143)] text-white">
             
             {/* Este botón controla el sidebar REAL de shadcn */}
-            <SidebarTrigger>
-              <Menu size={28} />
-            </SidebarTrigger>
+            <SidebarTrigger className="p-2 rounded-md hover:bg-white/20 transition" />
 
             <h1 className="text-xl font-bold">Panel Administrativo</h1>
           </header>
