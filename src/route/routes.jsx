@@ -16,10 +16,13 @@ import PrivateRoute from "./privateRoute";
 
 /* 🛠️ ADMIN */
 import HoraryList from "../pages/adminPage/HoraryList";
-import CreateHoraryForm from "../pages/adminPage/components/CreateHoraryForm";
-import ClassroomList from "../pages/adminPage/ClassroomList";
 import ScheduleList from "../pages/adminPage/ScheduleList";
 import IndexAdmin from "@/pages/adminPage/IndexAdmin";
+
+// nuevas páginas
+import TeacherList from "../pages/adminPage/TeacherList";
+import CourseList from "../pages/adminPage/CourseList";
+import SubjectList from "../pages/adminPage/SubjectList";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -42,9 +45,12 @@ const router = createBrowserRouter(
       >
         <Route index element={<HoraryList />} />
         <Route path="horarios" element={<HoraryList />} />
-        <Route path="crear-horario" element={<CreateHoraryForm />} />
-        <Route path="aulas" element={<ClassroomList />} />
         <Route path="bloques" element={<ScheduleList />} />
+
+        {/* nuevas rutas */}
+        <Route path="docentes" element={<TeacherList />} />
+        <Route path="cursos" element={<CourseList />} />
+        <Route path="materias" element={<SubjectList />} />
       </Route>
     </Route>
   )

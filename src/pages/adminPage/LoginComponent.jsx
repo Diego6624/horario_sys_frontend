@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { login } from "../../services/authService";
 
 const LoginComponent = () => {
   const navigate = useNavigate();
@@ -19,36 +20,27 @@ const LoginComponent = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true); // 👈 activa el loader
+    setLoading(true);
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_AUTH_URL}/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
+      const data = await login(form);
+      localStorage.setItem("user", JSON.stringify({
+        ...data,
+        password: form.password
+      }));
 
-      if (!res.ok) {
-        alert("Credenciales incorrectas");
-        setLoading(false); // 👈 apaga el loader si falla
-        return;
-      }
-
-      const data = await res.json();
-      localStorage.setItem("user", JSON.stringify(data));
       navigate("/admin");
     } catch (error) {
-      console.error(error);
+      alert("Credenciales incorrectas");
+      console.error("Error en login:", error);
     } finally {
-      setLoading(false); // 👈 siempre apagar al terminar
+      setLoading(false);
     }
   };
-
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-linear-to-r from-blue-600 via-indigo-600 to-purple-600">
       <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-md">
-        {/* Logo / título */}
         <h1 className="text-3xl font-bold text-center text-indigo-600 mb-2">
           Systematic
         </h1>
@@ -56,7 +48,6 @@ const LoginComponent = () => {
           Acceso al panel administrativo
         </p>
 
-        {/* Formulario */}
         <form onSubmit={handleLogin} className="space-y-5">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -66,6 +57,7 @@ const LoginComponent = () => {
               type="text"
               name="username"
               placeholder="ejemplo@correo.com"
+              value={form.username}
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
             />
@@ -79,6 +71,7 @@ const LoginComponent = () => {
               type="password"
               name="password"
               placeholder="********"
+              value={form.password}
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
             />
@@ -95,10 +88,8 @@ const LoginComponent = () => {
               "Ingresar"
             )}
           </button>
-
         </form>
 
-        {/* Footer */}
         <p className="text-xs text-gray-400 text-center mt-6">
           © {new Date().getFullYear()} Systematic. Todos los derechos reservados.
         </p>

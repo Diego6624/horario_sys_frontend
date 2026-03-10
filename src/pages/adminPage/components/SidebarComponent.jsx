@@ -5,6 +5,10 @@ import {
   Layers,
   LayoutDashboard,
   LogOut,
+  User,
+  BookText,
+  BookCopy,
+  BookOpen,
 } from "lucide-react";
 
 import {
@@ -20,8 +24,10 @@ import {
 
 const navLink = [
   { to: "/admin/horarios", icon: Calendar, label: "Horarios" },
-  { to: "/admin/crear-horario", icon: PlusCircle, label: "Crear Horario" },
   { to: "/admin/bloques", icon: Layers, label: "Bloques" },
+  { to: "/admin/materias", icon: BookText, label: "Materias" },
+  { to: "/admin/docentes", icon: User, label: "Docentes" },
+  { to: "/admin/cursos", icon: BookOpen, label: "Cursos" },
 ];
 
 const SidebarComponent = () => {

@@ -1,24 +1,24 @@
 const API = import.meta.env.VITE_API_URL;
 
-// Listar aulas
+const getAuthHeader = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  if (!user) return {};
+  const credentials = btoa(`${user.username}:${user.password}`);
+  return { "Authorization": `Basic ${credentials}` };
+};
+
 export const getAllClassrooms = async () => {
-  const res = await fetch(`${API}/api/classrooms`);
+  const res = await fetch(`${API}/classrooms`, { headers: getAuthHeader() });
   if (!res.ok) throw new Error("Error obteniendo aulas");
   return await res.json();
 };
 
-// Crear aula
 export const createClassroom = async (data) => {
-  const res = await fetch(`${API}/api/classrooms`, {
+  const res = await fetch(`${API}/classrooms`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...getAuthHeader() },
     body: JSON.stringify(data),
   });
   if (!res.ok) throw new Error("Error creando aula");
   return await res.json();
-};
-
-export default {
-  getAllClassrooms,
-  createClassroom,
 };

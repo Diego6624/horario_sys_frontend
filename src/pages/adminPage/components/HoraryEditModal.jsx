@@ -1,30 +1,18 @@
-import { useEffect, useState } from "react";
-import { getStatuses, changeStatus } from "../../../services/horaryService";
+import { useState } from "react";
+import { updateSchedule } from "../../../services/scheduleService"; // necesitas crear este método en tu service
 import { Edit3, User, BookOpen, Clock, List, CheckCircle, XCircle } from "lucide-react";
 
-const HoraryEditModal = ({ horary, onClose, onUpdated }) => {
-  const [statuses, setStatuses] = useState([]);
+const HoraryEditModal = ({ schedule, onClose, onUpdated }) => {
   const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
-    nameDocente: horary.schedule?.docente || "",
-    nameCurso: horary.schedule?.curso || "",
-    horario: `${horary.schedule?.startTime || ""} - ${horary.schedule?.endTime || ""}`,
-    numSesion: horary.schedule?.sesion || "",
-    statusId: horary.status?.id || ""
+    dayOfWeek: schedule.dayOfWeek || "",
+    startTime: schedule.startTime || "",
+    endTime: schedule.endTime || "",
+    sesion: schedule.sesion || "",
+    classroomId: schedule.classroomId || "",
+    subjectId: schedule.subjectId || ""
   });
-
-  useEffect(() => {
-    const fetchStatuses = async () => {
-      try {
-        const data = await getStatuses();
-        setStatuses(data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchStatuses();
-  }, []);
 
   const handleChange = (e) => {
     setForm({
@@ -38,10 +26,15 @@ const HoraryEditModal = ({ horary, onClose, onUpdated }) => {
     setLoading(true);
 
     try {
-      // Solo cambiamos estado en el backend
-      await changeStatus(horary.id, form.statusId);
-
-      // Refrescamos la lista en el admin
+      const payload = {
+        dayOfWeek: form.dayOfWeek,
+        startTime: form.startTime,
+        endTime: form.endTime,
+        sesion: form.sesion,
+        classroomId: Number(form.classroomId),
+        subjectId: Number(form.subjectId)
+      };
+      await updateSchedule(schedule.id, payload);
       await onUpdated();
       onClose();
     } catch (err) {
@@ -57,83 +50,68 @@ const HoraryEditModal = ({ horary, onClose, onUpdated }) => {
         onSubmit={handleSubmit}
         className="bg-white p-6 rounded-xl w-96 space-y-4 shadow-xl"
       >
-        {/* Título con icono */}
+        {/* Título */}
         <h2 className="text-xl font-bold text-center flex items-center justify-center gap-2" style={{ color: "rgb(43,57,143)" }}>
           <Edit3 size={22} style={{ color: "rgb(47,106,174)" }} />
-          Editar Aula {horary.classroom?.nombre || horary.numLab}
+          Editar Bloque
         </h2>
 
-        {/* DOCENTE */}
+        {/* DOCENTE / CURSO (solo lectura, vienen del Subject) */}
         <div>
           <label className="text-sm font-semibold flex items-center gap-1">
             <User size={16} style={{ color: "rgb(43,57,143)" }} /> Docente
           </label>
           <input
-            name="nameDocente"
-            value={form.nameDocente}
-            onChange={handleChange}
+            value={schedule.teacher}
             disabled
             className="w-full border p-2 rounded mt-1 bg-gray-100"
           />
         </div>
 
-        {/* CURSO */}
         <div>
           <label className="text-sm font-semibold flex items-center gap-1">
             <BookOpen size={16} style={{ color: "rgb(43,57,143)" }} /> Curso
           </label>
           <input
-            name="nameCurso"
-            value={form.nameCurso}
-            onChange={handleChange}
+            value={schedule.course}
             disabled
             className="w-full border p-2 rounded mt-1 bg-gray-100"
           />
         </div>
 
-        {/* HORARIO */}
+        {/* Editable */}
         <div>
           <label className="text-sm font-semibold flex items-center gap-1">
-            <Clock size={16} style={{ color: "rgb(43,57,143)" }} /> Horario
+            <Clock size={16} style={{ color: "rgb(43,57,143)" }} /> Inicio
           </label>
           <input
-            name="horario"
-            value={form.horario}
+            name="startTime"
+            value={form.startTime}
             onChange={handleChange}
-            disabled
-            className="w-full border p-2 rounded mt-1 bg-gray-100"
+            className="w-full border p-2 rounded mt-1"
           />
         </div>
 
-        {/* SESIÓN */}
+        <div>
+          <label className="text-sm font-semibold">Fin</label>
+          <input
+            name="endTime"
+            value={form.endTime}
+            onChange={handleChange}
+            className="w-full border p-2 rounded mt-1"
+          />
+        </div>
+
         <div>
           <label className="text-sm font-semibold flex items-center gap-1">
             <List size={16} style={{ color: "rgb(43,57,143)" }} /> Sesión
           </label>
           <input
-            name="numSesion"
-            value={form.numSesion}
-            onChange={handleChange}
-            disabled
-            className="w-full border p-2 rounded mt-1 bg-gray-100"
-          />
-        </div>
-
-        {/* ESTADO */}
-        <div>
-          <label className="text-sm font-semibold">Estado</label>
-          <select
-            name="statusId"
-            value={form.statusId}
+            name="sesion"
+            value={form.sesion}
             onChange={handleChange}
             className="w-full border p-2 rounded mt-1"
-          >
-            {statuses.map((st) => (
-              <option key={st.id} value={st.id}>
-                {st.name}
-              </option>
-            ))}
-          </select>
+          />
         </div>
 
         {/* BOTONES */}

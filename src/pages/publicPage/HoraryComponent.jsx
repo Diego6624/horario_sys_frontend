@@ -3,36 +3,22 @@ import CardHorarioComponent from "../../components/CardHorarioComponent";
 import { connectSocket, disconnectSocket } from "../../services/socketService";
 import bg from "/image/bg_image.png";
 import { Circle } from "lucide-react";
-import { getCurrentShift, getHoraries } from "../../services/horaryService";
+import { getCurrentSchedules } from "../../services/scheduleService";
 import LoaderComponent from "../../components/LoaderComponent";
 
 const HoraryComponent = () => {
   const [horarios, setHorarios] = useState([]);
-  const [turno, setTurno] = useState("");
   const [loading, setLoading] = useState(true);
 
   // Día actual
   const diasSemana = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"];
   const hoy = diasSemana[new Date().getDay()];
 
-  // Cargar turno actual
-  useEffect(() => {
-    const cargarTurno = async () => {
-      try {
-        const t = await getCurrentShift();
-        setTurno(t);
-      } catch (err) {
-        console.error("Error cargando turno:", err);
-      }
-    };
-    cargarTurno();
-  }, []);
-
-  // Cargar horarios activos
+  // Cargar horarios actuales con estado
   const cargarHorarios = async () => {
     try {
       setLoading(true);
-      const data = await getHoraries();
+      const data = await getCurrentSchedules(); // ahora usamos ScheduleViewDTO
       setHorarios(data);
     } catch (error) {
       console.error("Error cargando horarios:", error);
@@ -51,7 +37,7 @@ const HoraryComponent = () => {
   }, []);
 
   // Filtrar horarios del día actual
-  const horariosHoy = horarios.filter(h => h.schedule?.day === hoy);
+  const horariosHoy = horarios.filter(h => h.dayOfWeek === hoy);
 
   return (
     <div
@@ -68,18 +54,12 @@ const HoraryComponent = () => {
               className="h-8 md:h-12 lg:h-15 object-contain"
             />
           </div>
-          <span className="sm:hidden text-lg font-extrabold text-blue-700 uppercase">
-            TURNO {turno}
-          </span>
         </div>
 
         <div className="hidden sm:flex items-center gap-2 text-center">
           <h1 className="text-xl md:text-2xl lg:text-4xl xl:text-4xl font-bold tracking-tighter text-black uppercase">
             Distribución de Aulas
           </h1>
-          <span className="text-xl md:text-2xl lg:text-4xl xl:text-4xl font-bold text-blue-700 uppercase">
-            TURNO {turno}
-          </span>
         </div>
 
         <div className="flex flex-row sm:flex-col justify-center sm:justify-end gap-6 sm:gap-1 text-black font-semibold text-sm sm:text-md lg:text-lg">
@@ -115,12 +95,12 @@ const HoraryComponent = () => {
             {horariosHoy.map((h) => (
               <CardHorarioComponent
                 key={h.id}
-                aula={h.classroom?.nombre || "—"}
-                docente={h.schedule?.docente || "—"}
-                curso={h.schedule?.curso || "—"}
-                horario={`${h.schedule?.startTime || ""} - ${h.schedule?.endTime || ""}`}
-                sesion={h.schedule?.sesion || "—"}
-                estado={h.status?.name || "—"}
+                aula={h.classroom}
+                docente={h.teacher}
+                curso={h.course}
+                horario={h.horario}
+                sesion={h.sesion}
+                estado={h.estado}
               />
             ))}
           </div>
