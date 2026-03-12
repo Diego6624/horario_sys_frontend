@@ -41,9 +41,31 @@ export const deleteSubject = async (id) => {
   if (!res.ok) throw new Error("Error eliminando materia");
 };
 
+// subjectService.js
+export const createSubjectWithMultipleSchedules = async (data) => {
+  const res = await fetch(`${API}/subject-sessions/multi`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...getAuthHeader() },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error("Error creando asignatura con múltiples horarios");
+  return await res.json();
+};
+
+export const getSchedulesBySubjectSession = async (id) => {
+  const res = await fetch(`${API}/subject-sessions/${id}/schedules`, {
+    headers: getAuthHeader(),
+  });
+  if (!res.ok) throw new Error("Error obteniendo horarios de la asignatura");
+  return await res.json();
+};
+
+
 export default {
   getAllSubjects,
   createSubject,
   updateSubject,
   deleteSubject,
+  createSubjectWithMultipleSchedules,
+  getSchedulesBySubjectSession,
 };

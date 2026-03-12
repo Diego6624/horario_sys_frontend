@@ -10,15 +10,10 @@ const HoraryComponent = () => {
   const [horarios, setHorarios] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Día actual
-  const diasSemana = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"];
-  const hoy = diasSemana[new Date().getDay()];
-
-  // Cargar horarios actuales con estado
   const cargarHorarios = async () => {
     try {
       setLoading(true);
-      const data = await getCurrentSchedules(); // ahora usamos ScheduleViewDTO
+      const data = await getCurrentSchedules(); 
       setHorarios(data);
     } catch (error) {
       console.error("Error cargando horarios:", error);
@@ -27,17 +22,19 @@ const HoraryComponent = () => {
     }
   };
 
-  // Suscripción al socket
   useEffect(() => {
+    // 🔹 Carga inicial vía fetch
     cargarHorarios();
-    connectSocket(() => {
-      cargarHorarios();
+
+    // 🔹 Suscripción al socket
+    connectSocket((data) => {
+      // Usar directamente lo que manda el backend
+      setHorarios(data);
+      setLoading(false);
     });
+
     return () => disconnectSocket();
   }, []);
-
-  // Filtrar horarios del día actual
-  const horariosHoy = horarios.filter(h => h.dayOfWeek === hoy);
 
   return (
     <div
@@ -47,37 +44,38 @@ const HoraryComponent = () => {
       {/* HEADER */}
       <div className="w-full flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 sm:py-1.5 px-6 sm:px-12 border-b border-slate-300 bg-white/10 backdrop-blur-sm gap-2 sm:gap-0">
         <div className="flex justify-between items-center w-full sm:w-auto">
-          <div className="flex items-center">
-            <img
-              src="/image/logo_systematic.png"
-              alt="Systematic"
-              className="h-8 md:h-12 lg:h-15 object-contain"
-            />
-          </div>
+          <img
+            src="/image/logo_systematic.png"
+            alt="Systematic"
+            className="h-8 md:h-12 lg:h-15 object-contain"
+          />
         </div>
 
         <div className="hidden sm:flex items-center gap-2 text-center">
           <h1 className="text-xl md:text-2xl lg:text-4xl xl:text-4xl font-bold tracking-tighter text-black uppercase">
             Distribución de Aulas
           </h1>
+          <span className="text-xl md:text-2xl lg:text-4xl xl:text-4xl font-bold text-blue-700 uppercase">
+            TURNO {horarios[0]?.turno || "—"}
+          </span>
         </div>
 
         <div className="flex flex-row sm:flex-col justify-center sm:justify-end gap-6 sm:gap-1 text-black font-semibold text-sm sm:text-md lg:text-lg">
           <div className="sm:hidden flex items-center gap-2">
-            <Circle size={12} className="fill-green-500 text-green-500" />
+            <Circle size={12} className="fill-gray-400 text-gray-400" />
             <span>Libre</span>
           </div>
           <div className="sm:hidden flex items-center gap-2">
-            <Circle size={12} className="fill-red-500 text-red-500" />
-            <span>Ocupado</span>
+            <Circle size={12} className="fill-blue-500 text-blue-500" />
+            <span>En clase</span>
           </div>
           <div className="hidden sm:flex items-center gap-2">
-            <Circle size={15} className="fill-green-500 text-green-500" />
+            <Circle size={15} className="fill-gray-400 text-gray-400" />
             <span>Libre</span>
           </div>
           <div className="hidden sm:flex items-center gap-2">
-            <Circle size={15} className="fill-red-500 text-red-500" />
-            <span>Ocupado</span>
+            <Circle size={15} className="fill-blue-500 text-blue-500" />
+            <span>En clase</span>
           </div>
         </div>
       </div>
@@ -86,21 +84,18 @@ const HoraryComponent = () => {
       <div className="grow p-1.5 lg:p-5 w-full">
         {loading ? (
           <LoaderComponent />
-        ) : horariosHoy.length === 0 ? (
-          <p className="text-center text-lg text-blue-500 font-semibold mt-10">
-            No hay clases programadas para hoy ({hoy}).
-          </p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-2 lg:gap-4 w-full h-full">
-            {horariosHoy.map((h) => (
+            {horarios.map((h) => (
               <CardHorarioComponent
-                key={h.id}
+                key={h.id || h.classroom}
                 aula={h.classroom}
-                docente={h.teacher}
-                curso={h.course}
-                horario={h.horario}
-                sesion={h.sesion}
+                docente={h.teacher || "—"}
+                curso={h.course || "—"}
+                horario={h.startTime !== "—" ? `${h.startTime} - ${h.endTime}` : "—"}
+                sesion={h.sesion || "—"}
                 estado={h.estado}
+                turno={h.turno}
               />
             ))}
           </div>

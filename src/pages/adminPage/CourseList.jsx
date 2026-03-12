@@ -4,6 +4,7 @@ import {
   createCourse,
   updateCourse,
 } from "../../services/courseService";
+import LoaderComponent from "@/components/LoaderComponent";
 
 const CourseList = () => {
   const [courses, setCourses] = useState([]);
@@ -84,26 +85,37 @@ const CourseList = () => {
             </tr>
           </thead>
           <tbody>
-            {courses.map((c) => (
-              <tr key={c.id} className="border-b hover:bg-gray-50">
-                <td className="px-4 py-2">{c.id}</td>
-                <td className="px-4 py-2">{c.nombre}</td>
-                <td className="px-4 py-2">
-                  <button
-                    onClick={() => handleEdit(c)}
-                    className="text-blue-600 hover:underline mr-3"
-                  >
-                    Editar
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {courses.length === 0 && (
+            {loading ? (
               <tr>
-                <td className="px-4 py-2 text-center text-gray-500" colSpan="3">
-                  No hay cursos registrados
+                <td colSpan="4">
+                  <LoaderComponent />
                 </td>
               </tr>
+            ) : (
+              <>
+
+                {courses.map((c) => (
+                  <tr key={c.id} className="border-b hover:bg-gray-50">
+                    <td className="px-4 py-2">{c.id}</td>
+                    <td className="px-4 py-2">{c.nombre}</td>
+                    <td className="px-4 py-2">
+                      <button
+                        onClick={() => handleEdit(c)}
+                        className="text-blue-600 hover:bg-blue-600 hover:text-white focus border border-blue-600 px-3 py-1 rounded cursor-pointer transition"
+                      >
+                        Editar
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+                {courses.length === 0 && (
+                  <tr>
+                    <td className="px-4 py-2 text-center text-gray-500" colSpan="3">
+                      No hay cursos registrados
+                    </td>
+                  </tr>
+                )}
+              </>
             )}
           </tbody>
         </table>

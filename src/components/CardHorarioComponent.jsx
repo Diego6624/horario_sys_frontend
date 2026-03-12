@@ -12,17 +12,17 @@ const CardHorarioComponent = ({
   horario,
   sesion,
   estado,
+  turno,   // 🔹 nuevo campo
 }) => {
 
-  const isOcupado =
-    estado?.toLowerCase() === "ocupado";
+  const isOcupado = estado?.toLowerCase() === "en clase";
 
   return (
     <div
       className={`
         rounded-xl shadow-md flex flex-col w-full h-full
         border-2 transition
-        ${isOcupado ? "border-red-400" : "border-green-500"}
+        ${isOcupado ? "border-blue-500" : "border-gray-400"}
         ${!isOcupado ? "bg-gray-100" : "bg-white"}
       `}
     >
@@ -36,30 +36,24 @@ const CardHorarioComponent = ({
 
         {/* 🔘 ESTADO ANIMADO */}
         <div className="absolute right-3 top-3 flex items-center justify-center">
-
           <div className="relative flex items-center justify-center">
-
             {/* Aura / Glow */}
             <span
               className={`
                 absolute inline-flex h-6 w-6 rounded-full
-                ${isOcupado ? "bg-red-400 animate-ping"  : ""}
+                ${isOcupado ? "bg-blue-400 animate-ping" : ""}
                 opacity-60
               `}
             />
-
             {/* Punto principal */}
             <span
               className={`
                 relative inline-flex h-4 w-4 rounded-full
-                ${isOcupado ? "bg-red-500" : "bg-green-500"}
+                ${isOcupado ? "bg-blue-500" : "bg-gray-400"}
               `}
             />
-
           </div>
-
         </div>
-
       </div>
 
       {/* BODY */}
@@ -91,9 +85,7 @@ const CardHorarioComponent = ({
           label="Sesión"
           value={sesion}
         />
-
       </div>
-
     </div>
   );
 };
@@ -106,12 +98,10 @@ export default CardHorarioComponent;
 // ===============================
 const Info = ({ icon, label, value }) => (
   <div className="flex flex-col gap-0.5">
-
     <div className="flex items-center gap-2 text-blue-600 font-semibold uppercase tracking-wide text-xs sm:text-sm md:text-md xl:text-lg">
       {icon}
       {label}
     </div>
-
     <span className="font-medium text-gray-800 h-auto text-sm sm:text-base md:text-lg xl:text-xl">
       {value || "—"}
     </span>

@@ -16,7 +16,6 @@ import PrivateRoute from "./privateRoute";
 
 /* 🛠️ ADMIN */
 import HoraryList from "../pages/adminPage/HoraryList";
-import ScheduleList from "../pages/adminPage/ScheduleList";
 import IndexAdmin from "@/pages/adminPage/IndexAdmin";
 
 // nuevas páginas
@@ -45,7 +44,6 @@ const router = createBrowserRouter(
       >
         <Route index element={<HoraryList />} />
         <Route path="horarios" element={<HoraryList />} />
-        <Route path="bloques" element={<ScheduleList />} />
 
         {/* nuevas rutas */}
         <Route path="docentes" element={<TeacherList />} />

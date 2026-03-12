@@ -4,6 +4,7 @@ import {
   createTeacher,
   updateTeacher,
 } from "../../services/teacherService";
+import LoaderComponent from "@/components/LoaderComponent";
 
 const TeacherList = () => {
   const [teachers, setTeachers] = useState([]);
@@ -55,8 +56,6 @@ const TeacherList = () => {
     setShowModal(true);
   };
 
-  if (loading) return <p>Cargando docentes...</p>;
-
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -66,7 +65,7 @@ const TeacherList = () => {
         <button
           onClick={() => {
             setEditing(null);
-            setForm({ nombre: ""});
+            setForm({ nombre: "" });
             setShowModal(true);
           }}
           className="bg-[rgb(43,57,143)] text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition"
@@ -86,26 +85,36 @@ const TeacherList = () => {
             </tr>
           </thead>
           <tbody>
-            {teachers.map((t) => (
-              <tr key={t.id} className="border-b hover:bg-gray-50">
-                <td className="px-4 py-2">{t.id}</td>
-                <td className="px-4 py-2">{t.nombre}</td>
-                <td className="px-4 py-2">
-                  <button
-                    onClick={() => handleEdit(t)}
-                    className="text-blue-600 hover:underline mr-3"
-                  >
-                    Editar
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {teachers.length === 0 && (
+            {loading ? (
               <tr>
-                <td colSpan="4" className="px-4 py-2 text-center text-gray-500">
-                  No hay docentes registrados
+                <td colSpan="4">
+                  <LoaderComponent />
                 </td>
               </tr>
+            ) : (
+              <>
+                {teachers.map((t) => (
+                  <tr key={t.id} className="border-b hover:bg-gray-50">
+                    <td className="px-4 py-2">{t.id}</td>
+                    <td className="px-4 py-2">{t.nombre}</td>
+                    <td className="px-4 py-2">
+                      <button
+                        onClick={() => handleEdit(t)}
+                        className="text-blue-600 hover:bg-blue-600 hover:text-white focus border border-blue-600 px-3 py-1 rounded cursor-pointer transition"
+                      >
+                        Editar
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+                {teachers.length === 0 && (
+                  <tr>
+                    <td colSpan="4" className="px-4 py-2 text-center text-gray-500">
+                      No hay docentes registrados
+                    </td>
+                  </tr>
+                )}
+              </>
             )}
           </tbody>
         </table>
