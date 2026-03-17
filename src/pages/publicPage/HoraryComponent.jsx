@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import CardHorarioComponent from "../../components/CardHorarioComponent";
-import { connectSocket, disconnectSocket } from "../../services/socketService";
 import bg from "/image/bg_image.png";
 import { Circle } from "lucide-react";
 import { getCurrentSchedules } from "../../services/scheduleService";
@@ -13,7 +12,7 @@ const HoraryComponent = () => {
   const cargarHorarios = async () => {
     try {
       setLoading(true);
-      const data = await getCurrentSchedules(); 
+      const data = await getCurrentSchedules();
       setHorarios(data);
     } catch (error) {
       console.error("Error cargando horarios:", error);
@@ -23,17 +22,18 @@ const HoraryComponent = () => {
   };
 
   useEffect(() => {
-    // 🔹 Carga inicial vía fetch
-    cargarHorarios();
+    const cargarYProgramar = async () => {
+      await cargarHorarios();
 
-    // 🔹 Suscripción al socket
-    connectSocket((data) => {
-      // Usar directamente lo que manda el backend
-      setHorarios(data);
-      setLoading(false);
-    });
+      const ahora = new Date();
+      const msHastaProximoMinuto = (60 - ahora.getSeconds()) * 1000;
 
-    return () => disconnectSocket();
+      setTimeout(() => {
+        cargarYProgramar();
+      }, msHastaProximoMinuto);
+    };
+
+    cargarYProgramar();
   }, []);
 
   return (
@@ -92,7 +92,7 @@ const HoraryComponent = () => {
                 aula={h.classroom}
                 docente={h.teacher || "—"}
                 curso={h.course || "—"}
-                horario={h.startTime !== "—" ? `${h.startTime} - ${h.endTime}` : "—"}
+                horario={h.startTime ? `${h.startTime} - ${h.endTime}` : "—"}
                 sesion={h.sesion || "—"}
                 estado={h.estado}
                 turno={h.turno}

@@ -275,7 +275,7 @@ const SubjectList = () => {
                           className="w-full border rounded px-2 py-1"
                           required
                         >
-                          <option value="" disabled>Seleccione</option>
+                          <option value="" disabled>Seleccionar</option>
                           <option value="MONDAY">LUNES</option>
                           <option value="TUESDAY">MARTES</option>
                           <option value="WEDNESDAY">MIÉRCOLES</option>
