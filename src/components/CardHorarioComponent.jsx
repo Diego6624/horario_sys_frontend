@@ -12,7 +12,6 @@ const CardHorarioComponent = ({
   horario,
   sesion,
   estado,
-  turno,   // 🔹 nuevo campo
 }) => {
 
   const isOcupado = estado?.toLowerCase() === "en clase";

@@ -68,7 +68,7 @@ const CourseList = () => {
             setForm({ nombre: "" });
             setShowModal(true);
           }}
-          className="bg-[rgb(43,57,143)] text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition"
+          className="bg-[rgb(43,57,143)] text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition cursor-pointer"
         >
           + Nuevo Curso
         </button>
@@ -95,7 +95,7 @@ const CourseList = () => {
               <>
 
                 {courses.map((c) => (
-                  <tr key={c.id} className="border-b hover:bg-gray-50">
+                  <tr key={c.id} className="border-b hover:bg-gray-50 border-gray-300">
                     <td className="px-4 py-2">{c.id}</td>
                     <td className="px-4 py-2">{c.nombre}</td>
                     <td className="px-4 py-2">

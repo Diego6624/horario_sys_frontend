@@ -74,6 +74,19 @@ export const updateSchedule = async (id, data) => {
   return await res.json();
 };
 
+export const updateScheduleEstado = async (id, estado) => {
+  const res = await fetch(`${API}/schedules/${id}/estado`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      ...getAuthHeader()
+    },
+    body: JSON.stringify({ estado }),
+  });
+  if (!res.ok) throw new Error("Error actualizando estado");
+  return await res.json();
+};
+
 export default {
   getAllSchedules,
   createSchedule,

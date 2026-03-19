@@ -30,7 +30,7 @@ const SubjectList = () => {
     courseId: "",
     duracionSemanas: 1,
     teacherId: "",
-    modulo: "",  
+    modulo: "",
     schedules: [],
   });
 
@@ -56,7 +56,6 @@ const SubjectList = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
 
   // ---------- Helpers ----------
   const openNewModal = () => {
@@ -89,14 +88,23 @@ const SubjectList = () => {
     e.preventDefault();
     try {
       if (editing) {
-        await updateSubject(editing.id, {
-          courseId: Number(form.courseId),
+        const payload = {
           teacherId: Number(form.teacherId),
+          courseId: Number(form.courseId),
           duracionSemanas: Number(form.duracionSemanas),
           modulo: form.modulo,
-        });
+          schedules: form.schedules.map((s) => ({
+            dayOfWeek: (s.dayOfWeek || "").toUpperCase(),
+            startTime: s.startTime,
+            endTime: s.endTime,
+            classroomId: Number(s.classroomId),
+          })),
+        };
+
+        await updateSubject(editing.id, payload);
         alert("Materia actualizada.");
-      } else {
+      }
+      else {
         const payload = {
           teacherId: Number(form.teacherId),
           courseId: Number(form.courseId),
@@ -127,7 +135,8 @@ const SubjectList = () => {
       courseId: subject.courseId || "",
       duracionSemanas: subject.duracionSemanas || 1,
       teacherId: subject.teacherId || "",
-      schedules: [],
+      modulo: subject.modulo || "",
+      schedules: subject.schedules || [],
     });
     setShowModal(true);
   };
@@ -149,7 +158,7 @@ const SubjectList = () => {
         <h2 className="text-2xl font-bold text-[rgb(43,57,143)]">Gestión de Materias</h2>
         <button
           onClick={openNewModal}
-          className="bg-[rgb(43,57,143)] text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition"
+          className="bg-[rgb(43,57,143)] text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition cursor-pointer"
         >
           + Nueva Materia
         </button>
@@ -178,7 +187,7 @@ const SubjectList = () => {
               <>
                 {
                   subjects.map((s, index) => (
-                    <tr key={s.id || index} className="border-b hover:bg-gray-50">
+                    <tr key={s.id || index} className="border-b hover:bg-gray-50 border-gray-300">
                       <td className="px-4 py-2">{s.id}</td>
                       <td className="px-4 py-2">{s.course}</td>
                       <td className="px-4 py-2">{s.teacher}</td>
@@ -206,7 +215,7 @@ const SubjectList = () => {
         <div className="fixed inset-0 bg-black/50 flex items-start justify-center z-50 pt-10 pb-10 overflow-auto">
           <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-2xl">
             <h3 className="text-lg font-bold mb-4">{editing ? "Editar Materia" : "Nueva Materia"}</h3>
-            
+
             {/* Nueva materia */}
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Curso */}
@@ -241,7 +250,7 @@ const SubjectList = () => {
                     <option value="M3">Módulo 3</option>
                   </select>
                 </div>
-                
+
               </div>
 
               {/* Docente */}
