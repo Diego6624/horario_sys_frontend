@@ -24,12 +24,9 @@ const LoginComponent = () => {
 
     try {
       const data = await login(form);
-      localStorage.setItem("user", JSON.stringify({
-        ...data,
-        password: form.password
-      }));
-
+      localStorage.setItem("user", JSON.stringify(data));
       navigate("/admin");
+
     } catch (error) {
       alert("Credenciales incorrectas");
       console.error("Error en login:", error);

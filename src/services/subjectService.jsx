@@ -2,9 +2,8 @@ const API = import.meta.env.VITE_API_URL;
 
 const getAuthHeader = () => {
   const user = JSON.parse(localStorage.getItem("user"));
-  if (!user) return {};
-  const credentials = btoa(`${user.username}:${user.password}`);
-  return { "Authorization": `Basic ${credentials}` };
+  if (!user || !user.token) return {};
+  return { "Authorization": `Bearer ${user.token}` };
 };
 
 export const getAllSubjects = async () => {
@@ -41,7 +40,6 @@ export const deleteSubject = async (id) => {
   if (!res.ok) throw new Error("Error eliminando materia");
 };
 
-// subjectService.js
 export const createSubjectWithMultipleSchedules = async (data) => {
   const res = await fetch(`${API}/subject-sessions/multi`, {
     method: "POST",
@@ -59,7 +57,6 @@ export const getSchedulesBySubjectSession = async (id) => {
   if (!res.ok) throw new Error("Error obteniendo horarios de la asignatura");
   return await res.json();
 };
-
 
 export default {
   getAllSubjects,

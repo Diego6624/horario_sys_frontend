@@ -2,9 +2,8 @@ const API = import.meta.env.VITE_API_URL;
 
 const getAuthHeader = () => {
   const user = JSON.parse(localStorage.getItem("user"));
-  if (!user) return {};
-  const credentials = btoa(`${user.username}:${user.password}`);
-  return { "Authorization": `Basic ${credentials}` };
+  if (!user || !user.token) return {};
+  return { "Authorization": `Bearer ${user.token}` };
 };
 
 export const getAllTeachers = async () => {
@@ -33,8 +32,4 @@ export const updateTeacher = async (id, data) => {
   return await res.json();
 };
 
-export default{
-    getAllTeachers,
-    createTeacher,
-    updateTeacher,
-}
+export default { getAllTeachers, createTeacher, updateTeacher };

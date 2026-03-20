@@ -10,7 +10,6 @@ import {
   BookCopy,
   BookOpen,
 } from "lucide-react";
-
 import {
   Sidebar,
   SidebarContent,
@@ -21,6 +20,7 @@ import {
   SidebarMenuItem,
   SidebarFooter,
 } from "@/components/ui/sidebar";
+import { logout } from "../../../services/authService";
 
 const navLink = [
   { to: "/admin/horarios", icon: Calendar, label: "Horarios" },
@@ -32,8 +32,8 @@ const navLink = [
 const SidebarComponent = () => {
   const navigate = useNavigate();
 
-  const logout = () => {
-    localStorage.removeItem("user");
+  const handleLogout = () => {
+    logout();
     navigate("/");
   };
 
@@ -65,10 +65,9 @@ const SidebarComponent = () => {
                       <NavLink
                         to={item.to}
                         className={({ isActive }) =>
-                          `flex items-center gap-2 px-4 py-2 rounded-lg transition-colors text-lg ${
-                            isActive
-                              ? "bg-white text-[rgb(43,57,143)] font-semibold"
-                              : "text-white hover:bg-white/10"
+                          `flex items-center gap-2 px-4 py-2 rounded-lg transition-colors text-lg ${isActive
+                            ? "bg-white text-[rgb(43,57,143)] font-semibold"
+                            : "text-white hover:bg-white/10"
                           }`
                         }
                       >
@@ -86,7 +85,7 @@ const SidebarComponent = () => {
         {/* FOOTER */}
         <SidebarFooter className="p-4 border-t border-white/20 bg-[rgb(43,57,143)]">
           <button
-            onClick={logout}
+            onClick={handleLogout}
             className="w-full text-lg font-semibold flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-white hover:bg-white/10 transition cursor-pointer"
           >
             <LogOut size={20} />
