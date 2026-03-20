@@ -4,7 +4,9 @@ import {
   createCourse,
   updateCourse,
 } from "../../services/courseService";
+import CourseEditModal from "./components/CourseEditModal";
 import LoaderComponent from "@/components/LoaderComponent";
+import { Search, Pencil } from "lucide-react";
 
 const CourseList = () => {
   const [courses, setCourses] = useState([]);
@@ -12,6 +14,13 @@ const CourseList = () => {
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({ nombre: "" });
   const [editing, setEditing] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredCourses = courses.filter(
+    (c) =>
+      c.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(c.id).includes(searchTerm)
+  );
 
   const fetchData = async () => {
     setLoading(true);
@@ -74,6 +83,17 @@ const CourseList = () => {
         </button>
       </div>
 
+      <div className="flex items-center gap-2 bg-white shadow-sm rounded-lg px-3 py-2 border w-full max-w-md">
+        <Search size={18} className="text-gray-500" />
+        <input
+          type="text"
+          placeholder="Buscar por nombre o ID..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full outline-none text-sm"
+        />
+      </div>
+
       {/* Tabla */}
       <div className="overflow-x-auto bg-white shadow-md rounded-lg">
         <table className="min-w-full border-collapse">
@@ -93,28 +113,29 @@ const CourseList = () => {
               </tr>
             ) : (
               <>
-
-                {courses.map((c) => (
+                {filteredCourses.map((c) => (
                   <tr key={c.id} className="border-b hover:bg-gray-50 border-gray-300">
                     <td className="px-4 py-2">{c.id}</td>
                     <td className="px-4 py-2">{c.nombre}</td>
                     <td className="px-4 py-2">
                       <button
                         onClick={() => handleEdit(c)}
-                        className="text-blue-600 hover:bg-blue-600 hover:text-white focus border border-blue-600 px-3 py-1 rounded cursor-pointer transition"
+                        className="flex items-center gap-2 text-blue-600 border border-blue-600 px-3 py-1 rounded hover:bg-blue-600 hover:text-white transition"
                       >
-                        Editar
+                        <Pencil size={16} />
+                        <span className="hidden sm:inline">Editar</span>
                       </button>
                     </td>
                   </tr>
                 ))}
-                {courses.length === 0 && (
+                {filteredCourses.length === 0 && (
                   <tr>
                     <td className="px-4 py-2 text-center text-gray-500" colSpan="3">
-                      No hay cursos registrados
+                      No se encontraron cursos
                     </td>
                   </tr>
                 )}
+
               </>
             )}
           </tbody>
@@ -122,46 +143,14 @@ const CourseList = () => {
       </div>
 
       {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-            <h3 className="text-lg font-bold mb-4">
-              {editing ? "Editar Curso" : "Nuevo Curso"}
-            </h3>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Nombre del curso
-                </label>
-                <input
-                  type="text"
-                  name="nombre"
-                  value={form.nombre}
-                  onChange={handleChange}
-                  className="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-500"
-                  required
-                />
-              </div>
-
-              <div className="flex justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={() => setShowModal(false)}
-                  className="px-4 py-2 rounded-lg border hover:bg-gray-100"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  className="bg-[rgb(43,57,143)] text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition"
-                >
-                  {editing ? "Actualizar" : "Crear"}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <CourseEditModal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        onSubmit={handleSubmit}
+        form={form}
+        handleChange={handleChange}
+        editing={editing}
+      />
     </div>
   );
 };

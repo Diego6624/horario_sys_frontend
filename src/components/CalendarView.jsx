@@ -41,7 +41,8 @@ const CalendarView = ({ schedules, subjects = [] }) => {
         course: s.course,
         teacher: s.teacher,
         id: s.id,
-        estado: s.estado
+        estado: s.estado,
+        fechaSesion: s.date
       },
     };
   });

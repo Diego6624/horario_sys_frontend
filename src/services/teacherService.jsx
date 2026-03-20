@@ -22,6 +22,14 @@ export const createTeacher = async (data) => {
   return await res.json();
 };
 
+export const getSubjectsByTeacher = async (id) => {
+  const res = await fetch(`${API}/teachers/${id}/subjects`, {
+    headers: getAuthHeader(),
+  });
+  if (!res.ok) throw new Error("Error obteniendo materias del docente");
+  return await res.json();
+};
+
 export const updateTeacher = async (id, data) => {
   const res = await fetch(`${API}/teachers/${id}`, {
     method: "PUT",

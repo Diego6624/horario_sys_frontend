@@ -8,7 +8,7 @@ let stompClient = null;
 export const connectSocket = (onMessage) => {
 
   stompClient = new Client({
-    brokerURL: import.meta.env.VITE_SOCKET_URL, // ws://localhost:8080/ws-horarios
+    brokerURL: import.meta.env.VITE_SOCKET_URL,
     reconnectDelay: 5000,
     debug: (str) => console.log(str),
   });

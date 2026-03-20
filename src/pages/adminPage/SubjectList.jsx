@@ -4,11 +4,15 @@ import {
   createSubjectWithMultipleSchedules,
   updateSubject,
   deleteSubject,
+  getSchedulesBySubjectSession,
 } from "../../services/subjectService";
 import { getAllCourses } from "../../services/courseService";
 import { getAllTeachers } from "../../services/teacherService";
 import { getAllClassrooms } from "../../services/classroomService";
 import LoaderComponent from "@/components/LoaderComponent";
+import SubjectDetailModal from "./components/SubjectDetailModal";
+import SubjectEditModal from "./components/SubjectEditModal";
+import { Eye, Pencil, Trash2, Plus, Search } from "lucide-react";
 
 const emptySchedule = {
   dayOfWeek: "",
@@ -22,10 +26,35 @@ const SubjectList = () => {
   const [courses, setCourses] = useState([]);
   const [teachers, setTeachers] = useState([]);
   const [classrooms, setClassrooms] = useState([]);
+  const [schedules, setSchedules] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [showSubjectModal, setShowSubjectModal] = useState(false);
+  const [selectedSubject, setSelectedSubject] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [editing, setEditing] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredSubjects = subjects.filter(
+    (s) =>
+      s.course.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(s.id).includes(searchTerm)
+  );
+
+  const getRemainingWeeks = (subject) => {
+    if (!subject.fechaInicio || !subject.duracionSemanas) return subject.duracionSemanas;
+
+    const startDate = new Date(subject.fechaInicio);
+    const today = new Date();
+
+    const diffMs = today - startDate;
+    const diffWeeks = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 7));
+
+    const remaining = subject.duracionSemanas - diffWeeks;
+
+    return remaining > 0 ? remaining : 0;
+  };
+
+
   const [form, setForm] = useState({
     courseId: "",
     duracionSemanas: 1,
@@ -33,7 +62,6 @@ const SubjectList = () => {
     modulo: "",
     schedules: [],
   });
-
 
   const fetchData = async () => {
     setLoading(true);
@@ -62,6 +90,17 @@ const SubjectList = () => {
     setEditing(null);
     setForm({ courseId: "", duracionSemanas: 1, teacherId: "", schedules: [] });
     setShowModal(true);
+  };
+
+  const handleViewSubject = async (subject) => {
+    try {
+      const data = await getSchedulesBySubjectSession(subject.id); // 👈 ahora sí definido
+      setSchedules(data);
+      setSelectedSubject(subject);
+      setShowSubjectModal(true);
+    } catch (error) {
+      console.error("Error obteniendo sesiones:", error);
+    }
   };
 
   const handleChange = (e) => {
@@ -164,8 +203,20 @@ const SubjectList = () => {
         </button>
       </div>
 
+      <div className="flex items-center gap-2 bg-white shadow-sm rounded-lg px-3 py-2 border w-full max-w-md">
+        <Search size={18} className="text-gray-500" />
+        <input
+          type="text"
+          placeholder="Buscar por curso o ID..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full outline-none text-sm"
+        />
+      </div>
+
       {/* Tabla */}
       <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+
         <table className="min-w-full border-collapse">
           <thead className="bg-[rgb(43,57,143)] text-white">
             <tr>
@@ -185,23 +236,45 @@ const SubjectList = () => {
               </tr>
             ) : (
               <>
-                {
-                  subjects.map((s, index) => (
-                    <tr key={s.id || index} className="border-b hover:bg-gray-50 border-gray-300">
-                      <td className="px-4 py-2">{s.id}</td>
-                      <td className="px-4 py-2">{s.course}</td>
-                      <td className="px-4 py-2">{s.teacher}</td>
-                      <td className="px-4 py-2">{s.duracionSemanas} semana(s)</td>
-                      <td className="px-4 py-2 flex gap-3">
-                        <button onClick={() => handleEdit(s)} className="text-blue-600 hover:bg-blue-600 hover:text-white focus border border-blue-600 px-3 py-1 rounded cursor-pointer transition">Editar</button>
-                        <button onClick={() => handleDelete(s.id)} className="text-red-600 hover:bg-red-600 hover:text-white border border-red-600 px-3 py-1 rounded cursor-pointer transition">Eliminar</button>
-                      </td>
-                    </tr>
-                  ))
-                }
-                {subjects.length === 0 && (
+                {filteredSubjects.map((s, index) => (
+                  <tr key={s.id || index} className="border-b hover:bg-gray-50 border-gray-300">
+                    <td className="px-4 py-2">{s.id}</td>
+                    <td className="px-4 py-2">{s.course}</td>
+                    <td className="px-4 py-2">{s.teacher}</td>
+                    <td className="px-4 py-2">{getRemainingWeeks(s)} semana(s)</td>
+                    <td className="px-4 py-2 flex gap-3">
+                      {/* Botón Ver */}
+                      <button
+                        onClick={() => handleViewSubject(s)}
+                        className="flex items-center gap-2 text-green-600 border border-green-600 px-3 py-1 rounded hover:bg-green-600 hover:text-white transition"
+                      >
+                        <Eye size={16} />
+                        <span className="hidden sm:inline">Ver</span>
+                      </button>
+                      {/* Botón Editar */}
+                      <button
+                        onClick={() => handleEdit(s)}
+                        className="flex items-center gap-2 text-blue-600 border border-blue-600 px-3 py-1 rounded hover:bg-blue-600 hover:text-white transition"
+                      >
+                        <Pencil size={16} />
+                        <span className="hidden sm:inline">Editar</span>
+                      </button>
+                      {/* Botón Eliminar */}
+                      <button
+                        onClick={() => handleDelete(s.id)}
+                        className="flex items-center gap-2 text-red-600 border border-red-600 px-3 py-1 rounded hover:bg-red-600 hover:text-white transition"
+                      >
+                        <Trash2 size={16} />
+                        <span className="hidden sm:inline">Eliminar</span>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+                {filteredSubjects.length === 0 && (
                   <tr>
-                    <td colSpan="4" className="px-4 py-2 text-center text-gray-500">No hay materias registradas</td>
+                    <td colSpan="5" className="px-4 py-2 text-center text-gray-500">
+                      No se encontraron materias
+                    </td>
                   </tr>
                 )}
               </>
@@ -210,127 +283,27 @@ const SubjectList = () => {
         </table>
       </div>
 
-      {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-start justify-center z-50 pt-10 pb-10 overflow-auto">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-2xl">
-            <h3 className="text-lg font-bold mb-4">{editing ? "Editar Materia" : "Nueva Materia"}</h3>
+      <SubjectEditModal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        onSubmit={handleSubmit}
+        form={form}
+        handleChange={handleChange}
+        editing={editing}
+        courses={courses}
+        teachers={teachers}
+        classrooms={classrooms}
+        addScheduleRow={addScheduleRow}
+        updateScheduleRow={updateScheduleRow}
+        removeScheduleRow={removeScheduleRow}
+      />
 
-            {/* Nueva materia */}
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Curso */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Curso</label>
-                <select name="courseId" value={form.courseId} onChange={handleChange} className="w-full border rounded-lg px-3 py-2" required>
-                  <option value="" disabled>Seleccione curso</option>
-                  {courses.map((c) => <option key={c.id} value={c.id}>{c.nombre}</option>)}
-                </select>
-              </div>
-
-              {/* Duración y Módulo */}
-              <div className="flex w-full gap-5">
-
-                <div className="w-full">
-                  <label className="block text-sm font-medium text-gray-700">Duración (semanas)</label>
-                  <input type="number" min={1} name="duracionSemanas" value={form.duracionSemanas} onChange={handleChange} className="w-full border rounded-lg px-3 py-2" required />
-                </div>
-
-                <div className="w-full">
-                  <label className="block text-sm font-medium text-gray-700">Módulo</label>
-                  <select
-                    name="modulo"
-                    value={form.modulo}
-                    onChange={handleChange}
-                    className="w-full border rounded-lg px-3 py-2"
-                    required
-                  >
-                    <option value="" disabled selected>Seleccione módulo</option>
-                    <option value="M1">Módulo 1</option>
-                    <option value="M2">Módulo 2</option>
-                    <option value="M3">Módulo 3</option>
-                  </select>
-                </div>
-
-              </div>
-
-              {/* Docente */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Docente</label>
-                <select name="teacherId" value={form.teacherId} onChange={handleChange} className="w-full border rounded-lg px-3 py-2" required>
-                  <option value="" disabled>Seleccione docente</option>
-                  {teachers.map((t) => <option key={t.id} value={t.id}>{t.nombre}</option>)}
-                </select>
-              </div>
-
-              {/* Horarios dinámicos */}
-              {!editing && (
-                <div className="bg-gray-50 p-3 rounded space-y-3">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-semibold">Horarios</h4>
-                    <button type="button" onClick={addScheduleRow} className="text-sm bg-[rgb(43,57,143)] text-white px-3 py-1 rounded">+ Agregar horario</button>
-                  </div>
-
-                  {form.schedules.length === 0 && (
-                    <p className="text-sm text-gray-500">No hay horarios agregados. Presiona "+ Agregar horario" para añadir uno.</p>
-                  )}
-
-                  {form.schedules.map((s, idx) => (
-                    <div key={idx} className="grid grid-cols-12 gap-2 items-end bg-white p-2 rounded border">
-                      <div className="col-span-3">
-                        <label className="text-xs font-medium">Día</label>
-                        <select
-                          value={s.dayOfWeek}
-                          onChange={(e) => updateScheduleRow(idx, "dayOfWeek", e.target.value)}
-                          className="w-full border rounded px-2 py-1"
-                          required
-                        >
-                          <option value="" disabled>Seleccionar</option>
-                          <option value="MONDAY">LUNES</option>
-                          <option value="TUESDAY">MARTES</option>
-                          <option value="WEDNESDAY">MIÉRCOLES</option>
-                          <option value="THURSDAY">JUEVES</option>
-                          <option value="FRIDAY">VIERNES</option>
-                          <option value="SATURDAY">SÁBADO</option>
-                          <option value="SUNDAY">DOMINGO</option>
-                        </select>
-                      </div>
-
-                      <div className="col-span-2">
-                        <label className="text-xs font-medium">Inicio</label>
-                        <input type="time" value={s.startTime} onChange={(e) => updateScheduleRow(idx, "startTime", e.target.value)} className="w-full border rounded px-2 py-1" required />
-                      </div>
-
-                      <div className="col-span-2">
-                        <label className="text-xs font-medium">Fin</label>
-                        <input type="time" value={s.endTime} onChange={(e) => updateScheduleRow(idx, "endTime", e.target.value)} className="w-full border rounded px-2 py-1" required />
-                      </div>
-
-                      <div className="col-span-4">
-                        <label className="text-xs font-medium">Aula</label>
-                        <select value={s.classroomId} onChange={(e) => updateScheduleRow(idx, "classroomId", e.target.value)} className="w-full border rounded px-2 py-1" required>
-                          <option value="">Seleccione aula</option>
-                          {classrooms.map((c) => <option key={c.id} value={c.id}>{c.nombre}</option>)}
-                        </select>
-                      </div>
-
-                      <div className="col-span-1 flex justify-end">
-                        <button type="button" onClick={() => removeScheduleRow(idx)} className="text-red-600">Eliminar</button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              <div className="flex justify-end gap-3 pt-2">
-                <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 rounded-lg border hover:bg-gray-100">Cancelar</button>
-                <button type="submit" className="bg-[rgb(43,57,143)] text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition">
-                  {editing ? "Actualizar" : "Crear"}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <SubjectDetailModal
+        show={showSubjectModal}
+        onClose={() => setShowSubjectModal(false)}
+        selectedSubject={selectedSubject}
+        schedules={schedules}
+      />
     </div>
   );
 };

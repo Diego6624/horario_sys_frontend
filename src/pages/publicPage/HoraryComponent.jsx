@@ -2,13 +2,15 @@ import { useEffect, useState } from "react";
 import CardHorarioComponent from "../../components/CardHorarioComponent";
 import bg from "/image/bg_image.png";
 import { Circle } from "lucide-react";
-import { getCurrentSchedules } from "../../services/scheduleService";
 import LoaderComponent from "../../components/LoaderComponent";
+import { connectSocket, disconnectSocket } from "../../services/socketService";
+import { getCurrentSchedules } from "../../services/scheduleService";
 
 const HoraryComponent = () => {
   const [horarios, setHorarios] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // 🔹 Cargar horarios iniciales desde el backend
   const cargarHorarios = async () => {
     try {
       setLoading(true);
@@ -22,18 +24,19 @@ const HoraryComponent = () => {
   };
 
   useEffect(() => {
-    const cargarYProgramar = async () => {
-      await cargarHorarios();
+    // 1️⃣ Cargar horarios iniciales
+    cargarHorarios();
 
-      const ahora = new Date();
-      const msHastaProximoMinuto = (60 - ahora.getSeconds()) * 1000;
+    // 2️⃣ Conectar al WebSocket para actualizaciones en tiempo real
+    connectSocket((data) => {
+      console.log("📡 Horarios actualizados vía socket:", data);
+      setHorarios(data);
+    });
 
-      setTimeout(() => {
-        cargarYProgramar();
-      }, msHastaProximoMinuto);
+    // 3️⃣ Desconectar al desmontar el componente
+    return () => {
+      disconnectSocket();
     };
-
-    cargarYProgramar();
   }, []);
 
   return (
@@ -86,20 +89,24 @@ const HoraryComponent = () => {
           <LoaderComponent />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-2 lg:gap-4 w-full h-full">
-            {horarios
-              .filter(h => h.estado !== "Cancelado")
-              .map((h) => (
-                <CardHorarioComponent
-                  key={h.id || h.classroom}
-                  aula={h.classroom}
-                  docente={h.teacher || "—"}
-                  curso={h.course || "—"}
-                  horario={h.startTime ? `${h.startTime} - ${h.endTime}` : "—"}
-                  sesion={h.sesion || "—"}
-                  estado={h.estado}
-                  turno={h.turno}
-                />
-              ))}
+            {horarios.map((h) => (
+              <CardHorarioComponent
+                key={h.id || h.classroom}
+                aula={h.classroom}
+                docente={h.estado === "Cancelado" ? "—" : h.teacher || "—"}
+                curso={h.estado === "Cancelado" ? "—" : h.course || "—"}
+                horario={
+                  h.estado === "Cancelado"
+                    ? "—"
+                    : h.startTime
+                    ? `${h.startTime} - ${h.endTime}`
+                    : "—"
+                }
+                sesion={h.estado === "Cancelado" ? "—" : h.sesion || "—"}
+                estado={h.estado}
+                turno={h.turno}
+              />
+            ))}
           </div>
         )}
       </div>

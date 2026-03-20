@@ -3,15 +3,25 @@ import {
   getAllTeachers,
   createTeacher,
   updateTeacher,
+  getSubjectsByTeacher,
 } from "../../services/teacherService";
 import LoaderComponent from "@/components/LoaderComponent";
+import TeacherSubjectModal from "./components/TeacherSubjectModal";
+import TeacherEditModal from "./components/TeacherEditModal";
+import { Eye, Pencil, Search } from "lucide-react";
 
 const TeacherList = () => {
   const [teachers, setTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [showSubjectsModal, setShowSubjectsModal] = useState(false);
   const [form, setForm] = useState({ nombre: "" });
   const [editing, setEditing] = useState(null);
+  const [subjects, setSubjects] = useState([]);
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
+
+  // 🔹 Estado para búsqueda
+  const [searchTerm, setSearchTerm] = useState("");
 
   const fetchData = async () => {
     setLoading(true);
@@ -56,6 +66,24 @@ const TeacherList = () => {
     setShowModal(true);
   };
 
+  const handleViewSubjects = async (teacher) => {
+    try {
+      const data = await getSubjectsByTeacher(teacher.id);
+      setSubjects(data);
+      setSelectedTeacher(teacher);
+      setShowSubjectsModal(true);
+    } catch (error) {
+      console.error("Error obteniendo materias del docente:", error);
+    }
+  };
+
+  // 🔹 Filtrar docentes por nombre o ID
+  const filteredTeachers = teachers.filter(
+    (t) =>
+      t.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(t.id).includes(searchTerm)
+  );
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -72,6 +100,18 @@ const TeacherList = () => {
         >
           + Nuevo Docente
         </button>
+      </div>
+
+      {/* 🔹 Input de búsqueda */}
+      <div className="flex items-center gap-2 bg-white shadow-sm rounded-lg px-3 py-2 border w-full max-w-md">
+        <Search size={18} className="text-gray-500" />
+        <input
+          type="text"
+          placeholder="Buscar por nombre o ID..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full outline-none text-sm"
+        />
       </div>
 
       {/* Tabla */}
@@ -93,24 +133,40 @@ const TeacherList = () => {
               </tr>
             ) : (
               <>
-                {teachers.map((t) => (
-                  <tr key={t.id} className="border-b hover:bg-gray-50 border-gray-300">
+                {filteredTeachers.map((t) => (
+                  <tr
+                    key={t.id}
+                    className="border-b hover:bg-gray-50 border-gray-300"
+                  >
                     <td className="px-4 py-2">{t.id}</td>
                     <td className="px-4 py-2">{t.nombre}</td>
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-2 flex gap-2">
+                      {/* Botón Ver */}
+                      <button
+                        onClick={() => handleViewSubjects(t)}
+                        className="flex gap-2 items-center justify-center text-green-600 border border-green-600 px-3 py-1 rounded hover:bg-green-600 hover:text-white transition"
+                      >
+                        <Eye size={16} className="w-5 h-5" />
+                        <span className="hidden sm:inline">Ver</span>
+                      </button>
+                      {/* Botón Editar */}
                       <button
                         onClick={() => handleEdit(t)}
-                        className="text-blue-600 hover:bg-blue-600 hover:text-white focus border border-blue-600 px-3 py-1 rounded cursor-pointer transition"
+                        className="flex gap-2 items-center justify-center text-blue-600 border border-blue-600 px-3 py-1 rounded hover:bg-blue-600 hover:text-white transition"
                       >
-                        Editar
+                        <Pencil size={16} className="w-4 h-4" />
+                        <span className="hidden sm:inline">Editar</span>
                       </button>
                     </td>
                   </tr>
                 ))}
-                {teachers.length === 0 && (
+                {filteredTeachers.length === 0 && (
                   <tr>
-                    <td colSpan="4" className="px-4 py-2 text-center text-gray-500">
-                      No hay docentes registrados
+                    <td
+                      colSpan="4"
+                      className="px-4 py-2 text-center text-gray-500"
+                    >
+                      No se encontraron docentes
                     </td>
                   </tr>
                 )}
@@ -120,47 +176,21 @@ const TeacherList = () => {
         </table>
       </div>
 
-      {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-            <h3 className="text-lg font-bold mb-4">
-              {editing ? "Editar Docente" : "Nuevo Docente"}
-            </h3>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Nombre
-                </label>
-                <input
-                  type="text"
-                  name="nombre"
-                  value={form.nombre}
-                  onChange={handleChange}
-                  className="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-indigo-500"
-                  required
-                />
-              </div>
+      <TeacherEditModal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        onSubmit={handleSubmit}
+        form={form}
+        handleChange={handleChange}
+        editing={editing}
+      />
 
-              <div className="flex justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={() => setShowModal(false)}
-                  className="px-4 py-2 rounded-lg border hover:bg-gray-100"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  className="bg-[rgb(43,57,143)] text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition"
-                >
-                  {editing ? "Actualizar" : "Crear"}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <TeacherSubjectModal
+        show={showSubjectsModal}
+        onClose={() => setShowSubjectsModal(false)}
+        selectedTeacher={selectedTeacher}
+        subjects={subjects}
+      />
     </div>
   );
 };

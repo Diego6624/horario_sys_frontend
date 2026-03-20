@@ -1,6 +1,16 @@
-import { User, MapPin, Clock, BookText, ListOrdered, X } from "lucide-react";
+import {
+  User,
+  MapPin,
+  Clock,
+  BookText,
+  ListOrdered,
+  X,
+  CalendarDays,
+} from "lucide-react";
 import { useState } from "react";
 import { updateScheduleEstado } from "../services/scheduleService";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 const ModalCalendar = ({ event, onClose, refreshSchedules }) => {
   if (!event) return null;
@@ -11,8 +21,8 @@ const ModalCalendar = ({ event, onClose, refreshSchedules }) => {
     try {
       setLoading(true);
       await updateScheduleEstado(event.id, nuevoEstado);
-      await refreshSchedules(); // refresca el calendario
-      onClose(); // cierra modal
+      await refreshSchedules();
+      onClose();
     } catch (err) {
       console.error("Error actualizando clase:", err);
     } finally {
@@ -20,108 +30,142 @@ const ModalCalendar = ({ event, onClose, refreshSchedules }) => {
     }
   };
 
+  const isCancelado = event.estado === "Cancelado";
+
   return (
-    <div className="fixed inset-0 bg-black/70 flex items-center justify-center w-auto z-50">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-auto h-auto flex flex-col relative">
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center z-50">
 
-        {/* Header */}
-        <div className="flex items-center justify-center mb-4">
-          <div className="w-min h-auto">
-            <h2 className="text-2xl text-center font-bold mb-2 flex items-center gap-2 text-gray-900 w-max">
-              {event.course.toUpperCase()}
-            </h2>
-            <hr className="border-t border-blue-400 w-full" />
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden">
+
+        {/* HEADER */}
+        <div
+          className={`flex justify-between items-center px-6 py-4 ${isCancelado
+            ? "bg-red-700"
+            : "bg-[rgb(43,57,143)]"
+            }`}
+        >
+          <div className="flex items-center gap-3">
+            <CalendarDays size={22} className="text-white" />
+
+            <div className="flex items-center gap-3">
+              <h2 className="text-lg md:text-xl font-semibold text-white">
+                {event.course.toUpperCase()}
+              </h2>
+            </div>
           </div>
+
+          <span className="px-3 py-1 rounded-full text-xs font-semibold border bg-white/20 text-white border-white/30">
+            {isCancelado ? "Cancelada" : "Activa"}
+          </span>
         </div>
 
-        {/* Estado */}
-        <div className="text-center mb-4">
-          {event.estado === "Cancelado" ? (
-            <span className="px-3 py-1 bg-red-600 text-white rounded-full text-sm font-semibold">
-              CANCELADA
-            </span>
-          ) : (
-            <span className="px-3 py-1 bg-green-600 text-white rounded-full text-sm font-semibold">
-              ACTIVA
-            </span>
-          )}
+        {/* BODY */}
+        <div className="p-6 space-y-6">
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+            {/* Docente */}
+            <div className="bg-gray-50 rounded-xl p-4 flex items-center gap-3">
+              <User className="text-blue-500" size={20} />
+              <div>
+                <p className="text-xs text-gray-500">Docente</p>
+                <p className="font-semibold text-gray-800">{event.teacher}</p>
+              </div>
+            </div>
+
+            {/* Módulo */}
+            <div className="bg-gray-50 rounded-xl p-4 flex items-center gap-3">
+              <BookText className="text-blue-500" size={20} />
+              <div>
+                <p className="text-xs text-gray-500">Módulo</p>
+                <p className="font-semibold text-gray-800">{event.modulo || "N/A"}</p>
+              </div>
+            </div>
+
+            {/* Sesión */}
+            <div className="bg-gray-50 rounded-xl p-4 flex items-center gap-3">
+              <ListOrdered className="text-blue-500" size={20} />
+              <div>
+                <p className="text-xs text-gray-500">Sesión</p>
+                <p className="font-semibold text-gray-800">{event.sesion || "N/A"}</p>
+              </div>
+            </div>
+
+            {/* Horario */}
+            <div className="bg-gray-50 rounded-xl p-4 flex items-center gap-3">
+              <Clock className="text-blue-500" size={20} />
+              <div>
+                <p className="text-xs text-gray-500">Horario</p>
+                <p className="font-semibold text-gray-800">{event.hora}</p>
+              </div>
+            </div>
+
+            {/* 🔹 Fecha de la sesión */}
+            <div className="bg-gray-50 rounded-xl p-4 flex items-center gap-3">
+              <CalendarDays className="text-blue-500" size={20} />
+              <div>
+                <p className="text-xs text-gray-500">Fecha de sesión</p>
+                <p className="font-semibold text-gray-800">
+                  {event.fechaSesion
+                    ? new Date(event.fechaSesion).toISOString().split("T")[0]
+                    : "—"}
+                </p>
+              </div>
+            </div>
+
+
+            {/* Aula */}
+            <div className="bg-gray-50 rounded-xl p-4 flex items-center gap-3">
+              <MapPin className="text-blue-500" size={20} />
+              <div>
+                <p className="text-xs text-gray-500">Aula</p>
+                <p className="font-semibold text-gray-800">{event.aula}</p>
+              </div>
+            </div>
+
+          </div>
+
+
         </div>
 
-        {/* Grid de detalles */}
-        <div className="grid grid-cols-3 gap-7 text-lg text-gray-800">
-          {/* Docente */}
-          <div className="flex flex-col">
-            <div className="flex items-center gap-2 font-semibold">
-              <User size={22} className="text-blue-600" />
-              <span>DOCENTE:</span>
-            </div>
-            <span className="font-medium">{event.teacher}</span>
-          </div>
+        {/* FOOTER */}
+        <div className="flex justify-between items-center px-6 py-4 border-t border-gray-300 bg-gray-50">
 
-          {/* Módulo */}
-          <div className="flex flex-col">
-            <div className="flex items-center gap-2 font-semibold">
-              <BookText className="w-5 h-5 text-blue-600" />
-              <span>MÓDULO:</span>
-            </div>
-            <span className="font-medium">{event.modulo || "N/A"}</span>
-          </div>
+          {/* SWITCH PRO */}
+          <div className="flex items-center space-x-3">
 
-          {/* Sesión */}
-          <div className="flex flex-col">
-            <div className="flex items-center gap-2 font-semibold">
-              <ListOrdered className="w-5 h-5 text-blue-600" />
-              <span>SESIÓN:</span>
-            </div>
-            <span className="font-medium">{event.sesion || "N/A"}</span>
-          </div>
-
-          {/* Hora */}
-          <div className="flex flex-col">
-            <div className="flex items-center gap-2 font-semibold">
-              <Clock className="w-5 h-5 text-blue-600" />
-              <span>HORA:</span>
-            </div>
-            <span className="font-medium">{event.hora}</span>
-          </div>
-
-          {/* Aula */}
-          <div className="flex flex-col">
-            <div className="flex items-center gap-2 font-semibold">
-              <MapPin className="w-5 h-5 text-blue-600" />
-              <span>AULA:</span>
-            </div>
-            <span className="font-medium">{event.aula}</span>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="flex justify-end mt-4 gap-3">
-          {event.estado === "Cancelado" ? (
-            <button
-              onClick={() => handleChangeEstado("Libre")}
+            <Switch
+              id="estado-clase"
+              checked={!isCancelado}
               disabled={loading}
-              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 text-base cursor-pointer"
-            >
-              {loading ? "Reactivando..." : "Reactivar clase"}
-            </button>
-          ) : (
-            <button
-              onClick={() => handleChangeEstado("Cancelado")}
-              disabled={loading}
-              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 text-base cursor-pointer"
-            >
-              {loading ? "Cancelando..." : "Cancelar clase"}
-            </button>
-          )}
+              onCheckedChange={(checked) => {
+                const nuevoEstado = checked ? "Libre" : "Cancelado";
+                handleChangeEstado(nuevoEstado);
+              }}
+              className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500"
+            />
+
+            <Label htmlFor="estado-clase" className="text-sm font-medium">
+              {loading
+                ? "Actualizando..."
+                : !isCancelado
+                  ? "Clase activa"
+                  : "Clase cancelada"}
+            </Label>
+
+          </div>
+
+          {/* BOTÓN CERRAR */}
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 text-base cursor-pointer flex items-center gap-1"
+            className="px-4 py-2 rounded-lg bg-gray-800 text-white hover:bg-gray-900 transition flex items-center gap-2"
           >
-            <X className="w-5 h-5 inline-block" />
+            <X size={18} />
             Cerrar
           </button>
+
         </div>
+
       </div>
     </div>
   );
