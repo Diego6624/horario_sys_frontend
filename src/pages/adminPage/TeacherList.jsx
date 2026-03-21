@@ -144,7 +144,7 @@ const TeacherList = () => {
                       {/* Botón Ver */}
                       <button
                         onClick={() => handleViewSubjects(t)}
-                        className="flex gap-2 items-center justify-center text-green-600 border border-green-600 px-3 py-1 rounded hover:bg-green-600 hover:text-white transition"
+                        className="flex gap-2 items-center justify-center text-green-600 border border-green-600 px-3 py-1 rounded hover:bg-green-600 hover:text-white transition cursor-pointer"
                       >
                         <Eye size={16} className="w-5 h-5" />
                         <span className="hidden sm:inline">Ver</span>
@@ -152,7 +152,7 @@ const TeacherList = () => {
                       {/* Botón Editar */}
                       <button
                         onClick={() => handleEdit(t)}
-                        className="flex gap-2 items-center justify-center text-blue-600 border border-blue-600 px-3 py-1 rounded hover:bg-blue-600 hover:text-white transition"
+                        className="flex gap-2 items-center justify-center text-blue-600 border border-blue-600 px-3 py-1 rounded hover:bg-blue-600 hover:text-white transition cursor-pointer"
                       >
                         <Pencil size={16} className="w-4 h-4" />
                         <span className="hidden sm:inline">Editar</span>

@@ -246,25 +246,25 @@ const SubjectList = () => {
                       {/* Botón Ver */}
                       <button
                         onClick={() => handleViewSubject(s)}
-                        className="flex items-center gap-2 text-green-600 border border-green-600 px-3 py-1 rounded hover:bg-green-600 hover:text-white transition"
+                        className="flex items-center gap-2 text-green-600 border border-green-600 px-3 py-1 rounded hover:bg-green-600 hover:text-white transition cursor-pointer"
                       >
-                        <Eye size={16} />
+                        <Eye size={16} className="w-5 h-5"/>
                         <span className="hidden sm:inline">Ver</span>
                       </button>
                       {/* Botón Editar */}
                       <button
                         onClick={() => handleEdit(s)}
-                        className="flex items-center gap-2 text-blue-600 border border-blue-600 px-3 py-1 rounded hover:bg-blue-600 hover:text-white transition"
+                        className="flex items-center gap-2 text-blue-600 border border-blue-600 px-3 py-1 rounded hover:bg-blue-600 hover:text-white transition cursor-pointer"
                       >
-                        <Pencil size={16} />
+                        <Pencil size={16} className="w-4 h-4"/>
                         <span className="hidden sm:inline">Editar</span>
                       </button>
                       {/* Botón Eliminar */}
                       <button
                         onClick={() => handleDelete(s.id)}
-                        className="flex items-center gap-2 text-red-600 border border-red-600 px-3 py-1 rounded hover:bg-red-600 hover:text-white transition"
+                        className="flex items-center gap-2 text-red-600 border border-red-600 px-3 py-1 rounded hover:bg-red-600 hover:text-white transition cursor-pointer"
                       >
-                        <Trash2 size={16} />
+                        <Trash2 size={16} className="w-4 h-4"/>
                         <span className="hidden sm:inline">Eliminar</span>
                       </button>
                     </td>
