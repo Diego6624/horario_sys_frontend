@@ -215,10 +215,9 @@ const SubjectList = () => {
       </div>
 
       {/* Tabla */}
-      <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-
-        <table className="min-w-full border-collapse">
-          <thead className="bg-[rgb(43,57,143)] text-white">
+      <div className="overflow-x-auto bg-white shadow-md rounded-lg max-h-[70vh]">
+        <table className="w-full min-w-[600px] border-collapse">
+          <thead className="bg-[rgb(43,57,143)] text-white sticky top-0 z-10">
             <tr>
               <th className="px-4 py-2 text-left">ID</th>
               <th className="px-4 py-2 text-left">Curso</th>
@@ -237,34 +236,35 @@ const SubjectList = () => {
             ) : (
               <>
                 {filteredSubjects.map((s, index) => (
-                  <tr key={s.id || index} className="border-b hover:bg-gray-50 border-gray-300">
+                  <tr
+                    key={s.id || index}
+                    className="border-b hover:bg-gray-50 border-gray-300"
+                  >
                     <td className="px-4 py-2">{s.id}</td>
                     <td className="px-4 py-2">{s.course}</td>
                     <td className="px-4 py-2">{s.teacher}</td>
                     <td className="px-4 py-2">{getRemainingWeeks(s)} semana(s)</td>
                     <td className="px-4 py-2 flex gap-3">
-                      {/* Botón Ver */}
+                      {/* Botones */}
                       <button
                         onClick={() => handleViewSubject(s)}
                         className="flex items-center gap-2 text-green-600 border border-green-600 px-3 py-1 rounded hover:bg-green-600 hover:text-white transition cursor-pointer"
                       >
-                        <Eye size={16} className="w-5 h-5"/>
+                        <Eye size={16} className="w-5 h-5" />
                         <span className="hidden sm:inline">Ver</span>
                       </button>
-                      {/* Botón Editar */}
                       <button
                         onClick={() => handleEdit(s)}
                         className="flex items-center gap-2 text-blue-600 border border-blue-600 px-3 py-1 rounded hover:bg-blue-600 hover:text-white transition cursor-pointer"
                       >
-                        <Pencil size={16} className="w-4 h-4"/>
+                        <Pencil size={16} className="w-4 h-4" />
                         <span className="hidden sm:inline">Editar</span>
                       </button>
-                      {/* Botón Eliminar */}
                       <button
                         onClick={() => handleDelete(s.id)}
                         className="flex items-center gap-2 text-red-600 border border-red-600 px-3 py-1 rounded hover:bg-red-600 hover:text-white transition cursor-pointer"
                       >
-                        <Trash2 size={16} className="w-4 h-4"/>
+                        <Trash2 size={16} className="w-4 h-4" />
                         <span className="hidden sm:inline">Eliminar</span>
                       </button>
                     </td>
@@ -272,7 +272,10 @@ const SubjectList = () => {
                 ))}
                 {filteredSubjects.length === 0 && (
                   <tr>
-                    <td colSpan="5" className="px-4 py-2 text-center text-gray-500">
+                    <td
+                      colSpan="5"
+                      className="px-4 py-2 text-center text-gray-500"
+                    >
                       No se encontraron materias
                     </td>
                   </tr>
@@ -282,6 +285,7 @@ const SubjectList = () => {
           </tbody>
         </table>
       </div>
+
 
       <SubjectEditModal
         show={showModal}
