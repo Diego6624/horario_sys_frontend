@@ -58,7 +58,7 @@ const HoraryComponent = () => {
 
         {/* CENTRO (solo desktop) */}
         <div className="hidden md:flex gap-3 items-center">
-          <h1 className="text-xl md:text-3xl font-bold text-black uppercase">
+          <h1 className="text-xl md:text-3xl font-bold uppercase text-black ">
             Distribución de Aulas
           </h1>
           <span className="text-lg md:text-3xl font-bold text-blue-700 uppercase">
@@ -72,7 +72,7 @@ const HoraryComponent = () => {
         </div>
 
         {/* RELOJ MODERNO */}
-        <div className="hidden sm:block text-white font-semibold text-lg md:text-2xl px-3 py-1 rounded-lg border border-white/20 backdrop-blur-md bg-white/10 shadow-sm">
+        <div className="hidden sm:block text-blue-700 text-lg md:text-2xl px-4 py-2 rounded-md border bg-white/50 tracking-widest">
           {time.toLocaleTimeString("es-PE", {
             hour: "2-digit",
             minute: "2-digit",

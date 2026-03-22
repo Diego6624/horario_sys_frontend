@@ -11,7 +11,7 @@ import { getAllSchedules } from "../services/scheduleService";
 const CalendarView = ({ schedules, subjects = [] }) => {
   const [isMobile, setIsMobile] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const [allSchedules, setAllSchedules] = useState(schedules); // ✅ para refrescar
+  const [allSchedules, setAllSchedules] = useState(schedules);
 
   const calendarRef = useRef(null);
 
@@ -22,16 +22,14 @@ const CalendarView = ({ schedules, subjects = [] }) => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // ✅ Filtramos cancelados
   const events = allSchedules.map((s) => {
-    const subj = subjects.find(sub => sub.course === s.course);
+    const subj = subjects.find((sub) => sub.course === s.course);
     return {
       id: s.id,
       title: `${s.course} - ${s.teacher}`,
       start: `${s.date}T${s.startTime}`,
       end: `${s.date}T${s.endTime}`,
-      backgroundColor: s.estado === "Libre" ? "#475569" : "#1e3a8a",
-      borderColor: "#0f172a",
+      // quitamos backgroundColor y borderColor para evitar la doble capa
       textColor: "#fff",
       extendedProps: {
         aula: s.classroom,
@@ -42,14 +40,13 @@ const CalendarView = ({ schedules, subjects = [] }) => {
         teacher: s.teacher,
         id: s.id,
         estado: s.estado,
-        fechaSesion: s.date
+        fechaSesion: s.date,
       },
     };
   });
 
   const calendarApi = calendarRef.current ? calendarRef.current.getApi() : null;
 
-  // ✅ función para refrescar horarios
   const refreshSchedules = async () => {
     const schs = await getAllSchedules();
     setAllSchedules(schs);
@@ -112,17 +109,51 @@ const CalendarView = ({ schedules, subjects = [] }) => {
         eventClick={(info) => {
           setSelectedEvent(info.event.extendedProps);
         }}
-        eventContent={(arg) => (
-          <div className="p-2 text-xs md:text-sm font-medium text-white rounded-md cursor-pointer">
-            <div>{arg.event.title}</div>
-            <div className="opacity-80">{arg.event.extendedProps.aula}</div>
-            <div className="italic opacity-70">{arg.event.extendedProps.hora}</div>
-            {arg.event.extendedProps.estado === "Cancelado" && (
-              <div className="mt-1 text-red-300 font-bold">Cancelada</div>
-            )}
-          </div>
-        )}
+        eventDisplay="block"            // evita la doble capa de fondo
+        eventOverlap={false}
+        eventMaxStack={3}
+        eventDidMount={(info) => {
+          // Aseguramos que el contenedor base no tenga fondo ni borde visible
+          if (info.el && info.el.style) {
+            info.el.style.background = "transparent";
+            info.el.style.border = "none";
+            info.el.style.boxShadow = "none";
+          }
+        }}
+        eventContent={(arg) => {
+          const estado = arg.event.extendedProps.estado;
+          let bgClass = "";
+          let textColor = "text-white";
 
+          if (estado === "Libre") {
+            bgClass = "bg-gray-500";
+          } else if (estado === "En clase") {
+            bgClass = "bg-blue-700";
+          } else if (estado === "Cancelado") {
+            bgClass = "bg-red-400";
+          }
+
+          return (
+            <div
+              className={`p-1.5 text-xs md:text-sm font-medium rounded-md cursor-pointer shadow-md ${bgClass} ${textColor} overflow-hidden`}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                height: "100%",
+                boxSizing: "border-box",
+              }}
+              title={`${arg.event.title} • ${arg.event.extendedProps.hora}`} // tooltip con info completa
+            >
+              <div className="truncate">{arg.event.title}</div>
+              <div className="opacity-80 truncate text-[11px]">{arg.event.extendedProps.aula}</div>
+              <div className="italic opacity-70 truncate text-[11px]">{arg.event.extendedProps.hora}</div>
+              {estado === "Cancelado" && (
+                <div className="mt-1 text-red-100 font-bold truncate text-[11px]">Cancelada</div>
+              )}
+            </div>
+          );
+        }}
       />
 
       {/* Modal separado */}
