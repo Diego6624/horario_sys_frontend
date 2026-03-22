@@ -34,7 +34,7 @@ const CardHorarioComponent = ({
         </h2>
 
         {/* 🔘 ESTADO ANIMADO */}
-        <div className="absolute right-3 top-3 flex items-center justify-center">
+        <div className="absolute right-3 top-2 md:top-3 lg:top-4 flex items-center justify-center">
           <div className="relative flex items-center justify-center">
             {/* Aura / Glow */}
             <span
@@ -56,7 +56,7 @@ const CardHorarioComponent = ({
       </div>
 
       {/* BODY */}
-      <div className="relative px-2 py-2 lg:px-6 lg:py-6 grid grid-cols-2 grid-rows-2 gap-4 lg:gap-10 grow">
+      <div className="relative px-2 py-2 lg:px-6 lg:py-4 grid grid-cols-2 grid-rows-2 gap-4 lg:gap-10 grow">
 
         {/* Línea vertical */}
         <div className="absolute left-1/2 top-4 bottom-4 w-px bg-black -translate-x-1/2" />
