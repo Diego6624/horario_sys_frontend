@@ -215,9 +215,9 @@ const SubjectList = () => {
       </div>
 
       {/* Tabla */}
-      <div className="overflow-x-auto bg-white shadow-md rounded-lg max-h-[70vh]">
-        <table className="w-full min-w-[600px] border-collapse">
-          <thead className="bg-[rgb(43,57,143)] text-white sticky top-0 z-10">
+      <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+        <table className="w-auto min-w-full border-collapse">
+          <thead className="bg-[rgb(43,57,143)] text-white">
             <tr>
               <th className="px-4 py-2 text-left">ID</th>
               <th className="px-4 py-2 text-left">Curso</th>
@@ -226,7 +226,7 @@ const SubjectList = () => {
               <th className="px-4 py-2 text-left">Acciones</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="touch-auto overflow-auto">
             {loading ? (
               <tr>
                 <td colSpan="5">

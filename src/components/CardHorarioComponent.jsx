@@ -19,7 +19,7 @@ const CardHorarioComponent = ({
   return (
     <div
       className={`
-        rounded-xl shadow-md flex flex-col w-full h-full
+        rounded-xl shadow-md flex flex-col w-full h-full lg:h-74.5
         border-2 transition
         ${isOcupado ? "border-blue-500" : "border-gray-400"}
         ${!isOcupado ? "bg-gray-100" : "bg-white"}

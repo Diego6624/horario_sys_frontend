@@ -5,19 +5,20 @@ import { Circle } from "lucide-react";
 import LoaderComponent from "../../components/LoaderComponent";
 import { connectSocket, disconnectSocket } from "../../services/socketService";
 import { getCurrentSchedules } from "../../services/scheduleService";
-import { getAllSubjects } from "../../services/subjectService";
+import { getAllSubjectsPublic } from "../../services/subjectService";
+import useClock from "../../hooks/useClock"; // 👈 importar el hook
 
 const HoraryComponent = () => {
   const [horarios, setHorarios] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
+  const time = useClock(); // ⏰ reloj en tiempo real
 
-  // 🔹 Cargar horarios y subjects iniciales
   const cargarDatos = async () => {
     try {
       setLoading(true);
       const schs = await getCurrentSchedules();
-      const subs = await getAllSubjects();
+      const subs = await getAllSubjectsPublic();
       setHorarios(schs);
       setSubjects(subs);
     } catch (error) {
@@ -28,16 +29,13 @@ const HoraryComponent = () => {
   };
 
   useEffect(() => {
-    // 1️⃣ Cargar datos iniciales
     cargarDatos();
 
-    // 2️⃣ Conectar al WebSocket para actualizaciones en tiempo real
     connectSocket((data) => {
       console.log("📡 Horarios actualizados vía socket:", data);
       setHorarios(data);
     });
 
-    // 3️⃣ Desconectar al desmontar el componente
     return () => {
       disconnectSocket();
     };
@@ -45,45 +43,41 @@ const HoraryComponent = () => {
 
   return (
     <div
-      className="w-screen min-h-screen lg:h-full lg:w-full text-white flex flex-col bg-cover bg-center overflow-hidden"
+      className="w-screen min-h-screen text-white flex flex-col bg-cover bg-center overflow-hidden"
       style={{ backgroundImage: `url(${bg})` }}
     >
       {/* HEADER */}
-      <div className="w-full flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 sm:py-1.5 px-6 sm:px-12 border-b border-slate-300 bg-white/10 backdrop-blur-sm gap-2 sm:gap-0">
-        <div className="flex justify-between items-center w-full sm:w-auto">
-          <img
-            src="/image/logo_systematic.png"
-            alt="Systematic"
-            className="h-8 md:h-12 lg:h-15 object-contain"
-          />
-        </div>
+      <div className="w-full flex justify-between items-center py-3 px-4 md:px-6 border-b border-white/20 bg-white/10 backdrop-blur-md">
 
-        <div className="hidden sm:flex items-center gap-3 text-center">
-          <h1 className="text-xl md:text-2xl lg:text-4xl xl:text-4xl font-bold tracking-tighter text-black uppercase">
+        {/* LOGO */}
+        <img
+          src="/image/logo_systematic.png"
+          alt="Systematic"
+          className="h-8 md:h-12 object-contain"
+        />
+
+        {/* CENTRO (solo desktop) */}
+        <div className="hidden md:flex gap-3 items-center">
+          <h1 className="text-xl md:text-3xl font-bold text-black uppercase">
             Distribución de Aulas
           </h1>
-          <span className="text-xl md:text-2xl lg:text-4xl xl:text-4xl font-bold text-blue-700 uppercase">
+          <span className="text-lg md:text-3xl font-bold text-blue-700 uppercase">
             TURNO {horarios[0]?.turno || "—"}
           </span>
         </div>
 
-        <div className="flex flex-row sm:flex-col justify-center sm:justify-end gap-6 sm:gap-1 text-black font-semibold text-sm sm:text-md lg:text-lg">
-          <div className="sm:hidden flex items-center gap-2">
-            <Circle size={12} className="fill-gray-400 text-gray-400" />
-            <span>Libre</span>
-          </div>
-          <div className="sm:hidden flex items-center gap-2">
-            <Circle size={12} className="fill-blue-500 text-blue-500" />
-            <span>En clase</span>
-          </div>
-          <div className="hidden sm:flex items-center gap-2">
-            <Circle size={15} className="fill-gray-400 text-gray-400" />
-            <span>Libre</span>
-          </div>
-          <div className="hidden sm:flex items-center gap-2">
-            <Circle size={15} className="fill-blue-500 text-blue-500" />
-            <span>En clase</span>
-          </div>
+        {/* TURNO (solo mobile) */}
+        <div className="md:hidden text-blue-700 font-bold text-lg uppercase">
+          TURNO {horarios[0]?.turno || "—"}
+        </div>
+
+        {/* RELOJ MODERNO */}
+        <div className="hidden sm:block text-white font-semibold text-lg md:text-2xl px-3 py-1 rounded-lg border border-white/20 backdrop-blur-md bg-white/10 shadow-sm">
+          {time.toLocaleTimeString("es-PE", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          })}
         </div>
       </div>
 
@@ -122,6 +116,18 @@ const HoraryComponent = () => {
             })}
           </div>
         )}
+      </div>
+
+      {/* FOOTER */}
+      <div className="w-full flex justify-center gap-10 py-4 bg-white/10 backdrop-blur-sm text-black font-semibold">
+        <div className="flex items-center gap-2">
+          <Circle size={15} className="fill-gray-400 text-gray-400" />
+          <span>Libre</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <Circle size={15} className="fill-blue-500 text-blue-500" />
+          <span>En clase</span>
+        </div>
       </div>
     </div>
   );

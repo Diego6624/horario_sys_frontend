@@ -6,9 +6,17 @@ const getAuthHeader = () => {
   return { "Authorization": `Bearer ${user.token}` };
 };
 
+// 🔹 Versión protegida (admin)
 export const getAllSubjects = async () => {
   const res = await fetch(`${API}/subjects`, { headers: getAuthHeader() });
-  if (!res.ok) throw new Error("Error obteniendo materias");
+  if (!res.ok) throw new Error("Error obteniendo materias (admin)");
+  return await res.json();
+};
+
+// 🔹 Versión pública (sin token)
+export const getAllSubjectsPublic = async () => {
+  const res = await fetch(`${API}/public/subjects`);
+  if (!res.ok) throw new Error("Error obteniendo materias (public)");
   return await res.json();
 };
 
