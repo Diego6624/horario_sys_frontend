@@ -22,7 +22,7 @@ const TeacherSubjectsModal = ({ show, onClose, selectedTeacher, subjects }) => {
             </h3>
             <button
               onClick={onClose}
-              className="text-white/80 hover:text-white text-xl transition"
+              className="text-white/80 hover:text-white text-xl transition cursor-pointer"
             >
               ✕
             </button>
@@ -72,16 +72,6 @@ const TeacherSubjectsModal = ({ show, onClose, selectedTeacher, subjects }) => {
                 </tbody>
               </table>
             </div>
-          </div>
-
-          {/* FOOTER */}
-          <div className="flex justify-end px-6 py-4 border-t bg-gray-50">
-            <button
-              onClick={onClose}
-              className="px-5 py-2 rounded-lg bg-gray-800 text-white hover:bg-gray-900 transition font-medium cursor-pointer"
-            >
-              Cerrar
-            </button>
           </div>
         </motion.div>
       </div>

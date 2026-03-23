@@ -7,6 +7,7 @@ import {
 import CourseEditModal from "./components/CourseEditModal";
 import LoaderComponent from "@/components/LoaderComponent";
 import { Search, Pencil } from "lucide-react";
+import { toast } from "react-toastify";
 
 const CourseList = () => {
   const [courses, setCourses] = useState([]);
@@ -47,8 +48,10 @@ const CourseList = () => {
     try {
       if (editing) {
         await updateCourse(editing.id, form);
+        toast.success("Curso actualizado correctamente");
       } else {
         await createCourse(form);
+        toast.success("Curso creado correctamente");
       }
       setForm({ nombre: "" });
       setEditing(null);
@@ -56,6 +59,7 @@ const CourseList = () => {
       fetchData();
     } catch (error) {
       console.error("Error guardando curso:", error);
+      toast.error("Error guardando curso");
     }
   };
 

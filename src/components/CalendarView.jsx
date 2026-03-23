@@ -23,22 +23,25 @@ const CalendarView = ({ schedules, subjects = [] }) => {
   }, []);
 
   const events = allSchedules.map((s) => {
-    const subj = subjects.find((sub) => sub.course === s.course);
+    const subj = subjects.find(
+      (sub) => sub.course === s.course && sub.teacher === s.teacher
+    );
+
     return {
-      id: s.id,
+      id: `${s.id}-${subj?.id || "noSubj"}`,
       title: `${s.course} - ${s.teacher}`,
       start: `${s.date}T${s.startTime}`,
       end: `${s.date}T${s.endTime}`,
-      // quitamos backgroundColor y borderColor para evitar la doble capa
       textColor: "#fff",
       extendedProps: {
+        idSubject: subj?.id,
+        idSchedule: s.id,
         aula: s.classroom,
         sesion: s.sesion,
         modulo: subj?.modulo || "N/A",
         hora: `${s.startTime} - ${s.endTime}`,
         course: s.course,
         teacher: s.teacher,
-        id: s.id,
         estado: s.estado,
         fechaSesion: s.date,
       },
@@ -109,11 +112,10 @@ const CalendarView = ({ schedules, subjects = [] }) => {
         eventClick={(info) => {
           setSelectedEvent(info.event.extendedProps);
         }}
-        eventDisplay="block"            // evita la doble capa de fondo
+        eventDisplay="block"
         eventOverlap={false}
         eventMaxStack={3}
         eventDidMount={(info) => {
-          // Aseguramos que el contenedor base no tenga fondo ni borde visible
           if (info.el && info.el.style) {
             info.el.style.background = "transparent";
             info.el.style.border = "none";
@@ -126,16 +128,16 @@ const CalendarView = ({ schedules, subjects = [] }) => {
           let textColor = "text-white";
 
           if (estado === "Libre") {
-            bgClass = "bg-gray-500";
+            bgClass = "bg-gray-500 border-gray-400";
           } else if (estado === "En clase") {
-            bgClass = "bg-blue-700";
+            bgClass = "bg-blue-700 border-blue-800";
           } else if (estado === "Cancelado") {
-            bgClass = "bg-red-400";
+            bgClass = "bg-red-400 border-red-300";
           }
 
           return (
             <div
-              className={`p-1.5 text-xs md:text-sm font-medium rounded-md cursor-pointer shadow-md ${bgClass} ${textColor} overflow-hidden`}
+              className={`p-1.5 border text-xs md:text-sm font-medium rounded-md cursor-pointer shadow-md ${bgClass} ${textColor} overflow-hidden`}
               style={{
                 display: "flex",
                 flexDirection: "column",
@@ -143,11 +145,15 @@ const CalendarView = ({ schedules, subjects = [] }) => {
                 height: "100%",
                 boxSizing: "border-box",
               }}
-              title={`${arg.event.title} • ${arg.event.extendedProps.hora}`} // tooltip con info completa
+              title={`${arg.event.title} • ${arg.event.extendedProps.hora}`}
             >
               <div className="truncate">{arg.event.title}</div>
-              <div className="opacity-80 truncate text-[11px]">{arg.event.extendedProps.aula}</div>
-              <div className="italic opacity-70 truncate text-[11px]">{arg.event.extendedProps.hora}</div>
+              <div className="opacity-80 truncate text-[11px]">
+                Aula: {arg.event.extendedProps.aula}
+              </div>
+              <div className="italic opacity-70 truncate text-[11px]">
+                {arg.event.extendedProps.hora}
+              </div>
               {estado === "Cancelado" && (
                 <div className="mt-1 text-red-100 font-bold truncate text-[11px]">Cancelada</div>
               )}

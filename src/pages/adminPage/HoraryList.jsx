@@ -5,6 +5,7 @@ import { getAllClassrooms } from "../../services/classroomService";
 import LoaderComponent from "../../components/LoaderComponent";
 import CalendarView from "../../components/CalendarView";
 import SpecialSessionModal from "./components/SpecialSessionModal";
+import { toast } from "react-toastify";
 
 const HoraryList = () => {
   const [schedules, setSchedules] = useState([]);
@@ -34,6 +35,7 @@ const HoraryList = () => {
         setClassrooms(cls);
       } catch (error) {
         console.error("Error cargando datos:", error);
+        toast.error("Error cargando datos");
       } finally {
         setLoading(false);
       }
@@ -53,23 +55,25 @@ const HoraryList = () => {
           .toUpperCase(),
         startTime: specialForm.startTime,
         endTime: specialForm.endTime,
-        sesion: specialForm.sesion
+        sesion: specialForm.sesion,
       };
 
-
       await createSchedule(payload);
+      toast.success("Sesión creada correctamente");
       setShowSpecialModal(false);
+
       const schs = await getAllSchedules();
       setSchedules(schs);
     } catch (err) {
-      console.error("Error creando clase especial:", err);
+      console.error("Error creando una nueva sesión:", err);
+      toast.error("Error creando una nueva sesión:");
     }
   };
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-[rgb(43,57,143)]">Calendario</h2>
+        <h2 className="text-2xl font-bold text-[rgb(43,57,143)]">Gestión de horarios</h2>
         <button
           onClick={() => setShowSpecialModal(true)}
           className="bg-[rgb(43,57,143)] text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition cursor-pointer"

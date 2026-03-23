@@ -41,7 +41,7 @@ const SidebarComponent = () => {
     <Sidebar collapsible="offcanvas">
 
       {/* CONTENEDOR REAL CON COLOR */}
-      <div className="flex flex-col h-full bg-[rgb(43,57,143)] text-white">
+      <div className="flex flex-col min-h-full w-auto bg-[rgb(43,57,143)] text-white">
 
         {/* HEADER */}
         <div className="p-4 border-b border-white/20 flex justify-center items-center gap-3">
@@ -83,7 +83,7 @@ const SidebarComponent = () => {
         </SidebarContent>
 
         {/* FOOTER */}
-        <SidebarFooter className="p-4 border-t border-white/20 bg-[rgb(43,57,143)]">
+        <SidebarFooter className="p-2 border-t border-white/20 bg-[rgb(43,57,143)]">
           <button
             onClick={handleLogout}
             className="w-full text-lg font-semibold flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-white hover:bg-white/10 transition cursor-pointer"

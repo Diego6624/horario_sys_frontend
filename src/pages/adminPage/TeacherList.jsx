@@ -9,6 +9,7 @@ import LoaderComponent from "@/components/LoaderComponent";
 import TeacherSubjectModal from "./components/TeacherSubjectModal";
 import TeacherEditModal from "./components/TeacherEditModal";
 import { Eye, Pencil, Search } from "lucide-react";
+import { toast } from "react-toastify";
 
 const TeacherList = () => {
   const [teachers, setTeachers] = useState([]);
@@ -48,8 +49,10 @@ const TeacherList = () => {
     try {
       if (editing) {
         await updateTeacher(editing.id, form);
+        toast.success("Docente actualizado correctamente");
       } else {
         await createTeacher(form);
+        toast.success("Docente creado correctamente");
       }
       setForm({ nombre: "" });
       setEditing(null);
@@ -57,8 +60,10 @@ const TeacherList = () => {
       fetchData();
     } catch (error) {
       console.error("Error guardando docente:", error);
+      toast.error("Error guardando docente");
     }
   };
+
 
   const handleEdit = (teacher) => {
     setEditing(teacher);
@@ -74,8 +79,10 @@ const TeacherList = () => {
       setShowSubjectsModal(true);
     } catch (error) {
       console.error("Error obteniendo materias del docente:", error);
+      toast.error("Error cargando materias del docente");
     }
   };
+
 
   // 🔹 Filtrar docentes por nombre o ID
   const filteredTeachers = teachers.filter(

@@ -9,10 +9,11 @@ import {
 import { getAllCourses } from "../../services/courseService";
 import { getAllTeachers } from "../../services/teacherService";
 import { getAllClassrooms } from "../../services/classroomService";
-import LoaderComponent from "@/components/LoaderComponent";
 import SubjectDetailModal from "./components/SubjectDetailModal";
 import SubjectEditModal from "./components/SubjectEditModal";
-import { Eye, Pencil, Trash2, Plus, Search } from "lucide-react";
+import { Search } from "lucide-react";
+import SubjectTable from "./components/SubjectTable";
+import { toast } from "react-toastify";
 
 const emptySchedule = {
   dayOfWeek: "",
@@ -54,7 +55,6 @@ const SubjectList = () => {
     return remaining > 0 ? remaining : 0;
   };
 
-
   const [form, setForm] = useState({
     courseId: "",
     duracionSemanas: 1,
@@ -76,6 +76,7 @@ const SubjectList = () => {
       setClassrooms(aulas);
     } catch (error) {
       console.error("Error cargando datos:", error);
+      toast.error("Error cargando datos");
     } finally {
       setLoading(false);
     }
@@ -94,12 +95,13 @@ const SubjectList = () => {
 
   const handleViewSubject = async (subject) => {
     try {
-      const data = await getSchedulesBySubjectSession(subject.id); // 👈 ahora sí definido
+      const data = await getSchedulesBySubjectSession(subject.id);
       setSchedules(data);
       setSelectedSubject(subject);
       setShowSubjectModal(true);
     } catch (error) {
       console.error("Error obteniendo sesiones:", error);
+      toast.error("Error obteniendo sesiones");
     }
   };
 
@@ -126,45 +128,31 @@ const SubjectList = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const payload = {
+        teacherId: Number(form.teacherId),
+        courseId: Number(form.courseId),
+        duracionSemanas: Number(form.duracionSemanas),
+        modulo: form.modulo,
+        schedules: form.schedules.map((s) => ({
+          dayOfWeek: (s.dayOfWeek || "").toUpperCase(),
+          startTime: s.startTime,
+          endTime: s.endTime,
+          classroomId: Number(s.classroomId),
+        })),
+      };
+
       if (editing) {
-        const payload = {
-          teacherId: Number(form.teacherId),
-          courseId: Number(form.courseId),
-          duracionSemanas: Number(form.duracionSemanas),
-          modulo: form.modulo,
-          schedules: form.schedules.map((s) => ({
-            dayOfWeek: (s.dayOfWeek || "").toUpperCase(),
-            startTime: s.startTime,
-            endTime: s.endTime,
-            classroomId: Number(s.classroomId),
-          })),
-        };
-
         await updateSubject(editing.id, payload);
-        alert("Materia actualizada.");
-      }
-      else {
-        const payload = {
-          teacherId: Number(form.teacherId),
-          courseId: Number(form.courseId),
-          duracionSemanas: Number(form.duracionSemanas),
-          modulo: form.modulo,
-          schedules: form.schedules.map((s) => ({
-            dayOfWeek: (s.dayOfWeek || "").toUpperCase(),
-            startTime: s.startTime,
-            endTime: s.endTime,
-            classroomId: Number(s.classroomId),
-          })),
-        };
-
+        toast.success("Materia actualizada correctamente");
+      } else {
         await createSubjectWithMultipleSchedules(payload);
-        alert("Materia creada correctamente con múltiples horarios.");
+        toast.success("Materia con múltiples horarios creada correctamente");
       }
       setShowModal(false);
       fetchData();
     } catch (error) {
       console.error("Error guardando materia:", error);
-      alert("Error guardando materia.");
+      toast.error("Error guardando materia");
     }
   };
 
@@ -181,29 +169,36 @@ const SubjectList = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("¿Seguro que deseas eliminar esta materia?")) {
-      try {
-        await deleteSubject(id);
-        fetchData();
-      } catch (error) {
-        console.error("Error eliminando materia:", error);
-      }
+    try {
+      await deleteSubject(id);
+      toast.info("Materia eliminada correctamente");
+      fetchData();
+    } catch (error) {
+      console.error("Error eliminando materia:", error);
+      toast.error("Error eliminando materia");
     }
   };
 
+
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-[rgb(43,57,143)]">Gestión de Materias</h2>
+    <div className="space-y-5 sm:space-y-6">
+
+      {/* HEADER */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+        <h2 className="text-xl sm:text-2xl font-bold text-[rgb(43,57,143)]">
+          Gestión de Materias
+        </h2>
+
         <button
           onClick={openNewModal}
-          className="bg-[rgb(43,57,143)] text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition cursor-pointer"
+          className="w-full sm:w-auto bg-[rgb(43,57,143)] text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition cursor-pointer"
         >
           + Nueva Materia
         </button>
       </div>
 
-      <div className="flex items-center gap-2 bg-white shadow-sm rounded-lg px-3 py-2 border w-full max-w-md">
+      {/* BUSCADOR */}
+      <div className="flex items-center gap-2 bg-white shadow-sm rounded-lg px-3 py-2 border w-full sm:max-w-md">
         <Search size={18} className="text-gray-500" />
         <input
           type="text"
@@ -214,79 +209,17 @@ const SubjectList = () => {
         />
       </div>
 
-      {/* Tabla */}
-      <div className="overflow-x-auto bg-white shadow-md rounded-lg">
-        <table className="w-auto min-w-full border-collapse">
-          <thead className="bg-[rgb(43,57,143)] text-white">
-            <tr>
-              <th className="px-4 py-2 text-left">ID</th>
-              <th className="px-4 py-2 text-left">Curso</th>
-              <th className="px-4 py-2 text-left">Docente</th>
-              <th className="px-4 py-2 text-left">Duración</th>
-              <th className="px-4 py-2 text-left">Acciones</th>
-            </tr>
-          </thead>
-          <tbody className="touch-auto overflow-auto">
-            {loading ? (
-              <tr>
-                <td colSpan="5">
-                  <LoaderComponent />
-                </td>
-              </tr>
-            ) : (
-              <>
-                {filteredSubjects.map((s, index) => (
-                  <tr
-                    key={s.id || index}
-                    className="border-b hover:bg-gray-50 border-gray-300"
-                  >
-                    <td className="px-4 py-2">{s.id}</td>
-                    <td className="px-4 py-2">{s.course}</td>
-                    <td className="px-4 py-2">{s.teacher}</td>
-                    <td className="px-4 py-2">{getRemainingWeeks(s)} semana(s)</td>
-                    <td className="px-4 py-2 flex gap-3">
-                      {/* Botones */}
-                      <button
-                        onClick={() => handleViewSubject(s)}
-                        className="flex items-center gap-2 text-green-600 border border-green-600 px-3 py-1 rounded hover:bg-green-600 hover:text-white transition cursor-pointer"
-                      >
-                        <Eye size={16} className="w-5 h-5" />
-                        <span className="hidden sm:inline">Ver</span>
-                      </button>
-                      <button
-                        onClick={() => handleEdit(s)}
-                        className="flex items-center gap-2 text-blue-600 border border-blue-600 px-3 py-1 rounded hover:bg-blue-600 hover:text-white transition cursor-pointer"
-                      >
-                        <Pencil size={16} className="w-4 h-4" />
-                        <span className="hidden sm:inline">Editar</span>
-                      </button>
-                      <button
-                        onClick={() => handleDelete(s.id)}
-                        className="flex items-center gap-2 text-red-600 border border-red-600 px-3 py-1 rounded hover:bg-red-600 hover:text-white transition cursor-pointer"
-                      >
-                        <Trash2 size={16} className="w-4 h-4" />
-                        <span className="hidden sm:inline">Eliminar</span>
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-                {filteredSubjects.length === 0 && (
-                  <tr>
-                    <td
-                      colSpan="5"
-                      className="px-4 py-2 text-center text-gray-500"
-                    >
-                      No se encontraron materias
-                    </td>
-                  </tr>
-                )}
-              </>
-            )}
-          </tbody>
-        </table>
-      </div>
+      {/* TABLA */}
+      <SubjectTable
+        subjects={filteredSubjects}
+        loading={loading}
+        onView={handleViewSubject}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+        getRemainingWeeks={getRemainingWeeks}
+      />
 
-
+      {/* MODALES */}
       <SubjectEditModal
         show={showModal}
         onClose={() => setShowModal(false)}

@@ -12,6 +12,7 @@ import { updateScheduleEstado } from "../services/scheduleService";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "react-toastify";
 
 const ModalCalendar = ({ event, onClose, refreshSchedules }) => {
   if (!event) return null;
@@ -21,11 +22,13 @@ const ModalCalendar = ({ event, onClose, refreshSchedules }) => {
   const handleChangeEstado = async (nuevoEstado) => {
     try {
       setLoading(true);
-      await updateScheduleEstado(event.id, nuevoEstado);
+      await updateScheduleEstado(event.idSchedule, nuevoEstado);
       await refreshSchedules();
+      toast.success(`Estado actualizado a "${nuevoEstado}"`);
       onClose();
     } catch (err) {
       console.error("Error actualizando clase:", err);
+      toast.error("Error actualizando estado de la clase");
     } finally {
       setLoading(false);
     }
@@ -58,6 +61,9 @@ const ModalCalendar = ({ event, onClose, refreshSchedules }) => {
                   {event.course.toUpperCase()}
                 </h2>
               </div>
+              <div className="flex gap-1 items-center text-center bg-white text-[rgb(43,57,143)] px-2 py-0.5 rounded">
+                <p className="font-medium text-md">#{event.idSubject || "—"}</p>
+              </div>
             </div>
 
             <span className="px-3 py-1 rounded-full text-xs font-semibold border bg-white/20 text-white border-white/30">
@@ -74,6 +80,15 @@ const ModalCalendar = ({ event, onClose, refreshSchedules }) => {
                 <div>
                   <p className="text-xs text-gray-500">Docente</p>
                   <p className="font-semibold text-gray-800">{event.teacher}</p>
+                </div>
+              </div>
+
+              {/* Aula */}
+              <div className="bg-gray-50 rounded-xl p-4 flex items-center gap-3">
+                <MapPin className="text-blue-500" size={20} />
+                <div>
+                  <p className="text-xs text-gray-500">Aula</p>
+                  <p className="font-semibold text-gray-800">{event.aula}</p>
                 </div>
               </div>
 
@@ -95,16 +110,7 @@ const ModalCalendar = ({ event, onClose, refreshSchedules }) => {
                 </div>
               </div>
 
-              {/* Horario */}
-              <div className="bg-gray-50 rounded-xl p-4 flex items-center gap-3">
-                <Clock className="text-blue-500" size={20} />
-                <div>
-                  <p className="text-xs text-gray-500">Horario</p>
-                  <p className="font-semibold text-gray-800">{event.hora}</p>
-                </div>
-              </div>
-
-              {/* 🔹 Fecha de la sesión */}
+              {/* Fecha de la sesión */}
               <div className="bg-gray-50 rounded-xl p-4 flex items-center gap-3">
                 <CalendarDays className="text-blue-500" size={20} />
                 <div>
@@ -117,12 +123,12 @@ const ModalCalendar = ({ event, onClose, refreshSchedules }) => {
                 </div>
               </div>
 
-              {/* Aula */}
+              {/* Horario */}
               <div className="bg-gray-50 rounded-xl p-4 flex items-center gap-3">
-                <MapPin className="text-blue-500" size={20} />
+                <Clock className="text-blue-500" size={20} />
                 <div>
-                  <p className="text-xs text-gray-500">Aula</p>
-                  <p className="font-semibold text-gray-800">{event.aula}</p>
+                  <p className="text-xs text-gray-500">Horario</p>
+                  <p className="font-semibold text-gray-800">{event.hora}</p>
                 </div>
               </div>
             </div>
@@ -131,7 +137,7 @@ const ModalCalendar = ({ event, onClose, refreshSchedules }) => {
           {/* FOOTER */}
           <div className="flex justify-between items-center px-6 py-4 border-t border-gray-300 bg-gray-50">
 
-            {/* SWITCH PRO */}
+            {/* SWITCH */}
             <div className="flex items-center space-x-3">
 
               <Switch

@@ -6,13 +6,13 @@ import LoaderComponent from "../../components/LoaderComponent";
 import { connectSocket, disconnectSocket } from "../../services/socketService";
 import { getCurrentSchedules } from "../../services/scheduleService";
 import { getAllSubjectsPublic } from "../../services/subjectService";
-import useClock from "../../hooks/useClock"; // 👈 importar el hook
+import useClock from "../../hooks/useClock";
 
 const HoraryComponent = () => {
   const [horarios, setHorarios] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
-  const time = useClock(); // ⏰ reloj en tiempo real
+  const time = useClock();
 
   const cargarDatos = async () => {
     try {
@@ -80,6 +80,8 @@ const HoraryComponent = () => {
           })}
         </div>
       </div>
+
+      <hr className="text-gray-400"/>
 
       {/* CARDS */}
       <div className="grow p-2 w-auto mx-10 rounded-lg bg-white/10 backdrop-blur-sm">

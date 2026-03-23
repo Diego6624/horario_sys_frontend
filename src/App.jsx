@@ -1,5 +1,7 @@
-import { Outlet } from 'react-router-dom'
-import './App.css'
+import { Outlet } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "./App.css";
 
 const App = () => {
   return (
@@ -7,8 +9,20 @@ const App = () => {
       <main>
         <Outlet />
       </main>
-    </>
-  )
-}
 
-export default App
+      {/* Contenedor de notificaciones */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        pauseOnHover
+        draggable
+        theme="colored"
+      />
+    </>
+  );
+};
+
+export default App;
