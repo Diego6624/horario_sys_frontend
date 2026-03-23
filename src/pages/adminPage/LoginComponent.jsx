@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../services/authService";
+import { toast } from "react-toastify";
 
 const LoginComponent = () => {
   const navigate = useNavigate();
@@ -25,10 +26,11 @@ const LoginComponent = () => {
     try {
       const data = await login(form);
       localStorage.setItem("user", JSON.stringify(data));
-      navigate("/admin");
 
+      toast.success("Inicio de sesión exitoso");
+      navigate("/admin");
     } catch (error) {
-      alert("Credenciales incorrectas");
+      toast.error("Credenciales incorrectas");
       console.error("Error en login:", error);
     } finally {
       setLoading(false);
@@ -36,18 +38,27 @@ const LoginComponent = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-linear-to-r from-blue-600 via-indigo-600 to-purple-600">
-      <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-md">
-        <h1 className="text-3xl font-bold text-center text-indigo-600 mb-2">
-          Systematic
-        </h1>
-        <p className="text-center text-gray-500 mb-6">
-          Acceso al panel administrativo
-        </p>
+    <div className="flex items-center justify-center min-h-screen bg-linear-to-br from-[rgb(43,57,143)] via-[rgb(55,65,170)] to-[rgb(99,102,241)]">
 
+      {/* CARD */}
+      <div className="w-full max-w-md bg-white/90 backdrop-blur-md shadow-2xl rounded-2xl p-8 border border-white/20">
+
+        {/* HEADER */}
+        <div className="text-center mb-6">
+          <h1 className="text-3xl font-bold text-[rgb(43,57,143)] tracking-tight">
+            Systematic
+          </h1>
+          <p className="text-gray-500 text-sm mt-1">
+            Acceso al panel administrativo
+          </p>
+        </div>
+
+        {/* FORM */}
         <form onSubmit={handleLogin} className="space-y-5">
+
+          {/* USERNAME */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-600 mb-1">
               Correo electrónico
             </label>
             <input
@@ -56,12 +67,14 @@ const LoginComponent = () => {
               placeholder="ejemplo@correo.com"
               value={form.username}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm 
+              focus:ring-2 focus:ring-[rgb(43,57,143)] focus:border-[rgb(43,57,143)] outline-none transition"
             />
           </div>
 
+          {/* PASSWORD */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-600 mb-1">
               Contraseña
             </label>
             <input
@@ -70,23 +83,28 @@ const LoginComponent = () => {
               placeholder="********"
               value={form.password}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm 
+              focus:ring-2 focus:ring-[rgb(43,57,143)] focus:border-[rgb(43,57,143)] outline-none transition"
             />
           </div>
 
+          {/* BUTTON */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition duration-300 flex justify-center items-center cursor-pointer"
+            className="w-full bg-[rgb(43,57,143)] hover:bg-[rgb(30,45,120)] text-white py-2.5 rounded-lg font-semibold 
+            transition-all duration-300 flex justify-center items-center 
+            gap-2 shadow-md hover:shadow-lg active:scale-[0.98] cursor-pointer"
           >
             {loading ? (
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+              <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
             ) : (
               "Ingresar"
             )}
           </button>
         </form>
 
+        {/* FOOTER */}
         <p className="text-xs text-gray-400 text-center mt-6">
           © {new Date().getFullYear()} Systematic. Todos los derechos reservados.
         </p>

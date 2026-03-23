@@ -7,7 +7,7 @@ const SubjectDetailModal = ({ show, onClose, selectedSubject, schedules }) => {
   return (
     <AnimatePresence>
       <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4">
-        
+
         <motion.div
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -41,7 +41,7 @@ const SubjectDetailModal = ({ show, onClose, selectedSubject, schedules }) => {
 
             {/* INFO GENERAL */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-              
+
               <div className="bg-gray-50 rounded-xl p-3 sm:p-4 flex items-center gap-3 shadow-sm">
                 <BookOpen className="text-blue-500" size={18} />
                 <div className="min-w-0">
@@ -105,10 +105,10 @@ const SubjectDetailModal = ({ show, onClose, selectedSubject, schedules }) => {
                   <thead className="bg-gray-50 text-gray-600">
                     <tr>
                       <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold">#</th>
-                      <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold">Día</th>
                       <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold">Horario</th>
                       <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold">Aula</th>
-                      <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold">Estado</th>
+                      <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold">Día</th>
+                      <th className="px-3 sm:px-4 py-2 sm:py-3 text-left font-semibold">Fecha</th>
                     </tr>
                   </thead>
 
@@ -120,30 +120,20 @@ const SubjectDetailModal = ({ show, onClose, selectedSubject, schedules }) => {
                             {sch.sesion}
                           </td>
 
+                          <td className="px-3 sm:px-4 py-2 sm:py-3 text-gray-600 whitespace-nowrap">
+                            {sch.startTime} - {sch.endTime}
+                          </td>
+
+                          <td className="px-3 sm:px-4 py-2 sm:py-3 text-gray-600 whitespace-nowrap uppercase">
+                            {sch.classroom}
+                          </td>
+
                           <td className="px-3 sm:px-4 py-2 sm:py-3 capitalize text-gray-600">
                             {sch.dayOfWeek}
                           </td>
 
                           <td className="px-3 sm:px-4 py-2 sm:py-3 text-gray-600 whitespace-nowrap">
-                            {sch.startTime} - {sch.endTime}
-                          </td>
-
-                          <td className="px-3 sm:px-4 py-2 sm:py-3 text-gray-600 whitespace-nowrap">
-                            {sch.classroom}
-                          </td>
-
-                          <td className="px-3 sm:px-4 py-2 sm:py-3">
-                            <span
-                              className={`px-2 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs font-semibold ${
-                                sch.estado === "Disponible"
-                                  ? "bg-green-100 text-green-700"
-                                  : sch.estado === "Ocupado"
-                                  ? "bg-red-100 text-red-700"
-                                  : "bg-gray-100 text-gray-600"
-                              }`}
-                            >
-                              {sch.estado}
-                            </span>
+                            {sch.date}
                           </td>
                         </tr>
                       ))

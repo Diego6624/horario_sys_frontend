@@ -86,7 +86,11 @@ const HoraryList = () => {
         {loading ? (
           <LoaderComponent />
         ) : (
-          <CalendarView schedules={schedules} subjects={subjects} />
+          <CalendarView
+            schedules={schedules}
+            subjects={subjects}
+            classrooms={classrooms}
+          />
         )}
       </div>
 
