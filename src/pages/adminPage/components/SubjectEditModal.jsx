@@ -20,10 +20,11 @@ const SubjectEditModal = ({
   const inputStyle =
     "w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[rgb(43,57,143)] focus:border-transparent transition";
 
+  const inputStyleEdit = "w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-400 focus:outline-none focus:ring-2 focus:ring-[rgb(43,57,143)] focus:border-transparent transition";
+
   return (
     <AnimatePresence>
       <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center z-50 p-3">
-
         <motion.div
           initial={{ y: 40, opacity: 0, scale: 0.98 }}
           animate={{ y: 0, opacity: 1, scale: 1 }}
@@ -50,7 +51,7 @@ const SubjectEditModal = ({
           {/* FORM */}
           <form onSubmit={onSubmit} className="flex flex-col flex-1 overflow-hidden">
 
-            {/* 🔥 CONTENIDO CON SCROLL */}
+            {/* CONTENIDO CON SCROLL */}
             <div className="flex-1 overflow-y-auto pr-1 space-y-4">
 
               {/* Curso */}
@@ -87,8 +88,9 @@ const SubjectEditModal = ({
                     name="duracionSemanas"
                     value={form.duracionSemanas}
                     onChange={handleChange}
-                    className={inputStyle}
+                    className={editing ? inputStyleEdit : inputStyle}
                     required
+                    disabled={editing ? true : false}
                   />
                 </div>
 
@@ -111,27 +113,43 @@ const SubjectEditModal = ({
                 </div>
               </div>
 
-              {/* Docente */}
-              <div>
-                <label className="text-sm font-medium text-gray-600">Docente</label>
-                <select
-                  name="teacherId"
-                  value={form.teacherId}
-                  onChange={handleChange}
-                  className={inputStyle}
-                  required
-                >
-                  <option value="" disabled>Seleccione docente</option>
-                  {teachers
-                    .slice()
-                    .sort((a, b) => a.nombre.localeCompare(b.nombre))
-                    .map((t) => (
-                      <option key={t.id} value={t.id}>
-                        {t.nombre}
-                      </option>
-                    ))}
-                </select>
+              {/* Docente y FechaInicio*/}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="w-full">
+                  <label className="text-sm font-medium text-gray-600">Docente</label>
+                  <select
+                    name="teacherId"
+                    value={form.teacherId}
+                    onChange={handleChange}
+                    className={inputStyle}
+                    required
+                  >
+                    <option value="" disabled>Seleccione docente</option>
+                    {teachers
+                      .slice()
+                      .sort((a, b) => a.nombre.localeCompare(b.nombre))
+                      .map((t) => (
+                        <option key={t.id} value={t.id}>
+                          {t.nombre}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+
+                <div className="w-full">
+                  <label className="text-sm font-medium text-gray-600">Fecha de inicio</label>
+                  <input
+                    type="date"
+                    name="fechaInicio"
+                    value={form.fechaInicio || ""}
+                    onChange={handleChange}
+                    className={inputStyle}
+                    required
+                    disabled={editing ? true : false}
+                  />
+                </div>
               </div>
+
 
               {/* HORARIOS */}
               {!editing && (
@@ -171,7 +189,7 @@ const SubjectEditModal = ({
                           <button
                             type="button"
                             onClick={() => removeScheduleRow(idx)}
-                            className="text-red-500 hover:text-red-700"
+                            className="text-red-500 hover:text-red-700 cursor-pointer"
                           >
                             <X />
                           </button>
@@ -253,7 +271,7 @@ const SubjectEditModal = ({
             </div>
 
             {/* 🔥 FOOTER FIJO */}
-            <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 pt-3 border-t bg-white">
+            <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 pt-4 bg-white">
               <button
                 type="button"
                 onClick={onClose}

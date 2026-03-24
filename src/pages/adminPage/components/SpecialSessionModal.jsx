@@ -59,7 +59,6 @@ const SpecialSessionModal = ({
                       </option>
                     ))}
                 </select>
-
               </div>
 
               {/* Fecha */}

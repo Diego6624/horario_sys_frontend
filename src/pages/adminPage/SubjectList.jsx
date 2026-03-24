@@ -60,6 +60,7 @@ const SubjectList = () => {
     duracionSemanas: 1,
     teacherId: "",
     modulo: "",
+    fechaInicio: "",
     schedules: [],
   });
 
@@ -133,6 +134,7 @@ const SubjectList = () => {
         courseId: Number(form.courseId),
         duracionSemanas: Number(form.duracionSemanas),
         modulo: form.modulo,
+        fechaInicio: form.fechaInicio,
         schedules: form.schedules.map((s) => ({
           dayOfWeek: (s.dayOfWeek || "").toUpperCase(),
           startTime: s.startTime,
@@ -163,8 +165,10 @@ const SubjectList = () => {
       duracionSemanas: subject.duracionSemanas || 1,
       teacherId: subject.teacherId || "",
       modulo: subject.modulo || "",
+      fechaInicio: subject.fechaInicio || "",
       schedules: subject.schedules || [],
     });
+
     setShowModal(true);
   };
 

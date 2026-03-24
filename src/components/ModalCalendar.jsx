@@ -6,8 +6,6 @@ import {
   ListOrdered,
   X,
   CalendarDays,
-  Edit2,
-  Save,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { updateSchedule, updateScheduleEstado } from "../services/scheduleService";
@@ -121,9 +119,12 @@ const ModalCalendar = ({ event, onClose, refreshSchedules, classrooms = [] }) =>
             </div>
 
             <div className="flex items-center gap-3">
-              <span className="px-3 py-1 rounded-full text-xs font-semibold border bg-white/20 text-white border-white/30">
-                {isCancelado ? "Cancelada" : "Activa"}
-              </span>
+              <button
+                onClick={onClose}
+                className="text-white/80 hover:text-white text-lg sm:text-xl transition cursor-pointer"
+              >
+                ✕
+              </button>
             </div>
           </div>
 
@@ -134,18 +135,6 @@ const ModalCalendar = ({ event, onClose, refreshSchedules, classrooms = [] }) =>
               <h3 className="text-base md:text-lg font-semibold text-gray-700">
                 Información de la sesión
               </h3>
-
-              <button
-                onClick={() => setEditMode((v) => !v)}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition shadow-sm cursor-pointer
-                  ${editMode
-                    ? "bg-gray-800 text-white hover:bg-gray-900"
-                    : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-100"
-                  }`}
-              >
-                {editMode ? <X size={16} /> : <Edit2 size={16} />}
-                {editMode ? "Cancelar" : "Editar"}
-              </button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Docente (no editable aquí) */}
@@ -280,28 +269,42 @@ const ModalCalendar = ({ event, onClose, refreshSchedules, classrooms = [] }) =>
             <div className="flex items-center gap-2">
               {!editMode && (
                 <button
-                  onClick={onClose}
-                  className="px-4 py-2 rounded-lg bg-gray-800 text-white hover:bg-gray-900 transition flex items-center gap-2 cursor-pointer"
+                  onClick={() => setEditMode((v) => !v)}
+                  className={`flex items-center gap-2 px-3 py-2 rounded-lg transition shadow-sm cursor-pointer
+                  ${editMode ? null : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-100"}`}
                 >
-                  <X size={18} />
-                  Cerrar
+                  {/* {editMode ? null : <Edit2 size={16} />} */}
+                  {editMode ? null : "Editar"}
                 </button>
               )}
               {editMode && (
-                <button
-                  onClick={handleSave}
-                  disabled={loadingSave}
-                  className="px-4 py-2 rounded-lg bg-[rgb(43,57,143)] text-white hover:bg-indigo-700 transition flex items-center gap-2 cursor-pointer"
-                >
-                  {loadingSave ? (
-                    <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
-                  ) : (
-                    <>
-                      <Save size={16} />
-                      Guardar
-                    </>
-                  )}
-                </button>
+                <div className="flex justify-center items-center gap-2">
+                  <button
+                    onClick={() => setEditMode((v) => !v)}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-lg transition shadow-sm cursor-pointer
+                  ${editMode
+                        ? "bg-gray-800 text-white hover:bg-gray-900"
+                        : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-100"
+                      }`}
+                  >
+                    {/* {editMode ? <X size={16} /> : <Edit2 size={16} />} */}
+                    {editMode ? "Cancelar" : "Editar"}
+                  </button>
+                  <button
+                    onClick={handleSave}
+                    disabled={loadingSave}
+                    className="px-4 py-2 rounded-lg bg-[rgb(43,57,143)] text-white hover:bg-indigo-700 transition flex items-center gap-2 cursor-pointer"
+                  >
+                    {loadingSave ? (
+                      <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                    ) : (
+                      <>
+                        {/* <Save size={16} /> */}
+                        Guardar
+                      </>
+                    )}
+                  </button>
+                </div>
               )}
             </div>
           </div>
