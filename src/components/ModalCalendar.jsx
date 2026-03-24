@@ -19,7 +19,9 @@ import { toast } from "react-toastify";
 const ModalCalendar = ({ event, onClose, refreshSchedules, classrooms = [] }) => {
   if (!event) return null;
 
-  const [loading, setLoading] = useState(false);
+  const [loadingSave, setLoadingSave] = useState(false);
+  const [loadingEstado, setLoadingEstado] = useState(false);
+
   const [editMode, setEditMode] = useState(false);
 
   const [form, setForm] = useState({
@@ -46,10 +48,9 @@ const ModalCalendar = ({ event, onClose, refreshSchedules, classrooms = [] }) =>
     });
   }, [event]);
 
-
   const handleChangeEstado = async (nuevoEstado) => {
     try {
-      setLoading(true);
+      setLoadingEstado(true);
       await updateScheduleEstado(form.id, nuevoEstado);
       await refreshSchedules();
       toast.success(`Estado actualizado a "${nuevoEstado}"`);
@@ -58,24 +59,25 @@ const ModalCalendar = ({ event, onClose, refreshSchedules, classrooms = [] }) =>
       console.error("Error actualizando clase:", err);
       toast.error("Error actualizando estado de la clase");
     } finally {
-      setLoading(false);
+      setLoadingEstado(false);
     }
   };
 
   const handleSave = async () => {
     try {
-      setLoading(true);
+      setLoadingSave(true);
 
       const payload = {
         subjectId: Number(form.subjectId),
         classroomId: Number(form.classroomId),
         date: form.date || null,
-        dayOfWeek: form.date ? new Date(form.date).toLocaleDateString("en-US", { weekday: "long" }).toUpperCase() : undefined,
+        dayOfWeek: form.date
+          ? new Date(form.date).toLocaleDateString("en-US", { weekday: "long" }).toUpperCase()
+          : undefined,
         startTime: form.startTime,
         endTime: form.endTime,
         sesion: form.sesion,
       };
-
       await updateSchedule(form.id, payload);
       await refreshSchedules();
       toast.success("Sesión actualizada correctamente");
@@ -85,7 +87,7 @@ const ModalCalendar = ({ event, onClose, refreshSchedules, classrooms = [] }) =>
       console.error("Error actualizando sesión:", err);
       toast.error("Error actualizando sesión");
     } finally {
-      setLoading(false);
+      setLoadingSave(false);
     }
   };
 
@@ -184,7 +186,7 @@ const ModalCalendar = ({ event, onClose, refreshSchedules, classrooms = [] }) =>
                 <BookText className="text-blue-500" size={20} />
                 <div className="w-full">
                   <p className="text-xs text-gray-500">Módulo</p>
-                    <p className="font-semibold text-gray-800">{event.modulo || "N/A"}</p>
+                  <p className="font-semibold text-gray-800">{event.modulo || "N/A"}</p>
                 </div>
               </div>
 
@@ -261,7 +263,7 @@ const ModalCalendar = ({ event, onClose, refreshSchedules, classrooms = [] }) =>
               <Switch
                 id="estado-clase"
                 checked={!isCancelado}
-                disabled={loading}
+                disabled={loadingEstado}
                 onCheckedChange={async (checked) => {
                   const nuevoEstado = checked ? "Libre" : "Cancelado";
                   await handleChangeEstado(nuevoEstado);
@@ -270,30 +272,37 @@ const ModalCalendar = ({ event, onClose, refreshSchedules, classrooms = [] }) =>
               />
 
               <Label htmlFor="estado-clase" className="text-sm font-medium">
-                {loading ? "Actualizando..." : !isCancelado ? "Clase activa" : "Clase cancelada"}
+                {loadingEstado ? "Actualizando..." : !isCancelado ? "Clase activa" : "Clase cancelada"}
               </Label>
             </div>
 
+            {/* BOTONES */}
             <div className="flex items-center gap-2">
-              {editMode ? (
-                null
-              ) : <button
+              {!editMode && (
+                <button
                   onClick={onClose}
                   className="px-4 py-2 rounded-lg bg-gray-800 text-white hover:bg-gray-900 transition flex items-center gap-2 cursor-pointer"
                 >
                   <X size={18} />
                   Cerrar
-                </button>}
-              {editMode ? (
+                </button>
+              )}
+              {editMode && (
                 <button
                   onClick={handleSave}
-                  disabled={loading}
+                  disabled={loadingSave}
                   className="px-4 py-2 rounded-lg bg-[rgb(43,57,143)] text-white hover:bg-indigo-700 transition flex items-center gap-2 cursor-pointer"
                 >
-                  <Save size={16} />
-                  Guardar
+                  {loadingSave ? (
+                    <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                  ) : (
+                    <>
+                      <Save size={16} />
+                      Guardar
+                    </>
+                  )}
                 </button>
-              ) : null}
+              )}
             </div>
           </div>
         </motion.div>

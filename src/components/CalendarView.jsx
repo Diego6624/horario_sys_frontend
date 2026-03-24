@@ -12,6 +12,7 @@ const CalendarView = ({ schedules, subjects = [], classrooms = [] }) => {
   const [isMobile, setIsMobile] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [allSchedules, setAllSchedules] = useState(schedules);
+  const [currentMonth, setCurrentMonth] = useState("");
 
   const calendarRef = useRef(null);
 
@@ -21,6 +22,16 @@ const CalendarView = ({ schedules, subjects = [], classrooms = [] }) => {
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
+
+  useEffect(() => {
+    if (calendarRef.current) {
+      const api = calendarRef.current.getApi();
+      const date = api.getDate();
+      setCurrentMonth(
+        new Date(date).toLocaleDateString("es-ES", { month: "long", year: "numeric" }).toUpperCase()
+      );
+    }
+  }, [calendarRef]);
 
   const events = allSchedules.map((s) => {
     const subj = subjects.find(
@@ -56,35 +67,71 @@ const CalendarView = ({ schedules, subjects = [], classrooms = [] }) => {
     setAllSchedules(schs);
   };
 
+  const updateMonth = () => {
+    if (calendarApi) {
+      const date = calendarApi.getDate();
+      setCurrentMonth(
+        new Date(date).toLocaleDateString("es-ES", { month: "long", year: "numeric" }).toUpperCase()
+      );
+    }
+  };
+
   return (
-    <div className="bg-white rounded-xl shadow-lg p-3 md:p-6">
+    <div className="p-3">
       {/* Toolbar personalizada */}
       <div className="flex flex-row justify-between items-center gap-2 mb-4">
         <div className="flex gap-2">
-          <button onClick={() => calendarApi?.prev()} className="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer">
+          <button
+            onClick={() => {
+              calendarApi?.prev();
+              updateMonth();
+            }}
+            className="px-3 py-2 bg-white rounded-lg hover:bg-gray-200 transition cursor-pointer border border-gray-200"
+          >
             <ArrowLeft />
           </button>
-          <button onClick={() => calendarApi?.next()} className="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer">
+          <button
+            onClick={() => {
+              calendarApi?.next();
+              updateMonth();
+            }}
+            className="px-3 py-2 bg-white rounded-lg hover:bg-gray-200 transition cursor-pointer border border-gray-200"
+          >
             <ArrowRight />
           </button>
-          <button onClick={() => calendarApi?.today()} className="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer">
+          <button
+            onClick={() => {
+              calendarApi?.today();
+              updateMonth();
+            }}
+            className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition cursor-pointer"
+          >
             Hoy
           </button>
         </div>
 
-        <div className="hidden sm:block text-lg md:text-xl font-bold text-gray-800">
-          CALENDARIO
+        <div className="hidden sm:block text-lg md:text-xl font-bold text-gray-800 tracking-wide">
+          {currentMonth}
         </div>
 
         <div className="flex gap-2">
-          <button onClick={() => calendarApi?.changeView("timeGridDay")} className="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer">
+          <button
+            onClick={() => calendarApi?.changeView("timeGridDay")}
+            className="px-3 py-2 bg-white rounded-lg hover:bg-gray-200 transition cursor-pointer border border-gray-200"
+          >
             Día
           </button>
-          <button onClick={() => calendarApi?.changeView("timeGridWeek")} className="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer">
+          <button
+            onClick={() => calendarApi?.changeView("timeGridWeek")}
+            className="px-3 py-2 bg-white rounded-lg hover:bg-gray-200 transition cursor-pointer border border-gray-200"
+          >
             Semana
           </button>
           {!isMobile && (
-            <button onClick={() => calendarApi?.changeView("dayGridMonth")} className="px-3 py-2 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer">
+            <button
+              onClick={() => calendarApi?.changeView("dayGridMonth")}
+              className="px-3 py-2 bg-white rounded-lg hover:bg-gray-200 transition cursor-pointer border border-gray-200"
+            >
               Mes
             </button>
           )}
@@ -92,86 +139,104 @@ const CalendarView = ({ schedules, subjects = [], classrooms = [] }) => {
       </div>
 
       {/* Calendario */}
-      <FullCalendar
-        ref={calendarRef}
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-        initialView={isMobile ? "timeGridDay" : "timeGridWeek"}
-        locale={esLocale}
-        events={events}
-        allDaySlot={false}
-        headerToolbar={false}
-        slotMinTime="08:00:00"
-        slotMaxTime="24:00:00"
-        slotLabelFormat={{
-          hour: "2-digit",
-          minute: "2-digit",
-          omitZeroMinute: false,
-          meridiem: false,
-        }}
-        height={isMobile ? "85vh" : "auto"}
-        expandRows={true}
-        eventClick={(info) => {
-          setSelectedEvent(info.event.extendedProps);
-        }}
-        eventDisplay="block"
-        eventOverlap={false}
-        eventMaxStack={3}
-        eventDidMount={(info) => {
-          if (info.el && info.el.style) {
-            info.el.style.background = "transparent";
-            info.el.style.border = "none";
-            info.el.style.boxShadow = "none";
-          }
-        }}
-        eventContent={(arg) => {
-          const estado = arg.event.extendedProps.estado;
-          let bgClass = "";
-          let textColor = "text-white";
+      <div className="bg-white rounded-2xl shadow-xl p-4 md:p-6 border border-gray-100">
+        <FullCalendar
+          ref={calendarRef}
+          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+          initialView={isMobile ? "timeGridDay" : "timeGridWeek"}
+          locale={esLocale}
+          events={events}
+          allDaySlot={false}
+          headerToolbar={false}
+          slotMinTime="08:00:00"
+          slotMaxTime="24:00:00"
+          slotLabelFormat={{
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          }}
+          slotLabelInterval="01:00"
+          height={isMobile ? "85vh" : "auto"}
+          expandRows={true}
+          eventClick={(info) => {
+            setSelectedEvent(info.event.extendedProps);
+          }}
+          eventDisplay="block"
+          eventOverlap={false}
+          eventMaxStack={3}
+          eventDidMount={(info) => {
+            if (info.el && info.el.style) {
+              info.el.style.background = "transparent";
+              info.el.style.border = "none";
+              info.el.style.boxShadow = "none";
+            }
+          }}
+          dayHeaderContent={(args) => {
+            const date = args.date;
+            const viewType = args.view.type;
+            if (viewType === "dayGridMonth") {
+              const options = { weekday: "short" };
+              const formatted = new Date(date).toLocaleDateString("es-ES", options);
+              return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+            } else {
+              const options = { weekday: "short", day: "numeric" };
+              const formatted = new Date(date).toLocaleDateString("es-ES", options);
+              return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+            }
+          }}
+          dayHeaderClassNames="bg-indigo-50 text-indigo-700 font-semibold rounded-md px-3 py-1 mx-1 shadow-sm"
+          eventContent={(arg) => {
+            const estado = arg.event.extendedProps.estado;
+            let bgClass = "";
+            let textColor = "text-white";
 
-          if (estado === "Libre") {
-            bgClass = "bg-gray-500 border-gray-400";
-          } else if (estado === "En clase") {
-            bgClass = "bg-blue-700 border-blue-800";
-          } else if (estado === "Cancelado") {
-            bgClass = "bg-red-400 border-red-300";
-          }
+            if (estado === "Libre") {
+              bgClass = "bg-gray-500 border-gray-400";
+            } else if (estado === "En clase") {
+              bgClass = "bg-blue-700 border-blue-800";
+            } else if (estado === "Cancelado") {
+              bgClass = "bg-red-400 border-red-300";
+            }
 
-          return (
-            <div
-              className={`p-1.5 border text-xs md:text-sm font-medium rounded-md cursor-pointer shadow-md ${bgClass} ${textColor} overflow-hidden`}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                height: "100%",
-                boxSizing: "border-box",
-              }}
-              title={`${arg.event.title} • ${arg.event.extendedProps.hora}`}
-            >
-              <div className="truncate">{arg.event.title}</div>
-              <div className="opacity-80 truncate text-[11px]">
-                Aula: {arg.event.extendedProps.aula}
+            return (
+              <div
+                className={`p-1.5 border text-xs md:text-sm font-medium rounded-md cursor-pointer shadow-md ${bgClass} ${textColor} overflow-hidden`}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  height: "100%",
+                  boxSizing: "border-box",
+                }}
+                title={`${arg.event.title} • ${arg.event.extendedProps.hora}`}
+              >
+                <div className="truncate">{arg.event.title}</div>
+                <div className="opacity-80 truncate text-[11px]">
+                  Aula: <span className="uppercase">{arg.event.extendedProps.aula}</span>
+                </div>
+                <div className="italic opacity-70 truncate text-[11px]">
+                  {arg.event.extendedProps.hora}
+                </div>
+                {estado === "Cancelado" && (
+                  <div className="mt-1 text-red-100 font-bold truncate text-[11px]">
+                    Cancelada
+                  </div>
+                )}
               </div>
-              <div className="italic opacity-70 truncate text-[11px]">
-                {arg.event.extendedProps.hora}
-              </div>
-              {estado === "Cancelado" && (
-                <div className="mt-1 text-red-100 font-bold truncate text-[11px]">Cancelada</div>
-              )}
-            </div>
-          );
-        }}
-      />
-
-      {/* Modal separado */}
-      {selectedEvent && (
-        <ModalCalendar
-          event={selectedEvent}
-          onClose={() => setSelectedEvent(null)}
-          refreshSchedules={refreshSchedules}
-          classrooms={classrooms}
+            );
+          }}
         />
-      )}
+
+        {/* Modal separado */}
+        {selectedEvent && (
+          <ModalCalendar
+            event={selectedEvent}
+            onClose={() => setSelectedEvent(null)}
+            refreshSchedules={refreshSchedules}
+            classrooms={classrooms}
+          />
+        )}
+      </div>
     </div>
   );
 };

@@ -26,7 +26,7 @@ const SpecialSessionModal = ({
                 Nueva Sesión
               </h3>
               <p className="text-sm text-gray-500">
-                Completa los datos para registrar una sesión especial
+                Completa los datos para registrar una sesión independiente.
               </p>
             </div>
 
@@ -45,7 +45,8 @@ const SpecialSessionModal = ({
                   onChange={(e) =>
                     setSpecialForm({ ...specialForm, subjectId: e.target.value })
                   }
-                  className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[rgb(43,57,143)] focus:border-transparent transition"
+                  className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm 
+                    focus:outline-none focus:ring-2 focus:ring-[rgb(43,57,143)] focus:border-transparent transition"
                   required
                 >
                   <option value="" disabled>Seleccione materia</option>
@@ -54,10 +55,11 @@ const SpecialSessionModal = ({
                     .sort((a, b) => a.course.localeCompare(b.course))
                     .map((s) => (
                       <option key={s.id} value={s.id}>
-                        {s.course} - {s.teacher}
+                        #{s.id} {s.course} - {s.teacher}
                       </option>
                     ))}
                 </select>
+
               </div>
 
               {/* Fecha */}
@@ -115,57 +117,58 @@ const SpecialSessionModal = ({
                 </div>
               </div>
 
-              {/* Aula */}
-              <div>
-                <label className="text-sm font-medium text-gray-600">
-                  Aula
-                </label>
-                <select
-                  value={specialForm.classroomId}
-                  onChange={(e) =>
-                    setSpecialForm({
-                      ...specialForm,
-                      classroomId: e.target.value,
-                    })
-                  }
-                  className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[rgb(43,57,143)] transition"
-                  required
-                >
-                  <option value="" disabled>Seleccione aula</option>
-                  {classrooms.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.nombre}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Sesión */}
-              <div>
-                <label className="text-sm font-medium text-gray-600">
-                  Sesión
-                </label>
-                <select
-                  value={specialForm.sesion}
-                  onChange={(e) =>
-                    setSpecialForm({ ...specialForm, sesion: e.target.value })
-                  }
-                  className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[rgb(43,57,143)] transition"
-                  required
-                >
-                  <option value="" disabled>Seleccione sesión</option>
-                  {["INTRODUCCIÓN", "REPROGRAMACIÓN"]
-                    .sort((a, b) => a.localeCompare(b))
-                    .map((sesion) => (
-                      <option key={sesion} value={sesion}>
-                        {sesion}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* Aula */}
+                <div>
+                  <label className="text-sm font-medium text-gray-600">
+                    Aula
+                  </label>
+                  <select
+                    value={specialForm.classroomId}
+                    onChange={(e) =>
+                      setSpecialForm({
+                        ...specialForm,
+                        classroomId: e.target.value,
+                      })
+                    }
+                    className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[rgb(43,57,143)] transition"
+                    required
+                  >
+                    <option value="" disabled>Seleccione aula</option>
+                    {classrooms.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.nombre}
                       </option>
                     ))}
-                </select>
-              </div>
+                  </select>
+                </div>
 
+                {/* Sesión */}
+                <div>
+                  <label className="text-sm font-medium text-gray-600">
+                    Sesión
+                  </label>
+                  <select
+                    value={specialForm.sesion}
+                    onChange={(e) =>
+                      setSpecialForm({ ...specialForm, sesion: e.target.value })
+                    }
+                    className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[rgb(43,57,143)] transition"
+                    required
+                  >
+                    <option value="" disabled>Seleccione sesión</option>
+                    {["INTRODUCCIÓN", "REPROGRAMACIÓN"]
+                      .sort((a, b) => a.localeCompare(b))
+                      .map((sesion) => (
+                        <option key={sesion} value={sesion}>
+                          {sesion}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+              </div>
               {/* FOOTER */}
-              <div className="flex flex-col-reverse sm:flex-row justify-end gap-2">
+              <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 pt-4">
                 <button
                   type="button"
                   onClick={onClose}
@@ -178,7 +181,7 @@ const SpecialSessionModal = ({
                   type="submit"
                   className="w-full sm:w-auto bg-[rgb(43,57,143)] text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition shadow-md cursor-pointer"
                 >
-                  Crear Clase
+                  Crear sesión
                 </button>
               </div>
             </form>

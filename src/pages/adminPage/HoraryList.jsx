@@ -71,7 +71,7 @@ const HoraryList = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-2">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-[rgb(43,57,143)]">Gestión de horarios</h2>
         <button

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../services/authService";
 import { toast } from "react-toastify";
+import { ArrowLeft } from "lucide-react";
 
 const LoginComponent = () => {
   const navigate = useNavigate();
@@ -41,7 +42,16 @@ const LoginComponent = () => {
     <div className="flex items-center justify-center min-h-screen bg-linear-to-br from-[rgb(43,57,143)] via-[rgb(55,65,170)] to-[rgb(99,102,241)]">
 
       {/* CARD */}
-      <div className="w-full max-w-md bg-white/90 backdrop-blur-md shadow-2xl rounded-2xl p-8 border border-white/20">
+      <div className="relative w-full max-w-md bg-white/90 backdrop-blur-md shadow-2xl rounded-2xl p-8 border border-white/20">
+        
+        {/* 🔙 BACK BUTTON */}
+        <button
+          onClick={() => navigate("/")}
+          className="absolute top-4 left-4 p-2 rounded-full 
+          hover:bg-gray-100 transition cursor-pointer"
+        >
+          <ArrowLeft className="text-[rgb(43,57,143)]" size={20} />
+        </button>
 
         {/* HEADER */}
         <div className="text-center mb-6">
