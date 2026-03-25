@@ -202,18 +202,9 @@ const ModalCalendar = ({ event, onClose, refreshSchedules, classrooms = [] }) =>
                 <CalendarDays className="text-blue-500" size={20} />
                 <div className="w-full">
                   <p className="text-xs text-gray-500">Fecha de sesión</p>
-                  {editMode ? (
-                    <input
-                      type="date"
-                      value={form.date}
-                      onChange={(e) => setForm({ ...form, date: e.target.value })}
-                      className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm"
-                    />
-                  ) : (
-                    <p className="font-semibold text-gray-800">
-                      {form.date || "—"}
-                    </p>
-                  )}
+                  <p className="font-semibold text-gray-800">
+                    {form.date || "—"}
+                  </p>
                 </div>
               </div>
 
