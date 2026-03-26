@@ -9,7 +9,6 @@ const SubjectTable = ({
   onView,
   onEdit,
   onDelete,
-  getRemainingWeeks,
 }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [subjectToDelete, setSubjectToDelete] = useState(null);
@@ -66,7 +65,7 @@ const SubjectTable = ({
                   </td>
 
                   <td className="px-3 sm:px-4 py-2 whitespace-nowrap">
-                    {getRemainingWeeks(s)} semana(s)
+                    {s.duracionSemanas} semana(s)
                   </td>
 
                   <td className="px-3 sm:px-4 py-2">

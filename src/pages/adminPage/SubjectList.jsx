@@ -41,20 +41,6 @@ const SubjectList = () => {
       String(s.id).includes(searchTerm)
   );
 
-  const getRemainingWeeks = (subject) => {
-    if (!subject.fechaInicio || !subject.duracionSemanas) return subject.duracionSemanas;
-
-    const startDate = new Date(subject.fechaInicio);
-    const today = new Date();
-
-    const diffMs = today - startDate;
-    const diffWeeks = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 7));
-
-    const remaining = subject.duracionSemanas - diffWeeks;
-
-    return remaining > 0 ? remaining : 0;
-  };
-
   const [form, setForm] = useState({
     courseId: "",
     duracionSemanas: 1,
@@ -220,7 +206,6 @@ const SubjectList = () => {
         onView={handleViewSubject}
         onEdit={handleEdit}
         onDelete={handleDelete}
-        getRemainingWeeks={getRemainingWeeks}
       />
 
       {/* MODALES */}
