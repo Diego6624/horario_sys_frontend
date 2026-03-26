@@ -58,7 +58,7 @@ const HoraryComponent = () => {
           </div>
 
           {/* DESKTOP HEADER */}
-          <div className="hidden md:flex flex-col md:flex-row justify-between items-center gap-4 px-4 sm:px-6 py-4">
+          <div className="hidden md:flex flex-col md:flex-row justify-between items-center gap-4 px-4 sm:px-6 py-4 w-auto">
 
             <img src="/image/logo_systematic.png" className="h-10 sm:h-14" />
 
@@ -86,10 +86,10 @@ const HoraryComponent = () => {
         </div>
 
         {/* CONTENIDO */}
-        <div className="flex-1 p-6 pt-3">
+        <div className="flex-1 p-5 pt-3">
 
           {/* LEYENDA MOBILE */}
-          <div className="flex lg:hidden justify-center font-semibold  gap-4 py-3 text-xs sm:text-sm rounded-xl mb-4">
+          <div className="flex lg:hidden justify-center font-semibold gap-4 py-3 text-xs sm:text-sm rounded-xl mb-4">
             <Legend color="bg-gray-400" label="Libre" />
             <Legend color="bg-blue-500" label="En clase" />
             <Legend color="bg-orange-500" label="Siguiente" />
@@ -98,7 +98,7 @@ const HoraryComponent = () => {
           {loading ? (
             <LoaderComponent />
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 xl:gap-3 gap-4">
               {horarios.map((h) => {
                 const subject = subjects.find((s) => s.course === h.course);
 
