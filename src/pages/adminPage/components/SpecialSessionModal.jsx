@@ -30,16 +30,14 @@ const SpecialSessionModal = ({
               </p>
             </div>
 
-            {/* FORM SCROLL */}
+            {/* FORM */}
             <form
               onSubmit={onSubmit}
               className="flex-1 overflow-y-auto px-4 md:px-6 py-4 space-y-4"
             >
               {/* Materia */}
               <div>
-                <label className="text-sm font-medium text-gray-600">
-                  Materia
-                </label>
+                <label className="text-sm font-medium text-gray-600">Materia</label>
                 <select
                   value={specialForm.subjectId}
                   onChange={(e) =>
@@ -63,9 +61,7 @@ const SpecialSessionModal = ({
 
               {/* Fecha */}
               <div>
-                <label className="text-sm font-medium text-gray-600">
-                  Fecha
-                </label>
+                <label className="text-sm font-medium text-gray-600">Fecha</label>
                 <input
                   type="date"
                   value={specialForm.date}
@@ -80,35 +76,24 @@ const SpecialSessionModal = ({
               {/* Horas */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-sm font-medium text-gray-600">
-                    Hora Inicio
-                  </label>
+                  <label className="text-sm font-medium text-gray-600">Hora Inicio</label>
                   <input
                     type="time"
                     value={specialForm.startTime}
                     onChange={(e) =>
-                      setSpecialForm({
-                        ...specialForm,
-                        startTime: e.target.value,
-                      })
+                      setSpecialForm({ ...specialForm, startTime: e.target.value })
                     }
                     className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[rgb(43,57,143)] transition"
                     required
                   />
                 </div>
-
                 <div>
-                  <label className="text-sm font-medium text-gray-600">
-                    Hora Fin
-                  </label>
+                  <label className="text-sm font-medium text-gray-600">Hora Fin</label>
                   <input
                     type="time"
                     value={specialForm.endTime}
                     onChange={(e) =>
-                      setSpecialForm({
-                        ...specialForm,
-                        endTime: e.target.value,
-                      })
+                      setSpecialForm({ ...specialForm, endTime: e.target.value })
                     }
                     className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[rgb(43,57,143)] transition"
                     required
@@ -116,19 +101,14 @@ const SpecialSessionModal = ({
                 </div>
               </div>
 
+              {/* Aula y Sesión */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {/* Aula */}
                 <div>
-                  <label className="text-sm font-medium text-gray-600">
-                    Aula
-                  </label>
+                  <label className="text-sm font-medium text-gray-600">Aula</label>
                   <select
                     value={specialForm.classroomId}
                     onChange={(e) =>
-                      setSpecialForm({
-                        ...specialForm,
-                        classroomId: e.target.value,
-                      })
+                      setSpecialForm({ ...specialForm, classroomId: e.target.value })
                     }
                     className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[rgb(43,57,143)] transition"
                     required
@@ -142,11 +122,8 @@ const SpecialSessionModal = ({
                   </select>
                 </div>
 
-                {/* Sesión */}
                 <div>
-                  <label className="text-sm font-medium text-gray-600">
-                    Sesión
-                  </label>
+                  <label className="text-sm font-medium text-gray-600">Sesión</label>
                   <select
                     value={specialForm.sesion}
                     onChange={(e) =>
@@ -166,11 +143,22 @@ const SpecialSessionModal = ({
                   </select>
                 </div>
               </div>
+
               {/* FOOTER */}
               <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 pt-4">
                 <button
                   type="button"
-                  onClick={onClose}
+                  onClick={() => {
+                    onClose();
+                    setSpecialForm({
+                      subjectId: "",
+                      classroomId: "",
+                      date: "",
+                      startTime: "",
+                      endTime: "",
+                      sesion: "",
+                    });
+                  }}
                   className="w-full sm:w-auto px-4 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition cursor-pointer"
                 >
                   Cancelar

@@ -60,13 +60,24 @@ const HoraryList = () => {
 
       await createSchedule(payload);
       toast.success("Sesión creada correctamente");
-      setShowSpecialModal(false);
 
+      // refresca calendario
       const schs = await getAllSchedules();
       setSchedules(schs);
+
+      // cierra modal y limpia formulario
+      setShowSpecialModal(false);
+      setSpecialForm({
+        subjectId: "",
+        classroomId: "",
+        date: "",
+        startTime: "",
+        endTime: "",
+        sesion: "",
+      });
     } catch (err) {
       console.error("Error creando una nueva sesión:", err);
-      toast.error("Error creando una nueva sesión:");
+      toast.error("Error creando una nueva sesión");
     }
   };
 
@@ -96,7 +107,17 @@ const HoraryList = () => {
 
       <SpecialSessionModal
         show={showSpecialModal}
-        onClose={() => setShowSpecialModal(false)}
+        onClose={() => {
+          setShowSpecialModal(false);
+          setSpecialForm({
+            subjectId: "",
+            classroomId: "",
+            date: "",
+            startTime: "",
+            endTime: "",
+            sesion: "",
+          });
+        }}
         onSubmit={handleSpecialSubmit}
         specialForm={specialForm}
         setSpecialForm={setSpecialForm}

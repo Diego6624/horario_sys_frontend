@@ -16,6 +16,11 @@ const CalendarView = ({ schedules, subjects = [], classrooms = [] }) => {
 
   const calendarRef = useRef(null);
 
+  // 👇 sincroniza allSchedules con el prop schedules
+  useEffect(() => {
+    setAllSchedules(schedules);
+  }, [schedules]);
+
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
