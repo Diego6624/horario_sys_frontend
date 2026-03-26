@@ -18,12 +18,12 @@ export const connectSocket = (onMessage) => {
 
     console.log("🟢 Socket conectado");
 
-    stompClient.subscribe(
-      "/topic/horarios",
-      (message) => {
-        onMessage(JSON.parse(message.body));
-      }
-    );
+    stompClient.subscribe("/topic/horarios", (message) => {
+      const payload = JSON.parse(message.body);
+      console.log("Payload recibido:", payload);
+      onMessage(payload);
+    });
+
   };
 
   stompClient.activate();
