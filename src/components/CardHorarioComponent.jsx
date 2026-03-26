@@ -1,9 +1,4 @@
-import {
-  User,
-  BookOpen,
-  Clock,
-  CalendarDays,
-} from "lucide-react";
+import { User, BookOpen, Clock, CalendarDays } from "lucide-react";
 
 const CardHorarioComponent = ({
   aula,
@@ -13,107 +8,63 @@ const CardHorarioComponent = ({
   sesion,
   estado,
 }) => {
+  const estadoLower = estado?.toLowerCase();
 
-  const isOcupado =
-    estado?.toLowerCase() === "ocupado";
+  const config = {
+    libre: "bg-gray-400 border-gray-400",
+    "en clase": "bg-blue-500 border-blue-500",
+    "siguiente clase": "bg-orange-500 border-orange-500",
+    completado: "bg-green-500 border-green-500",
+  };
+
+  const styles = config[estadoLower] || "bg-gray-400 border-gray-400";
+
+  const bgColor = styles.split(" ")[0];
+  const borderColor = styles.split(" ")[1];
 
   return (
-    <div
-      className={`
-        rounded-xl shadow-md flex flex-col w-full h-full
-        border-2 transition
-        ${isOcupado ? "border-blue-500" : "border-gray-400"}
-        ${!isOcupado ? "bg-gray-100" : "bg-white"}
-      `}
-    >
+    <div className={`bg-white/90 backdrop-blur rounded-2xl p-4 sm:p-5 md:p-6 shadow-md border-l-4 ${borderColor} hover:shadow-lg transition h-full flex flex-col justify-between`}>
 
       {/* HEADER */}
-      <div className="relative text-center py-1 lg:py-2 px-4 border-b border-black">
-
-        <h2 className="text-base sm:text-lg md:text-xl xl:text-2xl font-bold text-black">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-[rgb(43,57,143)]">
           Aula {aula}
         </h2>
 
-        {/* 🔘 ESTADO ANIMADO */}
-        <div className="absolute right-3 top-3 flex items-center justify-center">
-
-          <div className="relative flex items-center justify-center">
-
-            {/* Aura / Glow */}
-            <span
-              className={`
-                absolute inline-flex h-6 w-6 rounded-full
-                ${isOcupado ? "bg-blue-400 animate-ping"  : ""}
-                opacity-60
-              `}
-            />
-
-            {/* Punto principal */}
-            <span
-              className={`
-                relative inline-flex h-4 w-4 rounded-full
-                ${isOcupado ? "bg-blue-500" : "bg-gray-400"}
-              `}
-            />
-
-          </div>
-
+        <div className="flex items-center gap-2">
+          <span className={`w-3 h-3 rounded-full ${bgColor} animate-pulse`} />
+          <span className="text-sm text-gray-500 capitalize">
+            {estado}
+          </span>
         </div>
-
       </div>
 
-      {/* BODY */}
-      <div className="relative px-2 py-2 lg:px-6 lg:py-6 grid grid-cols-2 grid-rows-2 gap-4 lg:gap-10 flex-grow">
+      {/* INFO */}
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 text-xs sm:text-sm md:text-base">
 
-        {/* Línea vertical */}
-        <div className="absolute left-1/2 top-4 bottom-4 w-px bg-black -translate-x-1/2" />
-        
-        <Info
-          icon={<User size={22} />}
-          label="Docente"
-          value={docente}
-        />
-
-        <Info
-          icon={<BookOpen size={22} />}
-          label="Curso"
-          value={curso}
-        />
-
-        <Info
-          icon={<Clock size={22} />}
-          label="Horario"
-          value={horario}
-        />
-
-        <Info
-          icon={<CalendarDays size={22} />}
-          label="Sesión"
-          value={sesion}
-        />
+        <Info icon={<User />} label="Docente" value={docente} />
+        <Info icon={<BookOpen />} label="Curso" value={curso} />
+        <Info icon={<Clock />} label="Horario" value={horario} />
+        <Info icon={<CalendarDays />} label="Sesión" value={sesion} />
 
       </div>
-
     </div>
   );
 };
 
 export default CardHorarioComponent;
 
-
-// ===============================
-// Subcomponente Info
-// ===============================
 const Info = ({ icon, label, value }) => (
-  <div className="flex flex-col gap-0.5">
+  <div className="flex flex-col gap-1 min-h-[60px] sm:min-h-[70px]">
 
-    <div className="flex items-center gap-2 text-blue-600 font-semibold uppercase tracking-wide text-xs sm:text-sm md:text-md xl:text-lg">
+    <div className="flex items-center gap-1 sm:gap-2 text-blue-600 font-semibold text-[10px] sm:text-xs uppercase">
       {icon}
       {label}
     </div>
 
-    <span className="font-medium text-gray-800 h-auto text-sm sm:text-base md:text-lg xl:text-xl">
+    <p className="text-gray-800 text-sm sm:text-lg md:text-xl font-medium leading-tight line-clamp-2">
       {value || "—"}
-    </span>
+    </p>
+
   </div>
 );

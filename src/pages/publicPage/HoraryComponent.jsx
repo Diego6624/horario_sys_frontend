@@ -1,120 +1,152 @@
 import { useEffect, useState } from "react";
 import CardHorarioComponent from "../../components/CardHorarioComponent";
+import LoaderComponent from "../../components/LoaderComponent";
 import { connectSocket, disconnectSocket } from "../../services/socketService";
-import bg from "/image/bg_image.png";
-import { Circle } from "lucide-react";
-import { getTurn } from "../../services/horaryService";
-
-const API_URL = "https://horario-sys-backend.onrender.com/api/horaries";
+import { getCurrentSchedules } from "../../services/scheduleService";
+import { getAllSubjectsPublic } from "../../services/subjectService";
+import useClock from "../../hooks/useClock";
 
 const HoraryComponent = () => {
   const [horarios, setHorarios] = useState([]);
-  const [turno, setTurno] = useState("");
+  const [subjects, setSubjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const time = useClock();
 
-  useEffect(() => {
-    const cargarTurno = async () => {
-      const t = await getTurn();
-      setTurno(t);
-    };
-    cargarTurno();
-  }, []);
-
-  const cargarHorarios = async () => {
+  const cargarDatos = async () => {
     try {
-      const res = await fetch(API_URL);
-      const data = await res.json();
-      setHorarios(data);
+      setLoading(true);
+      const schs = await getCurrentSchedules();
+      const subs = await getAllSubjectsPublic();
+      setHorarios(schs);
+      setSubjects(subs);
     } catch (error) {
-      console.error("Error cargando horarios:", error);
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    cargarHorarios();
-    connectSocket(() => {
-      cargarHorarios();
+    cargarDatos();
+
+    connectSocket((data) => {
+      setHorarios(data);
     });
+
     return () => disconnectSocket();
   }, []);
 
   return (
-    <div
-      className="w-screen min-h-screen lg:h-full lg:w-full text-white flex flex-col bg-cover bg-center overflow-hidden"
-      style={{ backgroundImage: `url(${bg})` }}
-    >
-      {/* HEADER DINÁMICO */}
-      <div className="w-full flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 sm:py-1.5 px-6 sm:px-12 border-b border-slate-300 bg-white/10 backdrop-blur-sm gap-2 sm:gap-0">
+    <div className="relative w-screen min-h-screen flex flex-col text-gray-800">
 
-        {/* BLOQUE SUPERIOR: Logo (Izquierda) y Turno (Derecha en mobile) */}
-        <div className="flex justify-between items-center w-full sm:w-auto">
-          <div className="flex items-center">
-            <img
-              src="/image/logo_systematic.png"
-              alt="Systematic"
-              className="h-8 md:h-12 lg:h-15 object-contain"
-            />
+      {/* 🌄 IMAGEN DE FONDO */}
+      <div className="absolute inset-0 bg-[url('/image/bg_image.png')] bg-cover bg-center"></div>
+
+      {/* 🔥 CONTENIDO */}
+      <div className="relative z-10 flex flex-col min-h-screen">
+
+        {/* HEADER */}
+        <div className="bg-white/10 backdrop-blur-xs shadow-xs">
+
+          {/* MOBILE HEADER */}
+          <div className="flex md:hidden justify-between items-center px-4 py-3">
+            <img src="/image/logo_systematic.png" className="h-8 sm:h-12" />
+
+            <p className="text-lg font-bold text-blue-600 uppercase">
+              TURNO {horarios[0]?.turno || "—"}
+            </p>
           </div>
 
-          {/* Turno exclusivo para Mobile (Oculto en SM para arriba) */}
-          <span className="sm:hidden text-lg font-extrabold text-blue-700 uppercase">
-            TURNO {turno}
-          </span>
+          {/* DESKTOP HEADER */}
+          <div className="hidden md:flex flex-col md:flex-row justify-between items-center gap-4 px-4 sm:px-6 py-4">
+
+            <img src="/image/logo_systematic.png" className="h-10 sm:h-14" />
+
+            <div className="text-center">
+              <h1 className="text-xl sm:text-2xl md:text-3xl xl:text-4xl font-bold text-[rgb(43,57,143)]">
+                DISTRIBUCIÓN DE AULAS
+              </h1>
+              <p className="text-sm sm:text-lg md:text-xl font-semibold text-blue-600 uppercase">
+                TURNO {horarios[0]?.turno || "—"}
+              </p>
+            </div>
+
+            <div className="text-center md:text-right">
+              <p className="text-xs sm:text-sm text-gray-500">Hora actual</p>
+              <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-[rgb(43,57,143)]">
+                {time.toLocaleTimeString("es-PE", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: false,
+                })}
+              </p>
+            </div>
+
+          </div>
         </div>
 
-        {/* BLOQUE CENTRAL: Título y Turno (Solo visible de SM para arriba) */}
-        <div className="hidden sm:flex items-center gap-4 text-center">
-          <h1 className="text-xl md:text-2xl lg:text-4xl xl:text-4xl font-bold tracking-tighter text-black uppercase">
-            Distribución de Aulas
-          </h1>
-          <span className="text-xl md:text-2xl lg:text-4xl xl:text-4xl font-bold text-blue-700 uppercase">
-            TURNO {turno}
-          </span>
+        {/* CONTENIDO */}
+        <div className="flex-1 p-6 pt-3">
+
+          {/* LEYENDA MOBILE */}
+          <div className="flex lg:hidden justify-center font-semibold  gap-4 py-3 text-xs sm:text-sm rounded-xl mb-4">
+            <Legend color="bg-gray-400" label="Libre" />
+            <Legend color="bg-blue-500" label="En clase" />
+            <Legend color="bg-orange-500" label="Siguiente" />
+          </div>
+
+          {loading ? (
+            <LoaderComponent />
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+              {horarios.map((h) => {
+                const subject = subjects.find((s) => s.course === h.course);
+
+                return (
+                  <CardHorarioComponent
+                    key={h.id || h.classroom}
+                    aula={h.classroom}
+                    docente={h.estado === "Cancelado" ? "—" : h.teacher || "—"}
+                    curso={h.estado === "Cancelado" ? "—" : h.course || "—"}
+                    horario={
+                      h.estado === "Cancelado"
+                        ? "—"
+                        : h.startTime
+                          ? `${h.startTime} - ${h.endTime}`
+                          : "—"
+                    }
+                    sesion={
+                      h.estado === "Cancelado"
+                        ? "—"
+                        : subject?.modulo && h.sesion
+                          ? `${subject.modulo} - ${h.sesion}`
+                          : h.sesion || "—"
+                    }
+                    estado={h.estado}
+                  />
+                );
+              })}
+            </div>
+          )}
         </div>
 
-        {/* LEYENDA / ESTADOS: Debajo en mobile, a la derecha en SM+ */}
-        <div className="flex flex-row sm:flex-col justify-center sm:justify-end gap-6 sm:gap-1 text-black font-semibold text-sm sm:text-md lg:text-lg">
-
-          {/* Versión MOBILE: Size 12 */}
-          <div className="sm:hidden flex items-center gap-2">
-            <Circle size={12} className="fill-gray-400 text-gray-400" />
-            <span>Libre</span>
-          </div>
-          <div className="sm:hidden flex items-center gap-2">
-            <Circle size={12} className="fill-blue-500 text-blue-500" />
-            <span>En clase</span>
-          </div>
-
-          {/* Versión SM en adelante: Size 15 */}
-          <div className="hidden sm:flex items-center gap-2">
-            <Circle size={15} className="fill-gray-400 text-gray-400" />
-            <span>Libre</span>
-          </div>
-          <div className="hidden sm:flex items-center gap-2">
-            <Circle size={15} className="fill-blue-500 text-blue-500" />
-            <span>En clase</span>
-          </div>
-
+        {/* FOOTER DESKTOP */}
+        <div className="hidden lg:flex flex-wrap justify-center font-semibold gap-4 sm:gap-8 md:gap-10 py-3 sm:py-4 bg-white/10 backdrop-blur-xs border-t border-gray-200 text-xs sm:text-sm md:text-base shadow-inner">
+          <Legend color="bg-gray-400" label="Libre" />
+          <Legend color="bg-blue-500" label="En clase" />
+          <Legend color="bg-orange-500" label="Siguiente clase" />
         </div>
-      </div>
 
-      {/* CONTENEDOR DE CARDS */}
-      <div className="grow p-1.5 lg:p-5 w-full">
-        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-2 lg:gap-4 w-full h-full">
-          {horarios.map((h) => (
-            <CardHorarioComponent
-              key={h.id}
-              aula={h.numLab}
-              docente={h.nameDocente || "—"}
-              curso={h.nameCurso || "—"}
-              horario={h.horario || "—"}
-              sesion={h.numSesion || "—"}
-              estado={h.status?.name}
-            />
-          ))}
-        </div>
       </div>
     </div>
   );
 };
 
 export default HoraryComponent;
+
+const Legend = ({ color, label }) => (
+  <div className="flex items-center gap-2">
+    <span className={`w-4 h-4 rounded-full ${color}`} />
+    <span className="text-gray-600">{label}</span>
+  </div>
+);

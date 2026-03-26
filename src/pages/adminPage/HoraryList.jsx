@@ -1,150 +1,131 @@
 import { useEffect, useState } from "react";
-import {
-    getAllHoraries,
-    toggleHorary,
-    changeStatus,
-    getStatuses,
-} from "../../services/horaryService";
-
-import HoraryEditModal from "../../components/HoraryEditModal";
+import { getAllSchedules, createSchedule } from "../../services/scheduleService";
+import { getAllSubjects } from "../../services/subjectService";
+import { getAllClassrooms } from "../../services/classroomService";
 import LoaderComponent from "../../components/LoaderComponent";
+import CalendarView from "../../components/CalendarView";
+import SpecialSessionModal from "./components/SpecialSessionModal";
+import { toast } from "react-toastify";
 
 const HoraryList = () => {
-    const [horaries, setHoraries] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [selected, setSelected] = useState(null);
-    const [statuses, setStatuses] = useState([]);
+  const [schedules, setSchedules] = useState([]);
+  const [subjects, setSubjects] = useState([]);
+  const [classrooms, setClassrooms] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    // ===============================
-    // 📦 Cargar horarios
-    // ===============================
+  const [showSpecialModal, setShowSpecialModal] = useState(false);
+  const [specialForm, setSpecialForm] = useState({
+    subjectId: "",
+    classroomId: "",
+    date: "",
+    startTime: "",
+    endTime: "",
+    sesion: "",
+  });
+
+  useEffect(() => {
     const fetchData = async () => {
-        setLoading(true);
-
-        try {
-            const data = await getAllHoraries();
-            setHoraries(data);
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoading(false);
-        }
+      setLoading(true);
+      try {
+        const schs = await getAllSchedules();
+        const subs = await getAllSubjects();
+        const cls = await getAllClassrooms();
+        setSchedules(schs);
+        setSubjects(subs);
+        setClassrooms(cls);
+      } catch (error) {
+        console.error("Error cargando datos:", error);
+        toast.error("Error cargando datos");
+      } finally {
+        setLoading(false);
+      }
     };
+    fetchData();
+  }, []);
 
-    // ===============================
-    // 📦 Cargar estados
-    // ===============================
-    const fetchStatuses = async () => {
-        try {
-            const data = await getStatuses();
-            setStatuses(data);
-        } catch (error) {
-            console.error(error);
-        }
-    };
+  const handleSpecialSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const payload = {
+        subjectId: Number(specialForm.subjectId),
+        classroomId: Number(specialForm.classroomId),
+        date: specialForm.date,
+        dayOfWeek: new Date(specialForm.date)
+          .toLocaleDateString("es-ES", { weekday: "long" })
+          .toUpperCase(),
+        startTime: specialForm.startTime,
+        endTime: specialForm.endTime,
+        sesion: specialForm.sesion,
+      };
 
-    useEffect(() => {
-        fetchData();
-        fetchStatuses();
-    }, []);
+      await createSchedule(payload);
+      toast.success("Sesión creada correctamente");
 
-    // ===============================
-    // 👁️ Toggle mostrar / ocultar
-    // ===============================
-    const handleToggle = async (id) => {
-        try {
-            await toggleHorary(id);
-            fetchData();
-        } catch (error) {
-            console.error("Error cambiando visibilidad:", error);
-        }
-    };
+      // refresca calendario
+      const schs = await getAllSchedules();
+      setSchedules(schs);
 
-    // ===============================
-    // 🔄 Cambiar estado
-    // ===============================
-    const handleStatusChange = async (horaryId, statusId) => {
-        if (!statusId) return;
+      // cierra modal y limpia formulario
+      setShowSpecialModal(false);
+      setSpecialForm({
+        subjectId: "",
+        classroomId: "",
+        date: "",
+        startTime: "",
+        endTime: "",
+        sesion: "",
+      });
+    } catch (err) {
+      console.error("Error creando una nueva sesión:", err);
+      toast.error("Error creando una nueva sesión");
+    }
+  };
 
-        try {
-            await changeStatus(horaryId, statusId);
-            fetchData();
-        } catch (error) {
-            console.error("Error cambiando estado:", error);
-        }
-    };
+  return (
+    <div className="space-y-2">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold text-[rgb(43,57,143)]">Gestión de horarios</h2>
+        <button
+          onClick={() => setShowSpecialModal(true)}
+          className="bg-[rgb(43,57,143)] text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition cursor-pointer"
+        >
+          + Nueva sesión
+        </button>
+      </div>
 
-    if (loading) return <LoaderComponent />;
+      <div className="w-auto h-auto">
+        {loading ? (
+          <LoaderComponent />
+        ) : (
+          <CalendarView
+            schedules={schedules}
+            subjects={subjects}
+            classrooms={classrooms}
+          />
+        )}
+      </div>
 
-    return (
-        <>
-            {/* HEADER */}
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-700">
-                    Gestión de Horarios
-                </h2>
-            </div>
-
-            {/* GRID */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {horaries.map((h) => (
-                    <div
-                        key={h.id}
-                        className="rounded-xl shadow p-5 border bg-white hover:shadow-lg transition"
-                    >
-                        {/* HEADER */}
-                        <div className="flex justify-between items-center mb-3">
-                            <h3 className="font-bold text-lg text-indigo-600">
-                                Aula {h.numLab}
-                            </h3>
-
-                            {/* BADGE ESTADO */}
-                            <span
-                                className={`px-3 py-1 text-xs rounded-full font-semibold text-white
-                                    ${
-                                        h.status?.name === "Disponible"
-                                            ? "bg-green-500"
-                                            : h.status?.name === "Ocupado"
-                                            ? "bg-red-500"
-                                            : "bg-gray-400"
-                                    }`}
-                            >
-                                {h.status?.name || "Sin estado"}
-                            </span>
-                        </div>
-
-                        {/* INFO */}
-                        <p><b>Docente:</b> {h.nameDocente || "—"}</p>
-                        <p><b>Curso:</b> {h.nameCurso || "—"}</p>
-                        <p><b>Horario:</b> {h.horario || "—"}</p>
-                        <p><b>Sesión:</b> {h.numSesion || "—"}</p>
-
-                        {/* ACCIONES */}
-                        <div className="flex gap-2 mt-4">
-
-                            {/* EDITAR */}
-                            <button
-                                onClick={() => setSelected(h)}
-                                className="w-full sm:flex-1 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition"
-                            >
-                                Editar
-                            </button>
-
-                        </div>
-                    </div>
-                ))}
-            </div>
-
-            {/* MODAL */}
-            {selected && (
-                <HoraryEditModal
-                    horary={selected}
-                    onClose={() => setSelected(null)}
-                    onUpdated={fetchData}
-                />
-            )}
-        </>
-    );
+      <SpecialSessionModal
+        show={showSpecialModal}
+        onClose={() => {
+          setShowSpecialModal(false);
+          setSpecialForm({
+            subjectId: "",
+            classroomId: "",
+            date: "",
+            startTime: "",
+            endTime: "",
+            sesion: "",
+          });
+        }}
+        onSubmit={handleSpecialSubmit}
+        specialForm={specialForm}
+        setSpecialForm={setSpecialForm}
+        subjects={subjects}
+        classrooms={classrooms}
+      />
+    </div>
+  );
 };
 
 export default HoraryList;

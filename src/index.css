@@ -1,1 +1,20 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+.fc .fc-event, .fc .fc-timegrid-event {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.fc-timegrid-slot-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #374151;
+  background: #f9fafb;
+  border-radius: 6px;
+  padding: 4px 8px;
+  margin: 2px 0;
+}
+
