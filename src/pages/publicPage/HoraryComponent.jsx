@@ -44,7 +44,6 @@ const HoraryComponent = () => {
   });
   const [hh, mm] = timeStr.split(":");
 
-  // ── TOKENS DE TEMA ──────────────────────────────────────────────────────────
   const tokens = isDark
     ? {
       pageBg: "#060c1f",
@@ -198,23 +197,14 @@ const HoraryComponent = () => {
                 return (
                   <CardHorarioComponent
                     key={h.id || h.classroom}
-                    theme={theme}
                     aula={h.classroom}
-                    docente={h.estado === "Cancelado" ? "—" : h.teacher || "—"}
-                    curso={h.estado === "Cancelado" ? "—" : h.course || "—"}
-                    horario={
-                      h.estado === "Cancelado"
-                        ? "—"
-                        : h.startTime
-                          ? `${h.startTime} - ${h.endTime}`
-                          : "—"
-                    }
+                    docente={h.teacher || "—"}
+                    curso={h.course || "—"}
+                    horario={h.startTime ? `${h.startTime} - ${h.endTime}` : "—"}
                     sesion={
-                      h.estado === "Cancelado"
-                        ? "—"
-                        : subject?.modulo && h.sesion
-                          ? `${subject.modulo} - ${h.sesion}`
-                          : h.sesion || "—"
+                      subject?.modulo && h.sesion
+                        ? `${subject.modulo} - ${h.sesion}`
+                        : h.sesion || "—"
                     }
                     estado={h.estado}
                   />
@@ -229,8 +219,6 @@ const HoraryComponent = () => {
 };
 
 export default HoraryComponent;
-
-// ── SUBCOMPONENTES ───────────────────────────────────────────────────────────
 
 const ClockSegment = ({ value, tokens }) => (
   <div
@@ -252,21 +240,6 @@ const ClockSegment = ({ value, tokens }) => (
       }}
     >
       {value}
-    </span>
-  </div>
-);
-
-const Legend = ({ color, label, textColor }) => (
-  <div className="flex items-center gap-2">
-    <span
-      className="w-2.5 h-2.5 rounded-full flex-shrink-0"
-      style={{ background: color, boxShadow: `0 0 6px ${color}` }}
-    />
-    <span
-      className="text-xs font-semibold tracking-wide uppercase"
-      style={{ color: textColor, transition: "color 0.6s ease" }}
-    >
-      {label}
     </span>
   </div>
 );

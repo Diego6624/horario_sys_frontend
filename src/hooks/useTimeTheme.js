@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 const getTheme = () => {
   const h = new Date().getHours();
-  return h >= 6 && h < 18 ? "dark" : "ligth";
+  return h >= 6 && h < 18 ? "ligth" : "dark";
 };
 
 const useTimeTheme = () => {
@@ -13,7 +13,7 @@ const useTimeTheme = () => {
     return () => clearInterval(interval);
   }, []);
 
-  return theme; // "light" | "dark"
+  return theme;
 };
 
 export default useTimeTheme;
