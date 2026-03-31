@@ -186,7 +186,7 @@ const CardHorarioComponent = ({
         }}
       >
         {/* Barra lateral */}
-        <div className={`w-1 flex-shrink-0 ${s.bar}`} />
+        <div className={`w-1 shrink-0 ${s.bar}`} />
 
         {/* Contenido */}
         <div className="flex-1 p-4 sm:p-5 flex flex-col gap-4">
