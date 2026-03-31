@@ -49,13 +49,12 @@ const HoraryComponent = () => {
       pageBg: "#060c1f",
       bg: "bg-[url('/image/bg_imageDark.png')]",
       imgOpacity: "opacity-20",
-      radial:
-        "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(43,57,143,0.35) 0%, transparent 70%), radial-gradient(ellipse 60% 40% at 80% 100%, rgba(59,130,246,0.15) 0%, transparent 60%)",
+      radial:"radial-gradient(ellipse 80% 50% at 50% 0%, rgba(43,57,143,0.35) 0%, transparent 70%), radial-gradient(ellipse 60% 40% at 80% 100%, rgba(59,130,246,0.15) 0%, transparent 60%)",
       gridColor: "rgba(99,179,237,1)",
       headerBg: "rgba(6, 12, 31, 0.75)",
       headerBorder: "rgba(99,179,237,0.12)",
       headerShadow: "0 1px 0 rgba(99,179,237,0.08)",
-      logoBg: "rgba(255,255,255,0.92)",
+      logoBg: "bg-gradient-to-br from-blue-500/30 to-blue-500/10 backdrop-blur-sm border border-blue-500/20",
       title: "#e2e8f0",
       turnoBg: "rgba(59,130,246,0.15)",
       turnoBorder: "rgba(59,130,246,0.3)",
@@ -71,11 +70,10 @@ const HoraryComponent = () => {
     : {
       pageBg: "linear-gradient(160deg, #dce8ff 0%, #eef2fb 40%, #f5f0ff 100%)",
       bg: "bg-[url('/image/bg_image.png')]",
-      imgOpacity: "opacity-10",
-      radial:
-        "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(219,234,254,0.8) 0%, transparent 70%), radial-gradient(ellipse 60% 40% at 80% 100%, rgba(191,219,254,0.5) 0%, transparent 60%)",
+      imgOpacity: "opacity-80",
+      radial: "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(219,234,254,0.45) 0%, transparent 70%), radial-gradient(ellipse 60% 40% at 80% 100%, rgba(191,219,254,0.3) 0%, transparent 60%)",
       gridColor: "rgba(59,130,246,0.8)",
-      headerBg: "rgba(255,255,255,0.85)",
+      headerBg: "bg-white/70 backdrop-blur-xs border border-blue-500/10",
       headerBorder: "rgba(59,130,246,0.15)",
       headerShadow: "0 1px 0 rgba(59,130,246,0.08), 0 2px 12px rgba(0,0,0,0.06)",
       logoBg: "transparent",
@@ -130,7 +128,14 @@ const HoraryComponent = () => {
         >
           {/* MOBILE */}
           <div className="flex md:hidden justify-between items-center px-4 py-3">
-            <img src="/image/logo_systematic.png" className="h-8 sm:h-10" />
+            <img
+              src="/image/logo_systematic.png"
+              className="h-8 sm:h-10 rounded-md px-1.5 py-0.5"
+              style={{
+                background: isDark ? "rgba(255,255,255,0.92)" : "transparent",
+                transition: "background 0.6s ease",
+              }}
+            />
             <span
               className="text-sm font-bold tracking-widest uppercase px-3 py-1 rounded-full"
               style={{
@@ -150,8 +155,11 @@ const HoraryComponent = () => {
             <div>
               <img
                 src="/image/logo_systematic.png"
-                className="h-10 sm:h-12 rounded-lg px-2 py-0.5"
-                style={{ background: tokens.logoBg, transition: "background 0.6s ease" }}
+                className="h-10 sm:h-12 rounded-lg px-2 py-1"
+                style={{
+                  background: isDark ? "rgba(255,255,255,0.92)" : "transparent",
+                  transition: "background 0.6s ease",
+                }}
               />
             </div>
 
@@ -197,6 +205,7 @@ const HoraryComponent = () => {
                 return (
                   <CardHorarioComponent
                     key={h.id || h.classroom}
+                    theme={theme}
                     aula={h.classroom}
                     docente={h.teacher || "—"}
                     curso={h.course || "—"}
