@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-toastify";
 
-const ModalCalendar = ({ event, onClose, refreshSchedules, classrooms = [] }) => {
+const ModalCalendar = ({ event, onClose, refreshSchedules, classrooms = [], teachers = [] }) => {
   if (!event) return null;
 
   const [loadingSave, setLoadingSave] = useState(false);
@@ -31,6 +31,7 @@ const ModalCalendar = ({ event, onClose, refreshSchedules, classrooms = [] }) =>
     endTime: event.hora ? event.hora.split(" - ")[1] : "",
     sesion: event.sesion || "",
     modulo: event.modulo || "",
+    teacherId: event.idTeacher || null,
   });
 
   useEffect(() => {
@@ -75,6 +76,7 @@ const ModalCalendar = ({ event, onClose, refreshSchedules, classrooms = [] }) =>
         startTime: form.startTime,
         endTime: form.endTime,
         sesion: form.sesion,
+        teacherId: form.teacherId ? Number(form.teacherId) : null,
       };
       await updateSchedule(form.id, payload);
       await refreshSchedules();
@@ -137,12 +139,27 @@ const ModalCalendar = ({ event, onClose, refreshSchedules, classrooms = [] }) =>
               </h3>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Docente (no editable aquí) */}
+              {/* Docente */}
               <div className="bg-gray-50 rounded-xl p-4 flex items-center gap-3">
                 <User className="text-blue-500" size={20} />
-                <div>
+                <div className="w-full">
                   <p className="text-xs text-gray-500">Docente</p>
-                  <p className="font-semibold text-gray-800">{event.teacher}</p>
+                  {editMode ? (
+                    <select
+                      value={form.teacherId || ""}
+                      onChange={(e) => setForm({ ...form, teacherId: e.target.value })}
+                      className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm uppercase"
+                    >
+                      <option value="" disabled>Seleccione docente</option>
+                      {teachers.map((t) => (
+                        <option key={t.id} value={t.id} className="uppercase">
+                          {t.nombre}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <p className="font-semibold text-gray-800">{event.teacher}</p>
+                  )}
                 </div>
               </div>
 

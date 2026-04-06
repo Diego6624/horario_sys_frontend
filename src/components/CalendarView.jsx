@@ -8,7 +8,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import ModalCalendar from "./ModalCalendar";
 import { getAllSchedules } from "../services/scheduleService";
 
-const CalendarView = ({ schedules, subjects = [], classrooms = [] }) => {
+const CalendarView = ({ schedules, subjects = [], classrooms = [], teachers = [] }) => {
   const [isMobile, setIsMobile] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [allSchedules, setAllSchedules] = useState(schedules);
@@ -239,6 +239,7 @@ const CalendarView = ({ schedules, subjects = [], classrooms = [] }) => {
             onClose={() => setSelectedEvent(null)}
             refreshSchedules={refreshSchedules}
             classrooms={classrooms}
+            teachers={teachers}
           />
         )}
       </div>

@@ -49,7 +49,7 @@ const HoraryComponent = () => {
       pageBg: "#060c1f",
       bg: "bg-[url('/image/bg_imageDark.png')]",
       imgOpacity: "opacity-20",
-      radial:"radial-gradient(ellipse 80% 50% at 50% 0%, rgba(43,57,143,0.35) 0%, transparent 70%), radial-gradient(ellipse 60% 40% at 80% 100%, rgba(59,130,246,0.15) 0%, transparent 60%)",
+      radial: "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(43,57,143,0.35) 0%, transparent 70%), radial-gradient(ellipse 60% 40% at 80% 100%, rgba(59,130,246,0.15) 0%, transparent 60%)",
       gridColor: "rgba(99,179,237,1)",
       headerBg: "rgba(6, 12, 31, 0.75)",
       headerBorder: "rgba(99,179,237,0.12)",
@@ -117,7 +117,7 @@ const HoraryComponent = () => {
 
         {/* ── HEADER ── */}
         <div
-          className="flex-shrink-0"
+          className="shrink-0"
           style={{
             background: tokens.headerBg,
             backdropFilter: "blur(20px)",
@@ -195,7 +195,7 @@ const HoraryComponent = () => {
         </div>
 
         {/* ── CARDS ── */}
-        <div className="flex-1 p-4 sm:p-4.5 pt-4 flex flex-col gap-4">
+        <div className="flex-1 p-4 sm:p-4 pt-4 flex flex-col gap-4">
           {loading ? (
             <LoaderComponent />
           ) : (
@@ -211,8 +211,8 @@ const HoraryComponent = () => {
                     curso={h.course || "—"}
                     horario={h.startTime ? `${h.startTime} - ${h.endTime}` : "—"}
                     sesion={
-                      subject?.modulo && h.sesion
-                        ? `${subject.modulo} - ${h.sesion}`
+                      subject?.modulo
+                        ? `${subject.modulo}${h.sesion ? " - " + h.sesion : ""}`
                         : h.sesion || "—"
                     }
                     estado={h.estado}

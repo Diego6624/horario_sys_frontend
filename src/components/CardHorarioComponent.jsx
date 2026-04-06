@@ -84,8 +84,8 @@ const CardHorarioComponent = ({
 
     if (animatingRef.current) return;
     runAnimation();
-
-  }, [estado, docente, curso, horario, sesion]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [estado, docente, curso, horario, sesion, displayed.estado, displayed.docente, displayed.curso, displayed.horario, displayed.sesion]);
 
   const runAnimation = () => {
     if (!pendingRef.current) return;
