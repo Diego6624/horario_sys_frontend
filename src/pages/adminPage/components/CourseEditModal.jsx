@@ -1,5 +1,5 @@
-import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 
 const CourseEditModal = ({ show, onClose, onSubmit, form, handleChange, editing }) => {
   if (!show) return null;
@@ -7,6 +7,8 @@ const CourseEditModal = ({ show, onClose, onSubmit, form, handleChange, editing 
   const inputStyle =
     "w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm " +
     "focus:outline-none focus:ring-2 focus:ring-[rgb(43,57,143)] focus:border-transparent transition";
+
+  const [loading, setLoading] = useState(false);
 
   return (
     <AnimatePresence>
@@ -35,7 +37,7 @@ const CourseEditModal = ({ show, onClose, onSubmit, form, handleChange, editing 
           </div>
 
           {/* FORM */}
-          <form onSubmit={onSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
 
             {/* NOMBRE */}
             <div>
@@ -66,11 +68,15 @@ const CourseEditModal = ({ show, onClose, onSubmit, form, handleChange, editing 
 
               <button
                 type="submit"
-                className="w-full sm:w-auto bg-[rgb(43,57,143)] text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition shadow-md cursor-pointer"
+                disabled={loading}
+                className="w-full sm:w-auto bg-[rgb(43,57,143)] text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition shadow-md cursor-pointer flex items-center justify-center gap-2"
               >
-                {editing ? "Actualizar" : "Crear"}
+                {loading ? (
+                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                ) : (
+                  editing ? "Actualizar" : "Crear"
+                )}
               </button>
-
             </div>
           </form>
 
