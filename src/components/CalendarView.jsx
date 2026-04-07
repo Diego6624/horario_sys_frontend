@@ -16,7 +16,6 @@ const CalendarView = ({ schedules, subjects = [], classrooms = [], teachers = []
 
   const calendarRef = useRef(null);
 
-  // 👇 sincroniza allSchedules con el prop schedules
   useEffect(() => {
     setAllSchedules(schedules);
   }, [schedules]);
@@ -50,12 +49,12 @@ const CalendarView = ({ schedules, subjects = [], classrooms = [], teachers = []
       end: `${s.date}T${s.endTime}`,
       textColor: "#fff",
       extendedProps: {
-        idSubject: subj?.id,
+        idSubject: s.subjectId,
         idSchedule: s.id,
         aula: s.classroom,
         classroomId: s.classroomId,
         sesion: s.sesion,
-        modulo: subj?.modulo || "N/A",
+        modulo: s.modulo || "—",
         hora: `${s.startTime} - ${s.endTime}`,
         course: s.course,
         teacher: s.teacher,

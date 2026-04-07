@@ -47,7 +47,7 @@ const SidebarInner = () => {
 
       {/* ── HEADER ─────────────────────────────────────────────── */}
       <div className="flex items-center gap-3 px-5 py-5 border-b border-white/15">
-        <div className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center flex-shrink-0">
+        <div className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center shrink-0">
           <LayoutDashboard size={20} className="text-white" />
         </div>
         <div>
@@ -66,7 +66,6 @@ const SidebarInner = () => {
           <SidebarGroupLabel className="text-white/40 text-[12px] md:text-[15px] font-bold tracking-[0.18em] uppercase px-2 mb-2">
             Navegación
           </SidebarGroupLabel>
-
           <SidebarGroupContent>
             <SidebarMenu className="flex flex-col gap-0.5">
               {navLink.map((item) => {
@@ -77,7 +76,7 @@ const SidebarInner = () => {
                       to={item.to}
                       onClick={handleNav}
                       className={({ isActive }) =>
-                        `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 text-lg md:text-lg font-medium ${isActive
+                        `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 text-md md:text-lg font-medium ${isActive
                           ? "bg-white text-[rgb(43,57,143)] font-semibold shadow-sm"
                           : "text-white/80 hover:text-white hover:bg-white/10"
                         }`
@@ -111,12 +110,19 @@ const SidebarInner = () => {
       </SidebarContent>
 
       {/* ── FOOTER ─────────────────────────────────────────────── */}
-      <SidebarFooter className="px-3 py-3 border-t border-white/15 bg-[rgb(43,57,143)]">
+      <SidebarFooter className="flex justify-center items-center px-3 py-3 border-t border-white/15 bg-[rgb(43,57,143)]">
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all duration-150 cursor-pointer"
+          className="flex md:hidden w-full justify-center items-center gap-2 px-3 py-2.5 rounded-lg font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all duration-150 cursor-pointer text-md"
         >
           <LogOut size={17} className="text-white/70" />
+          Cerrar sesión
+        </button>
+        <button
+          onClick={handleLogout}
+          className="hidden md:flex w-full justify-center items-center gap-2 px-3 py-2.5 rounded-lg font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all duration-150 cursor-pointer md:text-lg"
+        >
+          <LogOut size={20} className="text-white/70" />
           Cerrar sesión
         </button>
       </SidebarFooter>

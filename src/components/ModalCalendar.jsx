@@ -80,6 +80,11 @@ const ModalCalendar = ({ event, onClose, refreshSchedules, classrooms = [], teac
       };
       await updateSchedule(form.id, payload);
       await refreshSchedules();
+      setForm((prev) => ({
+        ...prev,
+        modulo: payload.modulo || prev.modulo,
+        subjectId: payload.subjectId || prev.subjectId,
+      }));
       toast.success("Sesión actualizada correctamente");
       setEditMode(false);
       onClose();
@@ -101,37 +106,29 @@ const ModalCalendar = ({ event, onClose, refreshSchedules, classrooms = [], teac
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 50, opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden"
+          className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 sm:mx-auto overflow-hidden max-h-[90vh] overflow-y-auto"
         >
           {/* HEADER */}
-          <div
-            className={`flex justify-between items-center px-6 py-4 ${isCancelado ? "bg-red-700" : "bg-[rgb(43,57,143)]"}`}
-          >
-            <div className="flex items-center gap-3">
-              <CalendarDays size={22} className="text-white" />
-
-              <div className="flex items-center gap-3">
-                <h2 className="text-lg md:text-xl font-semibold text-white">
-                  {event.course ? event.course.toUpperCase() : "—"}
-                </h2>
-              </div>
-              <div className="flex gap-1 items-center text-center bg-white px-2 py-0.5 rounded">
-                <p className="font-medium text-md">#{event.idSubject || "—"}</p>
+          <div className={`flex justify-between items-center px-4 sm:px-6 py-4 ${isCancelado ? "bg-red-700" : "bg-[rgb(43,57,143)]"}`}>
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+              <CalendarDays size={20} className="text-white shrink-0" />
+              <h2 className="text-base sm:text-xl font-semibold text-white truncate">
+                {event.course ? event.course.toUpperCase() : "—"}
+              </h2>
+              <div className="flex gap-1 items-center bg-white px-2 py-0.5 rounded shrink-0">
+                <p className="font-medium text-sm">#{form.subjectId || "—"}</p>
               </div>
             </div>
-
-            <div className="flex items-center gap-3">
-              <button
-                onClick={onClose}
-                className="text-white/80 hover:text-white text-lg sm:text-xl transition cursor-pointer"
-              >
-                ✕
-              </button>
-            </div>
+            <button
+              onClick={onClose}
+              className="text-white/80 hover:text-white transition cursor-pointer shrink-0 ml-2"
+            >
+              <X size={20} />
+            </button>
           </div>
 
           {/* BODY */}
-          <div className="p-6 space-y-6">
+          <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
             {/* HEADER BODY */}
             <div className="flex items-center justify-between">
               <h3 className="text-base md:text-lg font-semibold text-gray-700">
@@ -158,7 +155,10 @@ const ModalCalendar = ({ event, onClose, refreshSchedules, classrooms = [], teac
                       ))}
                     </select>
                   ) : (
-                    <p className="font-semibold text-gray-800">{event.teacher}</p>
+                    <p className="font-semibold text-gray-800">
+                      {teachers.find((t) => t.id === Number(form.teacherId))?.nombre || event.teacher || "—"}
+                    </p>
+
                   )}
                 </div>
               </div>
@@ -192,7 +192,7 @@ const ModalCalendar = ({ event, onClose, refreshSchedules, classrooms = [], teac
                 <BookText className="text-blue-500" size={20} />
                 <div className="w-full">
                   <p className="text-xs text-gray-500">Módulo</p>
-                  <p className="font-semibold text-gray-800">{event.modulo || "N/A"}</p>
+                  <p className="font-semibold text-gray-800">{form.modulo || "—"}</p>
                 </div>
               </div>
 
@@ -209,7 +209,7 @@ const ModalCalendar = ({ event, onClose, refreshSchedules, classrooms = [], teac
                       placeholder="S01 / REPROGRAMACIÓN / INTRODUCCIÓN"
                     />
                   ) : (
-                    <p className="font-semibold text-gray-800">{event.sesion || "N/A"}</p>
+                    <p className="font-semibold text-gray-800">{form.sesion || "—"}</p>
                   )}
                 </div>
               </div>
@@ -254,67 +254,57 @@ const ModalCalendar = ({ event, onClose, refreshSchedules, classrooms = [], teac
           </div>
 
           {/* FOOTER */}
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 px-6 py-4 border-t border-gray-300 bg-gray-50">
-            {/* SWITCH */}
-            <div className="flex items-center space-x-3">
-              <Switch
-                id="estado-clase"
-                checked={!isCancelado}
-                disabled={loadingEstado}
-                onCheckedChange={async (checked) => {
-                  const nuevoEstado = checked ? "Libre" : "Cancelado";
-                  await handleChangeEstado(nuevoEstado);
-                }}
-                className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500 cursor-pointer"
-              />
+          <div className="flex flex-row justify-between items-center gap-4 px-6 py-4 border-t border-gray-300 bg-gray-50">
 
-              <Label htmlFor="estado-clase" className="text-sm font-medium">
-                {loadingEstado ? "Actualizando..." : !isCancelado ? "Clase activa" : "Clase cancelada"}
-              </Label>
-            </div>
+            {/* SWITCH + EDITAR juntos */}
+            {!editMode && (
+              <div className="flex justify-between items-center gap-4 w-full">
+                <div className="flex items-center gap-3">
+                  <Switch
+                    id="estado-clase"
+                    checked={!isCancelado}
+                    disabled={loadingEstado}
+                    onCheckedChange={async (checked) => {
+                      const nuevoEstado = checked ? "Libre" : "Cancelado";
+                      await handleChangeEstado(nuevoEstado);
+                    }}
+                    className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-red-500 cursor-pointer"
+                  />
+                  <Label htmlFor="estado-clase" className="text-sm font-medium">
+                    {loadingEstado ? "Actualizando..." : !isCancelado ? "Clase activa" : "Clase cancelada"}
+                  </Label>
+                </div>
 
-            {/* BOTONES */}
-            <div className="flex items-center gap-2">
-              {!editMode && (
                 <button
                   onClick={() => setEditMode((v) => !v)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg transition shadow-sm cursor-pointer
-                  ${editMode ? null : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-100"}`}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg transition shadow-sm cursor-pointer
+                  bg-white border border-gray-300 text-gray-700 hover:bg-gray-100"
                 >
-                  {/* {editMode ? null : <Edit2 size={16} />} */}
-                  {editMode ? null : "Editar"}
+                  Editar
                 </button>
-              )}
-              {editMode && (
-                <div className="flex justify-center items-center gap-2">
-                  <button
-                    onClick={() => setEditMode((v) => !v)}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg transition shadow-sm cursor-pointer
-                  ${editMode
-                        ? "bg-gray-800 text-white hover:bg-gray-900"
-                        : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-100"
-                      }`}
-                  >
-                    {/* {editMode ? <X size={16} /> : <Edit2 size={16} />} */}
-                    {editMode ? "Cancelar" : "Editar"}
-                  </button>
-                  <button
-                    onClick={handleSave}
-                    disabled={loadingSave}
-                    className="px-4 py-2 rounded-lg bg-[rgb(43,57,143)] text-white hover:bg-indigo-700 transition flex items-center gap-2 cursor-pointer"
-                  >
-                    {loadingSave ? (
-                      <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
-                    ) : (
-                      <>
-                        {/* <Save size={16} /> */}
-                        Guardar
-                      </>
-                    )}
-                  </button>
-                </div>
-              )}
-            </div>
+              </div>
+            )}
+
+            {/* BOTONES edit mode */}
+            {editMode && (
+              <div className="flex flex-col-reverse md:flex-row gap-2 justify-end w-full">
+                <button
+                  onClick={() => setEditMode((v) => !v)}
+                  className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg transition shadow-sm cursor-pointer bg-gray-800 text-white hover:bg-gray-900"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleSave}
+                  disabled={loadingSave}
+                  className="px-4 py-2 rounded-lg bg-[rgb(43,57,143)] text-white hover:bg-indigo-700 transition flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  {loadingSave ? (
+                    <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                  ) : <>Guardar</>}
+                </button>
+              </div>
+            )}
           </div>
         </motion.div>
       </div>
