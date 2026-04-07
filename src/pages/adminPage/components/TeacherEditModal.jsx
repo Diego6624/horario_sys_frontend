@@ -1,7 +1,6 @@
-import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const TeacherEditModal = ({ show, onClose, onSubmit, form, handleChange, editing }) => {
+const TeacherEditModal = ({ show, onClose, onSubmit, form, handleChange, editing, loading }) => {
   if (!show) return null;
 
   const inputStyle =
@@ -11,7 +10,6 @@ const TeacherEditModal = ({ show, onClose, onSubmit, form, handleChange, editing
   return (
     <AnimatePresence>
       <div className="fixed inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center z-50 p-3">
-
         <motion.div
           initial={{ y: 40, opacity: 0, scale: 0.98 }}
           animate={{ y: 0, opacity: 1, scale: 1 }}
@@ -19,7 +17,6 @@ const TeacherEditModal = ({ show, onClose, onSubmit, form, handleChange, editing
           transition={{ duration: 0.25 }}
           className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-5 md:p-6"
         >
-
           {/* HEADER */}
           <div className="flex justify-between items-start mb-5">
             <div>
@@ -36,7 +33,6 @@ const TeacherEditModal = ({ show, onClose, onSubmit, form, handleChange, editing
 
           {/* FORM */}
           <form onSubmit={onSubmit} className="space-y-4">
-
             {/* NOMBRE */}
             <div>
               <label className="text-sm font-medium text-gray-600">
@@ -47,7 +43,7 @@ const TeacherEditModal = ({ show, onClose, onSubmit, form, handleChange, editing
                 name="nombre"
                 value={form.nombre}
                 onChange={handleChange}
-                placeholder="Ej: Felix Ramos"
+                placeholder="Ej: Félix Ramos"
                 className={inputStyle}
                 required
               />
@@ -55,7 +51,6 @@ const TeacherEditModal = ({ show, onClose, onSubmit, form, handleChange, editing
 
             {/* FOOTER */}
             <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 pt-3">
-
               <button
                 type="button"
                 onClick={onClose}
@@ -66,14 +61,17 @@ const TeacherEditModal = ({ show, onClose, onSubmit, form, handleChange, editing
 
               <button
                 type="submit"
-                className="w-full sm:w-auto bg-[rgb(43,57,143)] text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition shadow-md cursor-pointer"
+                disabled={loading}
+                className="w-full sm:w-auto bg-[rgb(43,57,143)] text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition shadow-md cursor-pointer flex items-center justify-center gap-2"
               >
-                {editing ? "Actualizar" : "Crear"}
+                {loading ? (
+                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                ) : (
+                  editing ? "Actualizar" : "Crear"
+                )}
               </button>
-
             </div>
           </form>
-
         </motion.div>
       </div>
     </AnimatePresence>

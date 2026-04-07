@@ -29,6 +29,7 @@ const SubjectList = () => {
   const [classrooms, setClassrooms] = useState([]);
   const [schedules, setSchedules] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingSave, setLoadingSave] = useState(false);
   const [showSubjectModal, setShowSubjectModal] = useState(false);
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -114,6 +115,7 @@ const SubjectList = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoadingSave(true);
     try {
       const payload = {
         teacherId: Number(form.teacherId),
@@ -141,6 +143,8 @@ const SubjectList = () => {
     } catch (error) {
       console.error("Error guardando materia:", error);
       toast.error("Error guardando materia");
+    } finally {
+      setLoadingSave(false);
     }
   };
 
@@ -222,6 +226,7 @@ const SubjectList = () => {
         addScheduleRow={addScheduleRow}
         updateScheduleRow={updateScheduleRow}
         removeScheduleRow={removeScheduleRow}
+        loading={loadingSave}
       />
 
       <SubjectDetailModal

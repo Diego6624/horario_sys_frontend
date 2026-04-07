@@ -14,6 +14,7 @@ const SubjectEditModal = ({
   addScheduleRow,
   updateScheduleRow,
   removeScheduleRow,
+  loading,
 }) => {
   if (!show) return null;
 
@@ -282,12 +283,16 @@ const SubjectEditModal = ({
 
               <button
                 type="submit"
-                className="w-full sm:w-auto bg-[rgb(43,57,143)] text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition shadow-md cursor-pointer"
+                disabled={loading}
+                className="w-full sm:w-auto bg-[rgb(43,57,143)] text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition shadow-md cursor-pointer flex items-center justify-center gap-2"
               >
-                {editing ? "Actualizar" : "Crear"}
+                {loading ? (
+                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                ) : (
+                  editing ? "Actualizar" : "Crear"
+                )}
               </button>
             </div>
-
           </form>
         </motion.div>
       </div>
