@@ -37,7 +37,7 @@ const CourseEditModal = ({ show, onClose, onSubmit, form, handleChange, editing 
           </div>
 
           {/* FORM */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={onSubmit} className="space-y-4">
 
             {/* NOMBRE */}
             <div>
