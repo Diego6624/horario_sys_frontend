@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 const CourseList = () => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingSave, setLoadingSave] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({ nombre: "" });
   const [editing, setEditing] = useState(null);
@@ -45,6 +46,7 @@ const CourseList = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoadingSave(true);
     try {
       if (editing) {
         await updateCourse(editing.id, form);
@@ -60,8 +62,11 @@ const CourseList = () => {
     } catch (error) {
       console.error("Error guardando curso:", error);
       toast.error("Error guardando curso");
+    } finally {
+      setLoadingSave(false);
     }
   };
+
 
   const handleEdit = (course) => {
     setEditing(course);
@@ -154,6 +159,7 @@ const CourseList = () => {
         form={form}
         handleChange={handleChange}
         editing={editing}
+        loading={loadingSave}
       />
     </div>
   );
