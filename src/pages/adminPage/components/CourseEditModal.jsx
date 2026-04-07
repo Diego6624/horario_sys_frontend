@@ -1,14 +1,11 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
 
-const CourseEditModal = ({ show, onClose, onSubmit, form, handleChange, editing }) => {
+const CourseEditModal = ({ show, onClose, onSubmit, form, handleChange, editing, loading }) => {
   if (!show) return null;
 
   const inputStyle =
     "w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm " +
     "focus:outline-none focus:ring-2 focus:ring-[rgb(43,57,143)] focus:border-transparent transition";
-
-  const [loading, setLoading] = useState(false);
 
   return (
     <AnimatePresence>

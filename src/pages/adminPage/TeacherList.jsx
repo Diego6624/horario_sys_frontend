@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 const TeacherList = () => {
   const [teachers, setTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingSave, setLoadingSave] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showSubjectsModal, setShowSubjectsModal] = useState(false);
   const [form, setForm] = useState({ nombre: "" });
@@ -21,7 +22,6 @@ const TeacherList = () => {
   const [subjects, setSubjects] = useState([]);
   const [selectedTeacher, setSelectedTeacher] = useState(null);
 
-  // 🔹 Estado para búsqueda
   const [searchTerm, setSearchTerm] = useState("");
 
   const fetchData = async () => {
@@ -46,6 +46,7 @@ const TeacherList = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoadingSave(true);
     try {
       if (editing) {
         await updateTeacher(editing.id, form);
@@ -61,9 +62,10 @@ const TeacherList = () => {
     } catch (error) {
       console.error("Error guardando docente:", error);
       toast.error("Error guardando docente");
+    } finally {
+      setLoadingSave(false);
     }
   };
-
 
   const handleEdit = (teacher) => {
     setEditing(teacher);
@@ -83,8 +85,6 @@ const TeacherList = () => {
     }
   };
 
-
-  // 🔹 Filtrar docentes por nombre o ID
   const filteredTeachers = teachers.filter(
     (t) =>
       t.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -190,6 +190,7 @@ const TeacherList = () => {
         form={form}
         handleChange={handleChange}
         editing={editing}
+        loading={loadingSave}
       />
 
       <TeacherSubjectModal

@@ -15,6 +15,7 @@ const HoraryList = () => {
   const [teachers, setTeachers] = useState([]);
 
   const [loading, setLoading] = useState(true);
+  const [loadingSave, setLoadingSave] = useState(false);
   const [showSpecialModal, setShowSpecialModal] = useState(false);
   const [specialForm, setSpecialForm] = useState({
     subjectId: "",
@@ -49,6 +50,7 @@ const HoraryList = () => {
 
   const handleSpecialSubmit = async (e) => {
     e.preventDefault();
+    setLoadingSave(true);
     try {
       const payload = {
         subjectId: Number(specialForm.subjectId),
@@ -82,6 +84,8 @@ const HoraryList = () => {
     } catch (err) {
       console.error("Error creando una nueva sesión:", err);
       toast.error("Error creando una nueva sesión");
+    } finally {
+      setLoadingSave(false);
     }
   };
 
@@ -128,6 +132,7 @@ const HoraryList = () => {
         setSpecialForm={setSpecialForm}
         subjects={subjects}
         classrooms={classrooms}
+        loading={loadingSave}
       />
     </div>
   );
