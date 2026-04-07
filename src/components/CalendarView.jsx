@@ -8,7 +8,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import ModalCalendar from "./ModalCalendar";
 import { getAllSchedules } from "../services/scheduleService";
 
-const CalendarView = ({ schedules, subjects = [], classrooms = [] }) => {
+const CalendarView = ({ schedules, subjects = [], classrooms = [], teachers = [] }) => {
   const [isMobile, setIsMobile] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [allSchedules, setAllSchedules] = useState(schedules);
@@ -16,7 +16,6 @@ const CalendarView = ({ schedules, subjects = [], classrooms = [] }) => {
 
   const calendarRef = useRef(null);
 
-  // 👇 sincroniza allSchedules con el prop schedules
   useEffect(() => {
     setAllSchedules(schedules);
   }, [schedules]);
@@ -50,12 +49,12 @@ const CalendarView = ({ schedules, subjects = [], classrooms = [] }) => {
       end: `${s.date}T${s.endTime}`,
       textColor: "#fff",
       extendedProps: {
-        idSubject: subj?.id,
+        idSubject: s.subjectId,
         idSchedule: s.id,
         aula: s.classroom,
         classroomId: s.classroomId,
         sesion: s.sesion,
-        modulo: subj?.modulo || "N/A",
+        modulo: s.modulo || "—",
         hora: `${s.startTime} - ${s.endTime}`,
         course: s.course,
         teacher: s.teacher,
@@ -239,6 +238,7 @@ const CalendarView = ({ schedules, subjects = [], classrooms = [] }) => {
             onClose={() => setSelectedEvent(null)}
             refreshSchedules={refreshSchedules}
             classrooms={classrooms}
+            teachers={teachers}
           />
         )}
       </div>

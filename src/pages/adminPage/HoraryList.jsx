@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getAllSchedules, createSchedule } from "../../services/scheduleService";
 import { getAllSubjects } from "../../services/subjectService";
 import { getAllClassrooms } from "../../services/classroomService";
+import { getAllTeachers } from "@/services/teacherService";
 import LoaderComponent from "../../components/LoaderComponent";
 import CalendarView from "../../components/CalendarView";
 import SpecialSessionModal from "./components/SpecialSessionModal";
@@ -11,8 +12,9 @@ const HoraryList = () => {
   const [schedules, setSchedules] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const [classrooms, setClassrooms] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [teachers, setTeachers] = useState([]);
 
+  const [loading, setLoading] = useState(true);
   const [showSpecialModal, setShowSpecialModal] = useState(false);
   const [specialForm, setSpecialForm] = useState({
     subjectId: "",
@@ -30,9 +32,11 @@ const HoraryList = () => {
         const schs = await getAllSchedules();
         const subs = await getAllSubjects();
         const cls = await getAllClassrooms();
+        const tchs = await getAllTeachers();
         setSchedules(schs);
         setSubjects(subs);
         setClassrooms(cls);
+        setTeachers(tchs);
       } catch (error) {
         console.error("Error cargando datos:", error);
         toast.error("Error cargando datos");
@@ -101,6 +105,7 @@ const HoraryList = () => {
             schedules={schedules}
             subjects={subjects}
             classrooms={classrooms}
+            teachers={teachers}
           />
         )}
       </div>

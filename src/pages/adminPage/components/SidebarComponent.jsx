@@ -1,13 +1,10 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   Calendar,
-  PlusCircle,
-  Layers,
   LayoutDashboard,
   LogOut,
   User,
   BookText,
-  BookCopy,
   BookOpen,
 } from "lucide-react";
 import {
@@ -19,6 +16,7 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarFooter,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { logout } from "../../../services/authService";
 
@@ -29,73 +27,115 @@ const navLink = [
   { to: "/admin/cursos", icon: BookOpen, label: "Cursos" },
 ];
 
-const SidebarComponent = () => {
+// ── Subcomponente que usa el hook de contexto del sidebar ────────────────────
+const SidebarInner = () => {
   const navigate = useNavigate();
+  const { setOpenMobile, isMobile } = useSidebar();
+
+  const handleNav = () => {
+    if (isMobile) setOpenMobile(false);
+  };
 
   const handleLogout = () => {
+    if (isMobile) setOpenMobile(false);
     logout();
     navigate("/");
   };
 
   return (
-    <Sidebar collapsible="offcanvas">
+    <div className="flex flex-col h-full w-full bg-[rgb(43,57,143)] text-white">
 
-      {/* CONTENEDOR REAL CON COLOR */}
-      <div className="flex flex-col min-h-full w-auto bg-[rgb(43,57,143)] text-white">
-
-        {/* HEADER */}
-        <div className="p-4 border-b border-white/20 flex justify-center items-center gap-3">
-          <LayoutDashboard size={24} />
-          <h2 className="text-xl font-bold uppercase">Panel Admin</h2>
+      {/* ── HEADER ─────────────────────────────────────────────── */}
+      <div className="flex items-center gap-3 px-5 py-5 border-b border-white/15">
+        <div className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center shrink-0">
+          <LayoutDashboard size={20} className="text-white" />
         </div>
-
-        {/* NAV */}
-        <SidebarContent className="px-2 py-4 bg-[rgb(43,57,143)]">
-          <SidebarGroup className="flex flex-col gap-3">
-            <SidebarGroupLabel className="text-white/80 text-md font-semibold">
-              Navegación
-            </SidebarGroupLabel>
-
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {navLink.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <SidebarMenuItem key={item.to}>
-                      <NavLink
-                        to={item.to}
-                        className={({ isActive }) =>
-                          `flex items-center gap-2 px-4 py-2 rounded-lg transition-colors text-lg ${isActive
-                            ? "bg-white text-[rgb(43,57,143)] font-semibold"
-                            : "text-white hover:bg-white/10"
-                          }`
-                        }
-                      >
-                        <Icon size={20} />
-                        {item.label}
-                      </NavLink>
-                    </SidebarMenuItem>
-                  );
-                })}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-
-        {/* FOOTER */}
-        <SidebarFooter className="p-2 border-t border-white/20 bg-[rgb(43,57,143)]">
-          <button
-            onClick={handleLogout}
-            className="w-full text-lg font-semibold flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-white hover:bg-white/10 transition cursor-pointer"
-          >
-            <LogOut size={20} />
-            Cerrar sesión
-          </button>
-        </SidebarFooter>
-
+        <div>
+          <p className="text-sm md:text-md font-semibold uppercase tracking-widest text-white/50 leading-none mb-0.5">
+            Sistema
+          </p>
+          <h2 className="text-md md:text-lg font-bold text-white leading-none">
+            Panel Admin
+          </h2>
+        </div>
       </div>
-    </Sidebar>
+
+      {/* ── NAV ────────────────────────────────────────────────── */}
+      <SidebarContent className="flex-1 px-3 py-4 bg-[rgb(43,57,143)] overflow-y-auto">
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-white/40 text-[12px] md:text-[15px] font-bold tracking-[0.18em] uppercase px-2 mb-2">
+            Navegación
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu className="flex flex-col gap-0.5">
+              {navLink.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <SidebarMenuItem key={item.to}>
+                    <NavLink
+                      to={item.to}
+                      onClick={handleNav}
+                      className={({ isActive }) =>
+                        `flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-150 text-md md:text-lg font-medium ${isActive
+                          ? "bg-white text-[rgb(43,57,143)] font-semibold shadow-sm"
+                          : "text-white/80 hover:text-white hover:bg-white/10"
+                        }`
+                      }
+                    >
+                      {({ isActive }) => (
+                        <>
+                          <div className="flex md:hidden justify-center items-center text-center gap-2">
+                            <Icon
+                              size={18}
+                              className={isActive ? "text-[rgb(43,57,143)]" : "text-white/70"}
+                            />
+                            {item.label}
+                          </div>
+                          <div className="hidden md:flex justify-center items-center text-center gap-2">
+                            <Icon
+                              size={20}
+                              className={isActive ? "text-[rgb(43,57,143)]" : "text-white/70"}
+                            />
+                            {item.label}
+                          </div>
+                        </>
+                      )}
+                    </NavLink>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+
+      {/* ── FOOTER ─────────────────────────────────────────────── */}
+      <SidebarFooter className="flex justify-center items-center px-3 py-3 border-t border-white/15 bg-[rgb(43,57,143)]">
+        <button
+          onClick={handleLogout}
+          className="flex md:hidden w-full justify-center items-center gap-2 px-3 py-2.5 rounded-lg font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all duration-150 cursor-pointer text-md"
+        >
+          <LogOut size={17} className="text-white/70" />
+          Cerrar sesión
+        </button>
+        <button
+          onClick={handleLogout}
+          className="hidden md:flex w-full justify-center items-center gap-2 px-3 py-2.5 rounded-lg font-medium text-white/80 hover:text-white hover:bg-white/10 transition-all duration-150 cursor-pointer md:text-lg"
+        >
+          <LogOut size={20} className="text-white/70" />
+          Cerrar sesión
+        </button>
+      </SidebarFooter>
+
+    </div>
   );
 };
+
+// ── Componente exportado ─────────────────────────────────────────────────────
+const SidebarComponent = () => (
+  <Sidebar collapsible="offcanvas">
+    <SidebarInner />
+  </Sidebar>
+);
 
 export default SidebarComponent;
