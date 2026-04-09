@@ -15,6 +15,7 @@ const SubjectTable = ({
   totalItems = 0,
   indexOfFirstItem = 0,
   indexOfLastItem = 0,
+  loadingViewId = null,   // 👈 nuevo
 }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [subjectToDelete, setSubjectToDelete] = useState(null);
@@ -97,9 +98,10 @@ const SubjectTable = ({
 
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-1.5 whitespace-nowrap">
-                      {/* Botón Ver */}
+                      {/* Botón Ver con spinner */}
                       <button
                         onClick={() => onView(s)}
+                        disabled={loadingViewId === s.id}
                         className="flex items-center gap-1.5 text-sm font-semibold px-2.5 py-1.5 rounded-lg border transition cursor-pointer"
                         style={{
                           color: "#059669",
@@ -117,8 +119,14 @@ const SubjectTable = ({
                           e.currentTarget.style.borderColor = "rgba(5, 150, 105, 0.3)";
                         }}
                       >
-                        <Eye size={16} />
-                        <span className="hidden sm:inline">Ver</span>
+                        {loadingViewId === s.id ? (
+                          <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                        ) : (
+                          <>
+                            <Eye size={16} />
+                            <span className="hidden sm:inline">Ver</span>
+                          </>
+                        )}
                       </button>
 
                       {/* Botón Editar */}

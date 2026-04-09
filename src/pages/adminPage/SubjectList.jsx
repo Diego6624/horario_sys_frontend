@@ -32,11 +32,12 @@ const SubjectList = () => {
   const [schedules, setSchedules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingSave, setLoadingSave] = useState(false);
+  const [loadingViewId, setLoadingViewId] = useState(null);
   const [showSubjectModal, setShowSubjectModal] = useState(false);
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [editing, setEditing] = useState(null);
-  
+
   // Estados para Búsqueda y Paginación
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -105,6 +106,7 @@ const SubjectList = () => {
   };
 
   const handleViewSubject = async (subject) => {
+    setLoadingViewId(subject.id);
     try {
       const data = await getSchedulesBySubjectSession(subject.id);
       setSchedules(data);
@@ -113,6 +115,8 @@ const SubjectList = () => {
     } catch (error) {
       console.error("Error obteniendo sesiones:", error);
       toast.error("Error obteniendo sesiones");
+    } finally {
+      setLoadingViewId(null);
     }
   };
 
@@ -224,8 +228,8 @@ const SubjectList = () => {
           type="text"
           placeholder="Buscar por curso o ID..."
           value={searchTerm}
-          onChange={(e) => { 
-            setSearchTerm(e.target.value); 
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
             setCurrentPage(1); // Reseteamos la página al buscar
           }}
           className="w-full outline-none text-sm text-gray-700 placeholder-gray-400"
@@ -242,6 +246,7 @@ const SubjectList = () => {
         totalItems={filteredSubjects.length}
         indexOfFirstItem={indexOfFirstItem}
         indexOfLastItem={indexOfLastItem}
+        loadingViewId={loadingViewId}
       />
 
       {/* ── PAGINACIÓN ── */}

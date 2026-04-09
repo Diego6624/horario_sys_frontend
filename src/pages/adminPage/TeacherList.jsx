@@ -17,6 +17,7 @@ const TeacherList = () => {
   const [teachers, setTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingSave, setLoadingSave] = useState(false);
+  const [loadingViewId, setLoadingViewId] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showSubjectsModal, setShowSubjectsModal] = useState(false);
   const [form, setForm] = useState({ nombre: "" });
@@ -95,6 +96,7 @@ const TeacherList = () => {
   };
 
   const handleViewSubjects = async (teacher) => {
+    setLoadingViewId(teacher.id);
     try {
       const data = await getSubjectsByTeacher(teacher.id);
       setSubjects(data);
@@ -103,6 +105,8 @@ const TeacherList = () => {
     } catch (error) {
       console.error("Error obteniendo materias del docente:", error);
       toast.error("Error cargando materias del docente");
+    } finally {
+      setLoadingViewId(null);
     }
   };
 
@@ -187,10 +191,32 @@ const TeacherList = () => {
                       {/* Botón Ver */}
                       <button
                         onClick={() => handleViewSubjects(t)}
-                        className="flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-lg border border-green-200 bg-green-50 text-green-600 hover:bg-green-600 hover:text-white hover:border-green-600 transition-all cursor-pointer"
+                        disabled={loadingViewId === t.id}
+                        className="flex items-center gap-1.5 text-sm font-semibold px-2.5 py-1.5 rounded-lg border transition cursor-pointer"
+                        style={{
+                          color: "#059669",
+                          borderColor: `rgba(5, 150, 105, 0.3)`,
+                          background: "rgba(5, 150, 105, 0.04)",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = "#059669";
+                          e.currentTarget.style.color = "white";
+                          e.currentTarget.style.borderColor = "#059669";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = "rgba(5, 150, 105, 0.04)";
+                          e.currentTarget.style.color = "#059669";
+                          e.currentTarget.style.borderColor = "rgba(5, 150, 105, 0.3)";
+                        }}
                       >
-                        <Eye size={16} />
-                        <span className="hidden sm:inline">Ver</span>
+                        {loadingViewId === t.id ? (
+                          <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+                        ) : (
+                          <>
+                            <Eye size={16} />
+                            <span className="hidden sm:inline">Ver</span>
+                          </>
+                        )}
                       </button>
 
                       {/* Botón Editar */}

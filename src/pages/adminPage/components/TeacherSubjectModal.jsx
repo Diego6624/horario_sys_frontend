@@ -11,14 +11,17 @@ const TeacherSubjectsModal = ({ show, onClose, selectedTeacher, subjects }) => {
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 50, opacity: 0 }}
-          transition={{ duration: 0.2 }} className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[85vh] flex flex-col overflow-hidden"
+          transition={{ duration: 0.2 }} className="mx-4 sm:mx-auto bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[85vh] flex flex-col overflow-hidden"
         >
 
           {/* HEADER */}
           <div className="flex justify-between items-center px-6 py-4 bg-[rgb(43,57,143)] text-white">
-            <h3 className="text-lg md:text-xl font-semibold flex items-center gap-2">
-              <BookOpen size={22} />
-              Docente: <span className="font-bold">{selectedTeacher?.nombre}</span>
+            <h3 className="text-lg md:text-xl font-semibold flex flex-col sm:flex-row gap-0.5 md:gap-2">
+              <div className="flex items-center gap-2">
+                <BookOpen size={22} />
+                <p>Docente: </p>
+              </div>
+              <span className="font-bold">{selectedTeacher?.nombre}</span>
             </h3>
             <button
               onClick={onClose}

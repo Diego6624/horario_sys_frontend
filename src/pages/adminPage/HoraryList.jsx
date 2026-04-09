@@ -8,6 +8,8 @@ import CalendarView from "../../components/CalendarView";
 import SpecialSessionModal from "./components/SpecialSessionModal";
 import { toast } from "react-toastify";
 
+const BRAND = "rgb(43,57,143)";
+
 const HoraryList = () => {
   const [schedules, setSchedules] = useState([]);
   const [subjects, setSubjects] = useState([]);
@@ -91,13 +93,18 @@ const HoraryList = () => {
 
   return (
     <div className="space-y-2">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-[rgb(43,57,143)]">Gestión de horarios</h2>
+      {/* ── HEADER ── */}
+      <div className="flex flex-wrap justify-between items-center gap-3">
+        <h2 className="text-2xl font-bold" style={{ color: BRAND }}>
+          Gestión de Docentes
+        </h2>
+
         <button
           onClick={() => setShowSpecialModal(true)}
-          className="bg-[rgb(43,57,143)] text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition cursor-pointer"
+          className="flex items-center w-full md:w-auto gap-2 text-white px-4 py-2 rounded-lg font-semibold hover:opacity-90 transition cursor-pointer text-md"
+          style={{ background: BRAND }}
         >
-          + Nueva sesión
+          <p className="w-full md:w-auto">+ Nueva sesión</p>
         </button>
       </div>
 
