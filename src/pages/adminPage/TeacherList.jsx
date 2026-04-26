@@ -70,13 +70,20 @@ const TeacherList = () => {
     e.preventDefault();
     setLoadingSave(true);
     try {
+      let saved;
       if (editing) {
-        await updateTeacher(editing.id, form);
+        saved = await updateTeacher(editing.id, form);
         toast.success("Docente actualizado correctamente");
       } else {
-        await createTeacher(form);
+        saved = await createTeacher(form);
         toast.success("Docente creado correctamente");
       }
+
+      if (form.file) {
+        await uploadTeacherPhoto(saved.id, form.file);
+        toast.success("Foto subida correctamente");
+      }
+
       setForm({ nombre: "" });
       setEditing(null);
       setShowModal(false);
@@ -88,6 +95,7 @@ const TeacherList = () => {
       setLoadingSave(false);
     }
   };
+
 
   const handleEdit = (teacher) => {
     setEditing(teacher);

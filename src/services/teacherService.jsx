@@ -40,4 +40,18 @@ export const updateTeacher = async (id, data) => {
   return await res.json();
 };
 
-export default { getAllTeachers, createTeacher, updateTeacher };
+export const uploadTeacherPhoto = async (id, file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const res = await fetch(`${API}/teachers/${id}/photo`, {
+    method: "POST",
+    headers: { ...getAuthHeader() },
+    body: formData,
+  });
+
+  if (!res.ok) throw new Error("Error subiendo foto del docente");
+  return await res.json();
+};
+
+export default { getAllTeachers, createTeacher, updateTeacher, uploadTeacherPhoto };

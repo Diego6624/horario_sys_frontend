@@ -1,5 +1,9 @@
 import { motion, AnimatePresence } from "framer-motion";
 
+const inputStyle =
+  "w-full mt-1 border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none transition " +
+  "focus:ring-2 focus:ring-[rgb(43,57,143)] focus:border-transparent placeholder:text-gray-300";
+
 const SpecialSessionModal = ({
   show,
   onClose,
@@ -22,13 +26,15 @@ const SpecialSessionModal = ({
             className="w-full max-w-lg bg-white rounded-2xl shadow-2xl flex flex-col max-h-[90vh]"
           >
             {/* HEADER */}
-            <div className="p-4 pb-1 md:p-6 md:pb-2">
-              <h3 className="text-lg md:text-xl font-bold text-[rgb(43,57,143)]">
-                Nueva Sesión
-              </h3>
-              <p className="text-sm text-gray-500">
-                Completa los datos para registrar una sesión independiente.
-              </p>
+            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+              <div>
+                <h3 className="text-base sm:text-lg font-bold" style={{ color: "rgb(43,57,143)" }}>
+                  Nueva Sesión
+                </h3>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  Completa los datos para registrar una sesión independiente.
+                </p>
+              </div>
             </div>
 
             {/* FORM */}
@@ -44,8 +50,7 @@ const SpecialSessionModal = ({
                   onChange={(e) =>
                     setSpecialForm({ ...specialForm, subjectId: e.target.value })
                   }
-                  className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm 
-                    focus:outline-none focus:ring-2 focus:ring-[rgb(43,57,143)] focus:border-transparent transition"
+                  className={inputStyle}
                   required
                 >
                   <option value="" disabled>Seleccione materia</option>
@@ -69,7 +74,7 @@ const SpecialSessionModal = ({
                   onChange={(e) =>
                     setSpecialForm({ ...specialForm, date: e.target.value })
                   }
-                  className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[rgb(43,57,143)] focus:border-transparent transition"
+                  className={inputStyle}
                   required
                 />
               </div>
@@ -84,7 +89,7 @@ const SpecialSessionModal = ({
                     onChange={(e) =>
                       setSpecialForm({ ...specialForm, startTime: e.target.value })
                     }
-                    className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[rgb(43,57,143)] transition"
+                    className={inputStyle}
                     required
                   />
                 </div>
@@ -96,7 +101,7 @@ const SpecialSessionModal = ({
                     onChange={(e) =>
                       setSpecialForm({ ...specialForm, endTime: e.target.value })
                     }
-                    className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[rgb(43,57,143)] transition"
+                    className={inputStyle}
                     required
                   />
                 </div>
@@ -111,7 +116,7 @@ const SpecialSessionModal = ({
                     onChange={(e) =>
                       setSpecialForm({ ...specialForm, classroomId: e.target.value })
                     }
-                    className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[rgb(43,57,143)] transition"
+                    className={inputStyle}
                     required
                   >
                     <option value="" disabled>Seleccione aula</option>
@@ -130,7 +135,7 @@ const SpecialSessionModal = ({
                     onChange={(e) =>
                       setSpecialForm({ ...specialForm, sesion: e.target.value })
                     }
-                    className="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[rgb(43,57,143)] transition"
+                    className={inputStyle}
                     required
                   >
                     <option value="" disabled>Seleccione sesión</option>
@@ -160,7 +165,7 @@ const SpecialSessionModal = ({
                       sesion: "",
                     });
                   }}
-                  className="w-full sm:w-auto px-4 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition cursor-pointer"
+                  className="w-full sm:w-auto px-4 py-2 rounded-xl border text-sm border-gray-300 text-gray-600 hover:bg-gray-100 transition cursor-pointer"
                 >
                   Cancelar
                 </button>
@@ -168,7 +173,7 @@ const SpecialSessionModal = ({
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full sm:w-auto bg-[rgb(43,57,143)] text-white px-4 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition shadow-md cursor-pointer flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto bg-[rgb(43,57,143)] text-sm text-white px-4 py-2 rounded-xl font-semibold hover:bg-indigo-700 transition shadow-md cursor-pointer flex items-center justify-center gap-2"
                 >
                   {loading ? (
                     <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>

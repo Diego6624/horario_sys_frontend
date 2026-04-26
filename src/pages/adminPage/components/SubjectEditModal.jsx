@@ -22,9 +22,11 @@ const SubjectEditModal = ({
   if (!show) return null;
 
   const inputStyle =
-    "w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[rgb(43,57,143)] focus:border-transparent transition";
+    "w-full mt-1 border border-gray-200 rounded-xl px-3 py-2.5 text-sm outline-none transition " +
+    "focus:ring-2 focus:ring-[rgb(43,57,143)] focus:border-transparent placeholder:text-gray-300";
+
   const inputStyleDisabled =
-    "w-full mt-1 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-400 bg-gray-50 cursor-not-allowed outline-none";
+    "w-full mt-1 border border-gray-100 rounded-xl px-3 py-2.5 text-sm text-gray-400 bg-gray-50 cursor-not-allowed outline-none";
 
   const step1Valid = form.courseId && form.teacherId && form.modulo && form.duracionSemanas;
   const step2Valid = form.fechaInicio;
@@ -63,8 +65,8 @@ const SubjectEditModal = ({
                   {editing ? "Modifica los datos de la materia" : step === 3 ? "Revisa los datos antes de confirmar" : "Completa la información en los pasos"}
                 </p>
               </div>
-              <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition cursor-pointer p-1">
-                <X size={20} />
+              <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition cursor-pointer p-1 rounded-lg hover:bg-gray-100">
+                <X size={18} />
               </button>
             </div>
 
@@ -77,7 +79,7 @@ const SubjectEditModal = ({
                   const isDone = step > n;
                   return (
                     <div key={n} className="flex items-center flex-1 last:flex-none">
-                      <div className="flex flex-col items-center gap-1 flex-shrink-0">
+                      <div className="flex flex-col items-center gap-1 shrink-0">
                         <div
                           className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300"
                           style={{
@@ -123,7 +125,7 @@ const SubjectEditModal = ({
                     className="space-y-4"
                   >
                     <div>
-                      <label className="text-sm font-medium text-gray-600">Curso</label>
+                      <label className="text-xs font-bold uppercase tracking-widest text-gray-400">Curso</label>
                       <select name="courseId" value={form.courseId} onChange={handleChange} className={editing ? inputStyleDisabled : inputStyle} required>
                         <option value="" disabled>Seleccione curso</option>
                         {courses.slice().sort((a, b) => a.nombre.localeCompare(b.nombre)).map(c => (
@@ -133,7 +135,7 @@ const SubjectEditModal = ({
                     </div>
 
                     <div>
-                      <label className="text-sm font-medium text-gray-600">Docente</label>
+                      <label className="text-xs font-bold uppercase tracking-widest text-gray-400">Docente</label>
                       <select name="teacherId" value={form.teacherId} onChange={handleChange} className={inputStyle} required>
                         <option value="" disabled>Seleccione docente</option>
                         {teachers.slice().sort((a, b) => a.nombre.localeCompare(b.nombre)).map(t => (
@@ -144,7 +146,7 @@ const SubjectEditModal = ({
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="text-sm font-medium text-gray-600">Módulo</label>
+                        <label className="text-xs font-bold uppercase tracking-widest text-gray-400">Módulo</label>
                         <select name="modulo" value={form.modulo} onChange={handleChange} className={inputStyle} required>
                           <option value="" disabled>Seleccione módulo</option>
                           <option value="M1">Módulo 1</option>
@@ -153,7 +155,7 @@ const SubjectEditModal = ({
                         </select>
                       </div>
                       <div>
-                        <label className="text-sm font-medium text-gray-600">Duración (semanas)</label>
+                        <label className="text-xs font-bold uppercase tracking-widest text-gray-400">Duración (semanas)</label>
                         <input type="number" min={1} name="duracionSemanas" value={form.duracionSemanas}
                           onChange={handleChange} className={editing ? inputStyleDisabled : inputStyle}
                           required disabled={!!editing} />
@@ -170,7 +172,7 @@ const SubjectEditModal = ({
                     className="space-y-4"
                   >
                     <div>
-                      <label className="text-sm font-medium text-gray-600">Fecha de inicio</label>
+                      <label className="text-xs font-bold uppercase tracking-widest text-gray-400">Fecha de inicio</label>
                       <input type="date" name="fechaInicio" value={form.fechaInicio || ""}
                         onChange={handleChange} className={inputStyle} required />
                     </div>
@@ -244,7 +246,7 @@ const SubjectEditModal = ({
                     {/* Banner de confirmación */}
                     <div className="rounded-xl p-4 flex items-center gap-3"
                       style={{ background: "rgba(43,57,143,0.06)", border: `1px solid rgba(43,57,143,0.15)` }}>
-                      <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
+                      <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
                         style={{ background: BRAND }}>
                         <Check size={16} className="text-white" />
                       </div>
@@ -332,12 +334,12 @@ const SubjectEditModal = ({
               {/* Izquierda */}
               {step === 1 || editing ? (
                 <button type="button" onClick={onClose}
-                  className="w-full sm:w-auto px-4 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 transition cursor-pointer text-sm">
+                  className="w-full sm:w-auto px-4 py-2 rounded-xl border border-gray-300 text-gray-600 hover:bg-gray-50 transition cursor-pointer text-sm">
                   Cancelar
                 </button>
               ) : (
                 <button type="button" onClick={() => setStep(s => s - 1)}
-                  className="w-full sm:w-auto flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 transition cursor-pointer text-sm">
+                  className="w-full sm:w-auto flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl border border-gray-300 text-gray-600 hover:bg-gray-50 transition cursor-pointer text-sm">
                   <ChevronLeft size={15} /> Atrás
                 </button>
               )}
@@ -345,7 +347,7 @@ const SubjectEditModal = ({
               {/* Derecha */}
               {isLastStep ? (
                 <button type="submit" disabled={loading}
-                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2 rounded-lg text-white font-semibold hover:opacity-90 transition shadow-md cursor-pointer text-sm"
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2 rounded-xl text-white font-semibold hover:opacity-90 transition shadow-md cursor-pointer text-sm"
                   style={{ background: BRAND }}>
                   {loading
                     ? <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
@@ -355,7 +357,7 @@ const SubjectEditModal = ({
               ) : (
                 <button type="submit"
                   disabled={step === 1 ? !step1Valid : !step2Valid}
-                  className="w-full sm:w-auto flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg text-white font-semibold transition cursor-pointer text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full sm:w-auto flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-white font-semibold transition cursor-pointer text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{ background: BRAND }}>
                   Siguiente <ChevronRight size={15} />
                 </button>
