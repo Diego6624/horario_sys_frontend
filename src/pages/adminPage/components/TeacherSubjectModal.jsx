@@ -11,17 +11,14 @@ const TeacherSubjectsModal = ({ show, onClose, selectedTeacher, subjects }) => {
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 50, opacity: 0 }}
-          transition={{ duration: 0.2 }} className="mx-4 sm:mx-auto bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[85vh] flex flex-col overflow-hidden"
+          transition={{ duration: 0.2 }}
+          className="mx-4 sm:mx-auto bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[85vh] flex flex-col overflow-hidden"
         >
-
           {/* HEADER */}
           <div className="flex justify-between items-center px-6 py-4 bg-[rgb(43,57,143)] text-white">
-            <h3 className="text-lg md:text-xl font-semibold flex flex-col sm:flex-row gap-0.5 md:gap-2">
-              <div className="flex items-center gap-2">
-                <BookOpen size={22} />
-                <p>Docente: </p>
-              </div>
-              <span className="font-bold">{selectedTeacher?.nombre}</span>
+            <h3 className="text-lg md:text-xl font-semibold flex items-center gap-2">
+              <BookOpen size={22} />
+              <p>Docente</p>
             </h3>
             <button
               onClick={onClose}
@@ -33,6 +30,31 @@ const TeacherSubjectsModal = ({ show, onClose, selectedTeacher, subjects }) => {
 
           {/* BODY */}
           <div className="p-6 overflow-y-auto grow">
+            {/* Info del docente */}
+            <div className="flex items-center gap-6 mb-6">
+              {/* Nombre a la izquierda */}
+              <div className="flex-1">
+                <h2 className="text-xl font-bold text-gray-800">
+                  {selectedTeacher?.nombre}
+                </h2>
+              </div>
+              {/* Foto a la derecha */}
+              <div className="w-24 h-24 rounded-full overflow-hidden border border-gray-300">
+                {selectedTeacher?.photoUrl ? (
+                  <img
+                    src={selectedTeacher.photoUrl}
+                    alt={selectedTeacher.nombre}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+                    Sin foto
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Cursos asignados */}
             <h4 className="text-sm font-semibold mb-4 flex items-center gap-2 text-gray-600 uppercase tracking-wide">
               <Layers size={18} className="text-blue-500" />
               Cursos asignados

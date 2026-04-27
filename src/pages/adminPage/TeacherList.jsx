@@ -4,6 +4,7 @@ import {
   createTeacher,
   updateTeacher,
   getSubjectsByTeacher,
+  uploadTeacherPhoto,
 } from "../../services/teacherService";
 import LoaderComponent from "@/components/LoaderComponent";
 import TeacherSubjectModal from "./components/TeacherSubjectModal";
@@ -320,6 +321,7 @@ const TeacherList = () => {
         onClose={() => setShowModal(false)}
         onSubmit={handleSubmit}
         form={form}
+        setForm={setForm}
         handleChange={handleChange}
         editing={editing}
         loading={loadingSave}
