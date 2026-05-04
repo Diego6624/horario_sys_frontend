@@ -31,26 +31,34 @@ const TeacherSubjectsModal = ({ show, onClose, selectedTeacher, subjects }) => {
           {/* BODY */}
           <div className="p-6 overflow-y-auto grow">
             {/* Info del docente */}
-            <div className="flex items-center gap-6 mb-6">
-              {/* Nombre a la izquierda */}
-              <div className="flex-1">
-                <h2 className="text-xl font-bold text-gray-800">
-                  {selectedTeacher?.nombre}
-                </h2>
-              </div>
+            <div className="flex items-center gap-6 mb-6 w-full">
               {/* Foto a la derecha */}
               <div className="w-24 h-24 rounded-full overflow-hidden border border-gray-300">
                 {selectedTeacher?.photoUrl ? (
                   <img
-                    src={selectedTeacher.photoUrl}
-                    alt={selectedTeacher.nombre}
-                    className="w-full h-full object-cover"
+                    src={selectedTeacher?.photoUrl}
+                    alt={selectedTeacher?.nombre}
+                    className="w-24 h-24 rounded-full object-cover"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm">
                     Sin foto
                   </div>
                 )}
+              </div>
+              <div className="flex w-auto">
+                <div className="flex flex-col w-auto">
+                  <h2 className="text-xl font-bold text-gray-800">
+                    {selectedTeacher?.nombre}
+                  </h2>
+                  <p className="text-sm text-gray-600">
+                    <span className="font-semibold">{subjects.length} {subjects.length === 1 ? "curso" : "cursos"} </span>
+                    {subjects.length === 1 ? "asignado" : "asignados"}
+                  </p>
+                </div>
+                {/* <div>
+                  Proxima clase:
+                </div> */}
               </div>
             </div>
 

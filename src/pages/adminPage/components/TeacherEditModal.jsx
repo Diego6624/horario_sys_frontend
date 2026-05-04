@@ -1,20 +1,42 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { User, ImagePlus, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const BRAND = "rgb(43,57,143)";
 
 const TeacherEditModal = ({ show, onClose, onSubmit, form, setForm, handleChange, editing, loading }) => {
   const [preview, setPreview] = useState(null);
+  const [loadingImage, setLoadingImage] = useState(false);
+
+  useEffect(() => {
+    if (show) {
+      if (editing && editing.photoUrl) {
+        // Si estás editando y el docente ya tiene foto guardada
+        setPreview(editing.photoUrl);
+        setForm((prev) => ({ ...prev, file: null }));
+      } else {
+        // Si es nuevo o no tiene foto
+        setPreview(null);
+        setForm((prev) => ({ ...prev, file: null }));
+      }
+    }
+  }, [show, editing, setForm]);
 
   if (!show) return null;
 
   const handleFile = (e) => {
     const file = e.target.files[0];
     if (!file) return;
+    setLoadingImage(true); // empieza carga
     setForm({ ...form, file });
-    setPreview(URL.createObjectURL(file));
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreview(reader.result);
+      setLoadingImage(false); // termina carga
+    };
+    reader.readAsDataURL(file);
   };
 
   const removeFile = () => {
@@ -83,12 +105,11 @@ const TeacherEditModal = ({ show, onClose, onSubmit, form, setForm, handleChange
 
             {/* FOTO */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold uppercase tracking-widest text-gray-400">
-                Foto del docente
-              </label>
-
-              {/* Preview si hay imagen */}
-              {preview ? (
+              {loadingImage ? (
+                <label className="text-xs font-bold uppercase tracking-widest text-gray-400">
+                  Foto del docente
+                </label>
+              ) : preview ? (
                 <div className="flex items-center gap-3 p-3 rounded-xl border border-gray-200 bg-gray-50">
                   <img
                     src={preview}
@@ -97,7 +118,11 @@ const TeacherEditModal = ({ show, onClose, onSubmit, form, setForm, handleChange
                   />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-gray-700 truncate">
-                      {form.file?.name}
+                      {form.file
+                        ? form.file.name
+                        : editing
+                          ? "Imagen subida"
+                          : ""}
                     </p>
                     <p className="text-xs text-gray-400 mt-0.5">
                       {form.file ? (form.file.size / 1024).toFixed(1) + " KB" : ""}
