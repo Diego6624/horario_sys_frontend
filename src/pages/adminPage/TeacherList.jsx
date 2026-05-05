@@ -82,7 +82,6 @@ const TeacherList = () => {
 
       if (form.file) {
         await uploadTeacherPhoto(saved.id, form.file);
-        toast.success("Foto subida correctamente");
       }
 
       setForm({ nombre: "" });
