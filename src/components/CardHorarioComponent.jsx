@@ -60,6 +60,8 @@ const CardHorarioComponent = ({
   sesion,
   estado,
   theme = "dark",
+  docentePhoto,
+  docenteNombre,
 }) => {
   const isDark = theme === "dark";
 
@@ -68,6 +70,44 @@ const CardHorarioComponent = ({
 
   const pendingRef = useRef(null);
   const animatingRef = useRef(false);
+  const [wavePhase, setWavePhase] = useState("hidden");
+  // "hidden" | "entering" | "showing" | "leaving"
+
+  const waveTimerRef = useRef(null);
+  const waveSeqRef = useRef(null);
+
+  useEffect(() => {
+    if (!docentePhoto) return;
+    const startCycle = (delay = 5000) => {
+      // Espera 20s, luego muestra la ola 5s
+      waveTimerRef.current = setTimeout(() => {
+        setWavePhase("entering");
+
+        waveSeqRef.current = setTimeout(() => {
+          setWavePhase("showing");
+
+          waveSeqRef.current = setTimeout(() => {
+            setWavePhase("leaving");
+
+            waveSeqRef.current = setTimeout(() => {
+              setWavePhase("hidden");
+              startCycle(20000); // reinicia el ciclo
+            }, 800); // duración salida
+
+          }, 5000); // duración mostrando
+
+        }, 800); // duración entrada
+
+      }, 20000); // intervalo entre apariciones
+    };
+
+    startCycle(5000);
+
+    return () => {
+      clearTimeout(waveTimerRef.current);
+      clearTimeout(waveSeqRef.current);
+    };
+  }, [docentePhoto]);
 
   useEffect(() => {
     const incoming = { docente, curso, horario, sesion, estado };
@@ -232,6 +272,68 @@ const CardHorarioComponent = ({
             <InfoRow icon={<CalendarDays size={13} />} label="Sesión" value={displayed.sesion} accent={s.accent} valueColor={valueColor} />
           </div>
         </div>
+
+        {/* ── WAVE OVERLAY ── */}
+        {docentePhoto && wavePhase !== "hidden" && (
+          <div
+            className="absolute inset-0 flex items-center justify-start overflow-hidden pointer-events-none rounded-xl"
+            style={{
+              clipPath: wavePhase === "entering"
+                ? undefined
+                : wavePhase === "leaving"
+                  ? undefined
+                  : "ellipse(55% 60% at 0% 50%)",
+              animation:
+                wavePhase === "entering"
+                  ? "wave-in 0.8s cubic-bezier(0.22,0.68,0,1.1) forwards"
+                  : wavePhase === "leaving"
+                    ? "wave-out 0.8s cubic-bezier(0.22,0.68,0,1.1) forwards"
+                    : "none",
+              background: isDark
+                ? "linear-gradient(135deg, rgba(10,15,50,0.97) 0%, rgba(30,50,120,0.95) 100%)"
+                : "linear-gradient(135deg, rgba(29,78,216,0.97) 0%, rgba(59,130,246,0.95) 100%)",
+              zIndex: 10,
+            }}
+          >
+            <div
+              className="flex flex-col items-center justify-center gap-3 w-[55%] h-full"
+              style={{
+                animation: wavePhase === "showing"
+                  ? "fade-up 0.4s ease 0.3s both"
+                  : "none",
+                opacity: wavePhase === "showing" ? 1 : 0,
+              }}
+            >
+              {/* Foto */}
+              <div
+                className="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2"
+                style={{ borderColor: isDark ? "rgba(99,179,237,0.4)" : "rgba(255,255,255,0.5)" }}
+              >
+                <img
+                  src={docentePhoto}
+                  alt={docente}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              {/* Nombre */}
+              <div className="text-center px-2">
+                <p
+                  className="text-[10px] font-bold uppercase tracking-widest mb-0.5"
+                  style={{ color: isDark ? "rgba(99,179,237,0.7)" : "rgba(255,255,255,0.7)" }}
+                >
+                  Docente
+                </p>
+                <p
+                  className="text-xs sm:text-sm font-bold leading-tight text-center"
+                  style={{ color: "white" }}
+                >
+                  {docente}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Brillo decorativo */}
         {isDark && (

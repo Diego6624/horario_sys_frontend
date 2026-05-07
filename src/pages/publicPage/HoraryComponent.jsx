@@ -216,6 +216,7 @@ const HoraryComponent = () => {
                         : h.sesion || "—"
                     }
                     estado={h.estado}
+                    docentePhoto={h.teacherPhotoUrl}        // 👈 aquí pasas la foto
                   />
                 );
               })}

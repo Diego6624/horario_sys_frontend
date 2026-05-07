@@ -18,3 +18,15 @@
   margin: 2px 0;
 }
 
+@keyframes wave-in {
+  0%   { clip-path: ellipse(0% 60% at 0% 50%); }
+  100% { clip-path: ellipse(55% 60% at 0% 50%); }
+}
+@keyframes wave-out {
+  0%   { clip-path: ellipse(55% 60% at 0% 50%); }
+  100% { clip-path: ellipse(0% 60% at 0% 50%); }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
